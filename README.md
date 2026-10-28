@@ -1,56 +1,127 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# URËZA
+### Connecting Kosovo's Diaspora with Home
 
-## Get started
+**University:** University "Isa Boletini" Mitrovica  
+**Course:** Mobile Application Development  
+**Academic Year:** 2026/2027  
+**Team:** Flutura Hyseni & Tringa Hyseni  
+**Project Route:** 3 — Startup  
+**Status:** Early-stage Expo mobile prototype
 
-1. Install dependencies
+## 1. Problem and Evidence
 
-   ```bash
-   npm install
-   ```
+Many Kosovo diaspora members live abroad while owning property or having family responsibilities in Kosovo. They often rely on relatives, neighbors, or workers for updates they cannot verify in person.
 
-2. Start the app
+### Public Research
 
-   ```bash
-   npx expo start
-   ```
+- [Haluzík (2025) — Why Brothers in Kosovo Build Identical Houses: The House as an Attempt to Adapt to Contradictions of Globalization](https://doi.org/10.1177/08883254251335981): Discusses houses in Kosovo whose owners may live abroad.
+- [Dushi & Berila (2025) — Diaspora's Role in Their Home Country's Economic Development: The Case of Kosovo](https://doi.org/10.3986/AGS.12806): Examines Kosovo diaspora investments and related challenges.
 
-In the output, you'll find options to open the app in a
+These sources offer background context; they do not establish demand for Urëza.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Our User Research
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+We documented three interviews with diaspora members:
 
-## Get a fresh project
+- **P1 — Germany:** Waste was dumped on land without the owner's knowledge. A paid cleaning service left work unfinished, and the family spent another three days cleaning.
+- **P2 — Germany:** Managing several properties and construction-related activities is costly. Some reports from workers have not reflected the real situation.
+- **P3 — Sweden:** A family discovered a house burglary approximately one week after it occurred. Dealing with property damage also consumed vacation time.
 
-When you're ready, run:
+**Three out of three participants described a problem with managing responsibilities in Kosovo from abroad.** This is initial qualitative evidence, not a representative market survey.
+
+See [BISEDAT.md](BISEDAT.md) for the anonymized interview summaries.
+
+## 2. Our Solution
+
+**One job:** Urëza turns a request from the Kosovo diaspora into a documented local visit, supported by GPS, live photos, voice evidence, and a clear report.
+
+The first target user is **a diaspora homeowner who needs a trusted property inspection in Kosovo**. The same workflow may support non-medical care visits for parents, with appropriate consent and privacy protections.
+
+## 3. User Roles
+
+- **Client:** Creates requests, views evidence and reports, and approves or disputes completed visits.
+- **Miku (local visitor):** Accepts a task, completes the visit, and submits evidence.
+- **Admin:** Reviews disputed submissions and supports accountability.
+
+The initial prototype does not yet have real accounts or backend authentication.
+
+## 4. Main Service Flow
+
+1. The client creates a visit request.
+2. Miku accepts the available task.
+3. Miku records GPS, live camera photos (not gallery uploads), voice notes, and timestamps during the visit.
+4. The client receives a report in their preferred language; AI report generation will be **simulated in the prototype**.
+5. The client approves or disputes the report. Approved visits appear in **Oda**, the chronological visit history; disputes can be reviewed by an admin.
+
+## 5. Planned MVP
+
+**Included:**
+
+- Property inspections and optional non-medical parent care visits
+- Basic Client and Miku roles, tasks, details, and status tracking
+- Task acceptance by Miku
+- GPS, live photos, voice, and timestamps
+- Simulated AI-generated report in the client's language
+- Client approval/dispute and basic admin review
+- Oda — chronological visit history
+
+**Excluded for now:**
+
+- Company registration, availability, and service offers
+- Advanced business management
+- Online payments and subscriptions
+- Push notifications and a public web application
+- Real backend authentication and real AI service integration
+- Advanced admin dashboard
+- Medical advice or healthcare services
+
+See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
+
+## 6. Current Prototype
+
+**Stack:** React Native, Expo SDK 58, TypeScript, and Expo Router.
+
+**Implemented and tested:**
+
+- Home screen with synthetic inspection tasks
+- Reusable `TaskCard` (Karta e Detyrës) component
+- `FlatList` with unique task IDs
+- Local status changes using `useState`
+- Dynamic `[id].tsx` task-detail screen
+- List-to-details navigation and invalid-ID handling
+
+**Not yet implemented:** Real request creation, Miku task acceptance, camera/GPS/voice collection, real or simulated AI report screens, approval/dispute workflow, non-medical parent visits, and Oda.
+
+The current data is synthetic. Urëza is not yet a live service.
+
+## 7. Run Locally
+
+Install Node.js and npm, and Expo Go on the phone. In the project directory run:
 
 ```bash
-npm run reset-project
+npm install
+npm start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Scan the Expo QR code on the phone. The phone and computer should normally be on the same Wi-Fi network.
 
-### Other setup steps
+## 8. Documentation
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- [IDEAS.md](IDEAS.md) — Three Week 2 app ideas and the selected startup
+- [EKIPI.md](EKIPI.md) — Team, startup route, and first target user
+- [BISEDAT.md](BISEDAT.md) — Three anonymized interviews
+- [HARTA.md](HARTA.md) — Product map, five screens, and MVP boundaries
+- [PITCH.md](PITCH.md) — One-minute pitch and rehearsal checklist
 
-## Learn more
+## 9. Privacy and Limitations
 
-To learn more about developing your project with Expo, look at the following resources:
+The planned application must handle personal locations, live photos, voice recordings, and visit reports only with appropriate permission and safeguards. Parent care visits are non-medical and require the parent's consent. GPS and media provide supporting evidence, not an absolute guarantee of task quality or personal safety.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The three interviews support the existence of problems for those participants only. Pricing, willingness to pay, visitor verification, and service reliability still require testing.
 
-## Join the community
+## 10. AI Usage Declaration
 
-Join our community of developers creating universal apps.
+-- AI: po — ChatGPT helped organize this README, improve English wording, explain technical concepts, and draft sections from the team's information.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+-- Team contribution: We selected the idea, conducted and documented the interviews, defined the scope and roles, and reviewed the final content.

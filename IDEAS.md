@@ -1,24 +1,24 @@
 
 # Mobile Application Ideas — Week 2
 
-Course: Mobile Application Development
-University: "Isa Boletini" Mitrovica
-Team: Flutura Hyseni & Tringa
+**Course:** Mobile Application Development  
+**University:** University "Isa Boletini" Mitrovica  
+**Team:** Flutura Hyseni & Tringa Hyseni
 
 ## Idea 1 — CampusLoop
-Track: Personal Use
+
+**Track:** 1 — Personal Use
 
 ### Problem
-Students often need to borrow equipment, books or
-study materials from each other, but there is no
-organized way to manage availability and returns.
+
+Students often need to borrow equipment, books, or study materials from each other, but there is no organized way to manage availability and returns.
 
 ### Solution
-A mobile application where students can list
-available items, request to borrow them, and track
-return dates.
+
+A mobile application where students list available items, request to borrow them, and track return dates.
 
 ### Main Features
+
 - Student profiles
 - Item listings
 - Borrowing requests
@@ -26,34 +26,33 @@ return dates.
 - Notifications
 
 ### AI Integration
-AI assists with categorizing items from descriptions
-or photos.
 
-### Mobile Capability
-Camera for photographing items and notifications
-for return reminders.
+AI could help categorize items from descriptions or photos.
+
+### Mobile Capabilities
+
+Camera for item photos and notifications for return reminders.
 
 ### Validation
-Interview students about their previous borrowing
-experiences and test weekly usage.
+
+Interview students about previous borrowing experiences and test weekly usage.
 
 ---
 
 ## Idea 2 — EventGuard
-Track: Family or Local Business
+
+**Track:** 2 — Family or Local Business
 
 ### Problem
-Event businesses often receive last-minute changes
-through calls and messages. Important information
-can be lost, causing scheduling conflicts and
-coordination problems.
+
+Event businesses often receive last-minute changes through calls and messages. Important information can be lost, creating scheduling conflicts and coordination problems.
 
 ### Solution
-A mobile application that organizes event changes,
-staff responsibilities, equipment and deadlines
-in one place.
+
+A mobile application to organize event changes, staff responsibilities, equipment, and deadlines in one place.
 
 ### Main Features
+
 - Event management
 - Task assignments
 - Equipment tracking
@@ -61,90 +60,85 @@ in one place.
 - Staff notifications
 
 ### AI Integration
-AI converts spoken or written client requests into
-structured change proposals for staff approval.
 
-### Mobile Capability
+AI could turn spoken or written requests into structured change proposals for staff approval.
+
+### Mobile Capabilities
+
 Microphone for voice input and notifications.
 
 ### Validation
-Interview an event business owner and test whether
-the application improves daily coordination.
+
+Interview an event business owner and test whether the application improves daily coordination.
 
 ---
 
 ## Idea 3 — Urëza
-Track: Startup
+
+**Track:** 3 — Startup
 
 ### Problem
-Families living abroad may have difficulty checking
-the condition of their homes, land and other
-properties in Kosovo.
 
-They often depend on phone calls or informal
-arrangements without consistent documentation.
+Families living abroad may struggle to check their homes, land, and other properties in Kosovo. They often depend on phone calls and informal arrangements without consistent documentation.
 
 ### Solution
-Urëza connects diaspora families with trusted
-local visitors who perform requested property
-checks and provide documented evidence.
+
+Urëza connects diaspora members with trusted local visitors who perform requested checks and provide documented evidence.
 
 ### Main Features
+
 - Client and visitor roles
-- Property registration
-- Visit requests
-- Task management
-- Photo, GPS and voice evidence
+- Property registration and visit requests
+- Task management and acceptance
+- GPS, live-photo, and voice evidence
+- AI-generated reports in the client's language
+- Client report review and approval/dispute
 - Visit history (Oda)
-- AI-generated reports
-- Client review and approval
 
 ### AI Integration
-AI transforms visit notes and recorded evidence
-into structured reports in the client's language.
+
+AI would organize visit evidence and observations into structured reports in the client's preferred language. This function will initially be simulated.
 
 ### Mobile Capabilities
-- GPS for recording visit location
-- Camera for capturing evidence
+
+- GPS for visit location
+- Camera for live photo capture (not gallery selection)
 - Microphone for recording observations
 
 ### Target Users
-- Kosovo diaspora families
-- Trusted local visitors
-- Property service providers
+
+- Kosovo diaspora homeowners
+- Trusted local visitors (Miku)
+- Property service providers as a possible future segment
 
 ### Business Model Hypothesis
-Customers could pay per completed visit.
-Subscription plans and business partnerships
-may be explored after validation.
+
+Customers might pay per completed visit. Subscriptions and business partnerships are possible later options, not validated business models.
 
 ### Validation
-Interview diaspora families about previous
-property-checking experiences.
 
-Seek potential pilot users and at least one
-letter of interest or pilot agreement.
+Interview diaspora members about actual previous problems. Seek pilot participants and, when possible, a letter of interest or pilot agreement. No letter or agreement is claimed as obtained.
 
 ---
 
 ## Selected Project: Urëza
 
-We selected Urëza because it addresses a practical
-problem faced by diaspora families and has the
-potential to expand into a service platform.
+We selected **Urëza** because it addresses a practical diaspora problem and has potential to grow into a service platform.
 
-Our initial MVP will focus on property visits,
-documented evidence and client-reviewed reports.
+**One job:** Urëza turns a request from the Kosovo diaspora into a documented local visit, supported by GPS, live photos, voice evidence, and a clear report.
 
-Additional services such as cleaning, repairs
-and construction will be considered in later phases.
+Our first use case is a documented property inspection. Cleaning, repairs, construction management, and other company services are outside the initial MVP.
 
-The idea still requires validation through
-real user interviews.
+### Week 4 Scope Update
+
+We documented three real diaspora interviews in [BISEDAT.md](BISEDAT.md). They highlighted delayed discovery of property problems, inaccurate reports, incomplete paid work, and difficulties relying on other people from abroad.
+
+The planned MVP now includes optional **non-medical parent care visits**, task acceptance by **Miku**, GPS/live-photo/voice evidence, a **simulated AI report in the client's language**, client approval or dispute, and **Oda** visit history. Parent visits require consent and do not provide medical advice.
+
+See [HARTA.md](HARTA.md) for the planned workflow. Pricing, willingness to pay, and the proposed pilot remain to be validated.
 
 ## AI Usage Declaration
 
-AI: Yes — used to assist with structuring and
-writing this project ideas document.
-Project selection and final decisions were made
-by the team.
+-- AI: po — ChatGPT helped structure the original ideas document, improve wording, and organize the Week 4 scope update.
+
+-- Team contribution: We proposed the ideas, chose Urëza, provided the interview experiences, and made the final product decisions.

@@ -1,105 +1,116 @@
 
-# URËZA — Week 3: User Interviews
+# URËZA — User Interviews
 
 **Course:** Mobile Application Development  
-**University:** University "Isa Boletini" Mitrovica  
 **Project:** Urëza  
 **Team:** Flutura Hyseni & Tringa Hyseni  
-**Date:** October 2026  
-**Participants:** 3 Kosovo diaspora members
+**Research Period:** October 2026  
+**Total Interviews:** 3  
+**Route:** 3 — Startup
 
-## 1. Research Objective
+## Research Objective
 
-The goal of these interviews was to understand the difficulties diaspora members face when managing properties, maintenance tasks, and family responsibilities in Kosovo while living abroad.
+We interviewed three Kosovo diaspora members about **actual previous experiences**, how problems were handled, and what they cost in time or money. We did not treat general opinions about the app as evidence of demand.
 
-Three family members living in Germany and Sweden were interviewed. Their responses were summarized to identify real problems that Urëza could address.
+For privacy, participants are identified only as **P1, P2, and P3**. Their answers are summarized in English, not presented as verbatim quotations.
 
-Participants are identified as P1, P2, and P3 to protect their privacy.
+---
 
-## 2. Interview 1 — P1 (Germany)
+## Interview 1 — 2026-10-18 — P1
 
-**Profile:** Owns an apartment and land in Kosovo.
+**Role:** Diaspora property owner  
+**Residence:** Germany
 
-### Main Findings
+### Last Occurrence
 
-- Relies on his father and father-in-law to check his properties when necessary.
-- His father-in-law once visited the apartment to retrieve an important document and check its condition.
-- Discovered that a large amount of waste had been dumped on one of his properties without his knowledge.
-- Submitted a complaint to the municipality but received no response.
-- Paid a cleaning company, but the work was incomplete, requiring another three days of cleaning by the family.
-- Usually receives information through Viber or phone calls, without photographic evidence.
-- Worries about paying for repairs without knowing whether they were completed properly.
-- Also needs trustworthy help with everyday responsibilities involving his elderly father.
+P1 owns an apartment and land in Kosovo. On one occasion, his father-in-law visited the apartment to collect an important document and check its condition. More seriously, neighbors had dumped waste on a plot of land without P1 knowing. The family discovered the problem only when they visited Kosovo.
 
-**Main Problem:** Lack of reliable property supervision, proof of completed work, and local assistance for family responsibilities.
+### How Was It Resolved?
 
-## 3. Interview 2 — P2 (Germany)
+P1 complained to the municipality but received no reply. A cleaning company was hired, yet it did not finish the work properly. The family completed the remaining cleanup themselves.
 
-**Profile:** Owns a house, land, rental apartments, and construction-related business activities in Kosovo.
+### Time and Financial Cost
 
-### Main Findings
+The cleaning company charged a substantial, unspecified amount, and the family spent **three additional days** cleaning. Repairs are otherwise coordinated through relatives and Viber, often without photographic evidence.
 
-- Managing several properties requires significant time and money.
-- Different workers handle different services and normally provide weekly updates.
-- Has experienced misunderstandings and inaccurate reports from workers.
-- Security cameras provide visibility at his house, but not across all properties.
-- Often depends on workers' reports without independently verifying the actual situation.
-- Coordinating many people and responsibilities from Germany is stressful.
-- Has not yet found a satisfactory long-term solution.
+### What We Didn't Know
 
-**Main Problem:** Difficulty coordinating multiple workers, monitoring properties, and verifying completed tasks remotely.
+Unmonitored **land**, not just houses, can create major problems. P1 also worries about organizing everyday support for his elderly father from abroad; this suggests a possible need for non-medical care visits.
 
-## 4. Interview 3 — P3 (Sweden)
+---
 
-**Profile:** Owns a house and some land in Kosovo.
+## Interview 2 — 2026-10-22 — P2
 
-### Main Findings
+**Role:** Property owner and construction business operator  
+**Residence:** Germany
 
-- Cannot regularly inspect her house because most close family members also live abroad.
-- Her house was burglarized, but the family learned about the incident approximately one week later through a neighbor.
-- Damage to the yard and outdoor lighting was also discovered late.
-- Resolving property problems took approximately two days of limited vacation time.
-- Receives only occasional photographs from relatives instead of regular inspection reports.
-- Would like a trustworthy person to inspect her property, report problems, and coordinate maintenance.
+### Last Occurrence
 
-**Main Problem:** Lack of regular inspections, timely updates, and dependable maintenance assistance.
+P2 owns a house, land, rental apartments, and construction-related activities in Kosovo. He described **past occasions** when local workers said tasks were completed correctly but later information showed otherwise. He did not specify the date of a single most recent incident.
 
-## 5. Key Research Findings
+### How Was It Resolved?
 
-The interviews identified four common challenges:
+P2 manages different workers and normally receives updates about once a week. He uses security cameras at his house, but not all properties can be monitored this way. He continues to resolve disagreements and coordinate people individually; no satisfactory long-term solution has been found.
 
-1. **Limited Visibility:** Property owners cannot easily monitor the actual condition of their properties from abroad.
-2. **Lack of Verification:** Phone calls and messages do not always provide reliable proof that work was completed.
-3. **Time and Financial Costs:** Property management and unexpected repairs require significant resources.
-4. **Dependence on Others:** Owners must rely on relatives, neighbors, or workers for inspections and assistance.
+### Time and Financial Cost
 
-## 6. Proposed Urëza Solution
+P2 described high ongoing costs for workers, maintenance, and supervision, as well as considerable personal time spent following up. He did not provide exact monetary amounts.
 
-Based on these findings, the Urëza MVP will focus on:
+### What We Didn't Know
 
-- Property registration and inspection requests.
-- Task assignment to trusted local visitors.
-- GPS location, photographs, and timestamps as visit evidence.
-- AI-assisted structured reports.
-- Client review of completed visits.
-- Property visit history through the Oda feature.
+Even with many workers and regular updates, remote management can remain confusing. Reports alone do not always establish what was actually done, and multi-property owners may need stronger task coordination.
 
-Future features may include maintenance services, business property management, and assistance with everyday family responsibilities.
+---
 
-## 7. Conclusion
+## Interview 3 — 2026-10-22 — P3
 
-The three interviews revealed real difficulties experienced by Kosovo diaspora members when managing responsibilities from abroad.
+**Role:** Diaspora homeowner  
+**Residence:** Sweden
 
-The most important shared need is access to trustworthy people and reliable information about properties and completed tasks.
+### Last Occurrence
 
-Urëza aims to address these problems through organized local visits, documented evidence, and transparent reporting.
+P3 owns a house in Kosovo and has no one available to inspect it regularly. The house was burglarized, but the family only learned about it **approximately one week later**, after a neighbor noticed an open door. Yard damage and broken outdoor lights were also discovered late.
 
-Additional research will be needed to evaluate pricing, customer willingness to pay, and service reliability.
+### How Was It Resolved?
 
-## 8. AI Usage Declaration
+The family dealt with the damage themselves when they returned to Kosovo. On a separate occasion, a relative checked the outdoor lights and sent a photo, but regular visits and reports are not available.
 
-**AI: Yes.**
+### Time and Financial Cost
 
-AI was used to help prepare relevant interview questions for family members, structure and organize the collected responses, and summarize the interview notes into a clear document.
+Addressing problems took approximately **two days of limited vacation time**, plus repair costs that varied by incident. No exact payment amount was given.
 
-All personal experiences and interview information were provided by the participants themselves.
+### What We Didn't Know
+
+An alarm alone did not ensure timely awareness of the burglary. P3's need is not simply a photo but a reliable person who can check the property and report problems promptly.
+
+---
+
+## Key Findings
+
+**Three out of three interviewees described a problem with supervising responsibilities in Kosovo from abroad.** The issues differed:
+
+1. **Limited visibility:** Owners may discover problems late.
+2. **Lack of verification:** Verbal updates do not always prove work was finished properly.
+3. **Time and financial costs:** Cleaning, repairs, and follow-ups take time and money.
+4. **Dependence on others:** Owners rely on relatives, neighbors, and different workers.
+
+This is a small qualitative sample; it does not establish overall market demand or willingness to pay.
+
+## Impact on Urëza
+
+The interviews helped our team prioritize:
+
+- Trusted local property visits and optional, consent-based non-medical parent visits
+- Request creation and task acceptance by **Miku**
+- GPS, **live** camera photos, voice, and timestamps
+- Structured AI-assisted reports in the client's language (**simulated in the prototype**)
+- Client approval or dispute of reports and basic admin review
+- **Oda**, a chronological visit history
+
+The first pilot use case remains property inspection. See [HARTA.md](HARTA.md) for planned screens and MVP boundaries.
+
+## AI Usage Declaration
+
+-- AI: po — ChatGPT helped prepare relevant interview questions, structure the supplied answers, translate and summarize the notes, and improve the document's wording.
+
+-- Team contribution: We conducted the interviews and supplied the real participant experiences. AI did not invent participant statements or outcomes.
