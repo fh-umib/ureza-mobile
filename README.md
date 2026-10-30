@@ -120,8 +120,29 @@ The planned application must handle personal locations, live photos, voice recor
 
 The three interviews support the existence of problems for those participants only. Pricing, willingness to pay, visitor verification, and service reliability still require testing.
 
+
 ## 10. AI Usage Declaration
 
--- AI: po — ChatGPT helped organize this README, improve English wording, explain technical concepts, and draft sections from the team's information.
+-- AI: po — ChatGPT was used to assist with project planning,
+documentation, TypeScript and React Native development, and
+technical troubleshooting.
 
--- Team contribution: We selected the idea, conducted and documented the interviews, defined the scope and roles, and reviewed the final content.
+### AI Assistance in Code
+
+AI helped draft, explain, and improve parts of the Expo prototype,
+including:
+
+- The home screen and task list in `src/app/index.tsx`.
+- The reusable `TaskCard` component and its typed props.
+- Sample task data and TypeScript definitions in `src/data/tasks.ts`.
+- Dynamic task navigation and details in `src/app/artikull/[id].tsx`.
+- Debugging TypeScript errors and Expo navigation issues.
+
+### Team Contribution
+
+We selected the project idea, provided the product requirements,
+conducted the user interviews, reviewed the suggested code,
+tested the application on an iPhone, and made the final decisions.
+
+AI-assisted code was reviewed and adapted during development.
+The application currently uses synthetic task data.

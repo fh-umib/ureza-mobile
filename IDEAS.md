@@ -1,9 +1,21 @@
 
-# Mobile Application Ideas — Week 2
-
+# Mobile Application Ideas — Urëza Team
 **Course:** Mobile Application Development  
 **University:** University "Isa Boletini" Mitrovica  
 **Team:** Flutura Hyseni & Tringa Hyseni
+
+## Project History
+
+This document records the ideas considered for the Urëza team
+project and explains why we selected Route 3 — Startup.
+
+An earlier individual Week 2 exercise was completed in the
+separate `projekti-im` repository, with its original ideas
+documented in `IDETE.md`.
+
+This document belongs to the Urëza team repository and does
+not replace or claim to be the original Week 2 submission.
+
 
 ## Idea 1 — CampusLoop
 
