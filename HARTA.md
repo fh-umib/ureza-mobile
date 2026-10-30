@@ -192,6 +192,21 @@ taking care of a family home. Proposed palette, to be confirmed with the team:
 - Text: dark warm brown (#2E2A26)
 - Accent: muted olive green (#6B7F4E)
 
+### Current Prototype vs. Proposed Design
+
+The current Urëza prototype uses a teal-based color palette,
+with dark teal as the primary color and light backgrounds.
+
+The terracotta and cream palette proposed above represents
+an alternative visual direction for future development.
+
+This design proposal has not yet been implemented.
+The final color palette will be selected collaboratively
+after reviewing usability and user feedback.
+
+For now, the existing prototype design will remain unchanged
+to preserve consistency and functionality.
+
 ### Design Principles
 
 - Simple navigation between screens.
