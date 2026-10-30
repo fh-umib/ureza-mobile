@@ -136,3 +136,79 @@ A property inspection is the first pilot use case. A parent check-in follows the
 -- AI: po — ChatGPT helped draft and structure the product map, organize the screen flow, and improve the English text.
 
 -- Team contribution: We defined the product concept, supplied the interview findings, decided on the MVP boundaries, and reviewed the final workflow.
+
+## 9. UI/UX Design Notes
+
+**Responsible:** Tringa Hyseni  
+**Area:** Mobile Interface and User Experience
+
+### Navigation
+
+- A bottom tab bar is used for the main sections (e.g. My Tasks, Create Request, Oda / History).
+- Secondary screens (Task Details, Visit Evidence) open on top of the main tabs.
+
+### Screen Design
+
+**1. Home / My Tasks**
+- Tasks are shown as detailed cards, not a plain list.
+- Each card shows the property location, visit type, date and current status.
+- Tapping a card opens the full task details.
+
+**2. Create Request**
+- A short, simple form with a clear task description.
+- The client chooses the type of visit.
+- The submission process is kept to as few steps as possible.
+
+**3. Task Details**
+- Shows all task information and the current status.
+- Provides an Accept Task action for Miku.
+- Displays the submitted report for the client.
+
+**4. Visit Evidence**
+- Camera, voice and GPS actions are easy to find.
+- Each recorded piece of evidence is clearly marked.
+- A confirmation step is required before submitting.
+
+**5. Oda / Visit History**
+- Completed visits are ordered chronologically.
+- Previous reports are easy to open.
+- Approved and disputed visits are clearly distinguished.
+
+### Status Indicators
+
+Task status is shown with both a color and an icon, so it is clear
+even for users who have difficulty distinguishing colors:
+- Pending: amber + clock icon
+- Accepted / In progress: blue + arrow icon
+- Completed / Approved: green + check icon
+- Disputed: red + warning icon
+
+### Color Direction (proposed)
+
+The app should feel warm, familiar and "homely", since it is about
+taking care of a family home. Proposed palette, to be confirmed with the team:
+- Primary: warm terracotta (#C8664B)
+- Background: soft cream (#FAF6F0)
+- Text: dark warm brown (#2E2A26)
+- Accent: muted olive green (#6B7F4E)
+
+### Design Principles
+
+- Simple navigation between screens.
+- Readable typography and consistent colors.
+- Large, accessible touch targets.
+- Clear status indicators and action buttons.
+- Responsive layouts for different phone sizes.
+
+### Development Status
+
+These notes describe the proposed interface and design direction.
+They do not describe completed functionality; implementation status
+is tracked in the code.
+
+### AI Usage
+
+- AI: po — AI was used to help phrase these notes in English; the design
+  decisions (card layout, bottom tab bar, color + icon status indicators,
+  warm color direction) were made by Tringa.
+- Team contribution: UI/UX decisions and review by Tringa.
