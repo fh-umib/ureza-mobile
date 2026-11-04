@@ -30,8 +30,8 @@ export default function TaskDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [fromSupabase, setFromSupabase] = useState(false);
 
-  // M3: detajet lexohen nga Supabase sipas id-së, kështu hapen edhe detyrat
-  // e reja. Nëse nuk ka rrjet, përdorim të dhënat lokale.
+  // M3: the details are read from Supabase by id, so tasks added from the
+  // phone also open. If there is no network, we use the local data.
   useEffect(() => {
     let active = true;
 

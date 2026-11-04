@@ -7,7 +7,7 @@ const key = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 if (!url || !key) {
   throw new Error(
-    "Mungon .env: vendos EXPO_PUBLIC_SUPABASE_URL dhe EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY (shih .env.example), pastaj rinise Expo me: npx expo start -c"
+    "Missing .env: set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY (see .env.example), then restart Expo with: npx expo start -c"
   );
 }
 

@@ -1,7 +1,7 @@
--- M3: lejo ndryshimin e statusit nga aplikacioni (vetëm kolona "status"; demo, të dhëna testuese).
--- Ekzekutoje te Supabase -> SQL Editor -> Run.
+-- M3: allow changing the status from the app (only the "status" column; demo, synthetic data).
+-- Run in Supabase: SQL Editor > New query > Run.
 
--- anon nuk mund të ndryshojë asnjë kolonë tjetër, vetëm status
+-- anon cannot change any other column, only status
 revoke update on public.tasks from anon;
 grant update (status) on public.tasks to anon;
 

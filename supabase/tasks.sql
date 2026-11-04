@@ -15,7 +15,7 @@ insert into public.tasks (id, title, location, status) values
   ('prona-5', 'Kontrolli i pronës', 'Gjakovë, Kosovë', 'pending')
 on conflict (id) do nothing;
 
--- Read-only for the public (anon) role. No insert/update/delete policies on purpose.
+-- Read-only for the public (anon) role here. Insert and status updates are added in tasks_insert.sql and tasks_update.sql. No delete policy on purpose.
 grant select on public.tasks to anon;
 alter table public.tasks enable row level security;
 

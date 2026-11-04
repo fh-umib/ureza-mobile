@@ -32,7 +32,7 @@ export default function HomeScreen() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  // Formulari "Shto detyrë" (M2)
+  // "Add task" form state (M2)
   const [newTitle, setNewTitle] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [saving, setSaving] = useState(false);
@@ -42,10 +42,10 @@ export default function HomeScreen() {
     const { data, error } = await supabase
       .from("tasks")
       .select("id, title, location, status")
-      .order("created_at", { ascending: false }); // më e reja në krye
+      .order("created_at", { ascending: false }); // newest first
 
     if (error || !data) {
-      // Pa rrjet ose pa tabelë: kthehemi te të dhënat lokale.
+      // No network or no table: fall back to the local sample data.
       setErrorMessage(error?.message ?? "Nuk u morën të dhëna");
       setTasks(initialTasks);
       setSource("local");
@@ -60,7 +60,7 @@ export default function HomeScreen() {
     loadTasks();
   }, [loadTasks]);
 
-  // M2: përdoruesi shton një detyrë të re; ruhet në Supabase.
+  // M2: the user adds a new task; it is saved to Supabase.
   async function addTask() {
     const title = newTitle.trim();
     const location = newLocation.trim();
@@ -73,7 +73,7 @@ export default function HomeScreen() {
     setSaving(true);
     setFormMessage(null);
 
-    // id dhe created_at i jep vetë baza; statusi fillon "pending".
+    // The database generates id and created_at; the status starts as "pending".
     const { error } = await supabase
       .from("tasks")
       .insert({ title, location, status: "pending" });
@@ -102,8 +102,8 @@ export default function HomeScreen() {
         ? "Android"
         : "Web";
 
-  // M3: statusi ruhet në Supabase. Ekrani ndryshon menjëherë; nëse ruajtja
-  // dështon, e kthejmë statusin mbrapsht dhe e tregojmë gabimin.
+  // M3: the status is saved to Supabase. The screen updates immediately; if
+  // saving fails, we roll the status back and show the error.
   async function toggleStatus(id: string) {
     const current = tasks.find((task) => task.id === id);
     if (!current) return;
@@ -118,7 +118,7 @@ export default function HomeScreen() {
       )
     );
 
-    // Offline (të dhëna lokale): ndryshimi mbetet vetëm në telefon.
+    // Offline (local data): the change stays on the phone only.
     if (source !== "supabase") return;
 
     const { data, error } = await supabase
@@ -127,7 +127,7 @@ export default function HomeScreen() {
       .eq("id", id)
       .select("id");
 
-    // RLS mund ta injorojë ndryshimin pa gabim; atëherë "data" është bosh.
+    // RLS can silently ignore the update without an error; then "data" is empty.
     if (error || !data || data.length === 0) {
       setTasks((previous) =>
         previous.map((task) =>
