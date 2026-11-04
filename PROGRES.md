@@ -1,62 +1,66 @@
-# PROGRES — J5 (4 nëntor 2026)
+# URËZA — PROGRES (J5, November 4, 2026)
 
-**Projekti:** Urëza · **Ekipi:** Flutura Hyseni & Tringa Hyseni · **Rruga:** 3 — Startup
+**Project:** Urëza · **Team:** Flutura Hyseni & Tringa Hyseni · **Route:** 3 — Startup
 
-Sot e lidha aplikacionin me Supabase duke punuar me një agjent AI. Ky dokument tregon çka punon, çka bëri agjenti, çka bëra unë dhe hapin e radhës.
+Today I connected the app to Supabase while working with an AI agent. This document shows what works, what the agent did, what I did, and the next step.
 
-## 1. Misionet
+## 1. Missions
 
-| Misioni | Statusi | Provë në repo |
+| Mission | Status | Evidence in the repo |
 |---|---|---|
-| **M0** — `AGENTS.md` nga EKIPI, BISEDAT, HARTA | Kryer | Commit `434ee14`. Agjenti (GitHub Copilot Chat) e përmblodhi idenë saktë: klienti krijon kërkesë, Miku e pranon dhe e kryen vizitën, klienti e miraton ose e kundërshton raportin, vizitat ruhen në Oda, me Supabase. |
-| **M1** — aplikacioni lexon një gjë reale nga Supabase | Kryer | Commit-et `6e161c8` dhe `d6897c3`. Lista e detyrave vjen nga tabela `tasks`; telefoni shfaq "Të dhëna nga Supabase (5)". |
-| **M2** — përdoruesi shton një gjë nga telefoni dhe ruhet | Kryer | Commit `c3e1166`. Forma "Shto detyrë të re" bën INSERT në `tasks`; rreshti mbetet kur e mbyll dhe e hap aplikacionin. |
-| **M3** (sfidë) — ekrani kryesor i HARTA-s me të dhëna reale | Kryer për ekranin 1 | Ballina (ekrani 1) lexon, shton dhe ndryshon statusin me të dhëna reale, dhe detajet e detyrës lexohen nga Supabase. Kodi: `src/app/index.tsx`, `src/app/artikull/[id].tsx`, `supabase/tasks_update.sql`. Ekrani 2 (Krijo kërkesë me lloj vizite dhe udhëzime) nuk është bërë ende. |
+| **M0** — `AGENTS.md` from EKIPI, BISEDAT, HARTA | Done | Commit `434ee14`. The agent (GitHub Copilot Chat) summarized the idea correctly: the client creates a request, Miku accepts it and performs the visit, the client approves or disputes the report, approved visits are stored in Oda, with Supabase as the backend. |
+| **M1** — the app reads something real from Supabase | Done | Commits `6e161c8` and `d6897c3`. The task list comes from the `tasks` table; the phone shows "Të dhëna nga Supabase (5)". |
+| **M2** — the user adds something from the phone and it persists | Done | Commit `c3e1166`. The "Shto detyrë të re" form inserts a row into `tasks`; the row is still there after closing and reopening the app. |
+| **M3** (challenge) — the main HARTA screen with real data | Done for screen 1 | Screen 1 (Home / My Tasks) reads, adds and changes status with real data, and the task details are read from Supabase. Code: `src/app/index.tsx`, `src/app/artikull/[id].tsx`, `supabase/tasks_update.sql`. Screen 2 (Create Request with visit type and instructions) is not built yet. |
 
-## 2. Çka punon tani
+**In class (November 4, 11:30–13:00):** M0, M1 and M2, with commits `434ee14` (12:05), `6e161c8` (12:25), `d6897c3` (12:26), `c3e1166` (12:41) and `58bb6ea` (12:53).
 
-- Ballina e ngarkon listën nga Supabase (`src/lib/supabase.ts`, `src/app/index.tsx`), me detyrën më të re në krye.
-- Kur nuk ka rrjet ose tabelë, aplikacioni kalon në të dhënat lokale dhe e tregon "Offline" në ekran.
-- Forma shton detyrë të re (titull dhe vendndodhje) dhe e rifreskon listën. Nëse ruajtja dështon, gabimi shfaqet në ekran, jo në heshtje.
-- Butoni "Ndrysho statusin" e ruan statusin në Supabase (`update`); nëse ruajtja dështon, statusi kthehet mbrapsht dhe gabimi shfaqet në ekran.
-- Ekrani i detajeve e lexon detyrën nga Supabase sipas id-së, kështu hapen edhe detyrat e shtuara nga telefoni.
-- Tabela `tasks` ka kolonat `id`, `title`, `location`, `status` (`pending` ose `completed`) dhe `created_at`; SQL-i është në `supabase/tasks.sql` dhe `supabase/tasks_insert.sql`.
+**Outside class (November 4, after the lesson):** M3 (the challenge), commit `3027c78` (15:27), and the documents: updates to `README.md`, `EKIPI.md` and `PITCH.md` (`d04d997` at 14:15, `18919ba` at 14:16), and this `PROGRES.md` with the M3 documentation updates (`c31a48b` at 15:28).
 
-## 3. Çka bëri agjenti dhe çka bëra unë
+## 2. What works now
 
-**Agjenti (Claude; Copilot Chat vetëm për përmbledhjen e M0):**
-- e shkroi seksionin "Urëza" te `AGENTS.md`, `.env.example` dhe rregullin në `.gitignore` që `.env` të mos hyjë në Git;
-- shkroi klientin Supabase, SQL-in e tabelës me 5 rreshta testues dhe politikat RLS;
-- e ndryshoi `src/app/index.tsx` që të lexojë nga Supabase, shtoi formën me `insert` dhe ruajtjen e statusit me `update`;
-- e ndryshoi ekranin e detajeve që të lexojë nga Supabase dhe shkroi `supabase/tasks_update.sql` (UPDATE vetëm për kolonën `status`);
-- e përditësoi `AGENTS.md`, `README.md` dhe `EKIPI.md` kur ndryshoi gjendja.
+- The home screen loads the task list from Supabase (`src/lib/supabase.ts`, `src/app/index.tsx`), with the newest task first.
+- When there is no network or no table, the app falls back to the local sample data and shows "Offline" on screen.
+- The form adds a new task (title and location) and refreshes the list. If saving fails, the error is shown on screen instead of failing silently.
+- The "Ndrysho statusin" button saves the status to Supabase (`update`); if saving fails, the status is rolled back and the error is shown on screen.
+- The details screen reads the task from Supabase by id, so tasks added from the phone also open.
+- The `tasks` table has the columns `id`, `title`, `location`, `status` (`pending` or `completed`) and `created_at`; the SQL is in `supabase/tasks.sql`, `supabase/tasks_insert.sql` and `supabase/tasks_update.sql`.
 
-**Unë:**
-- krijova organizatën dhe projektin në Supabase, e ekzekutova SQL-in dhe krijova `.env` me çelësat;
-- instalova paketat me `npx expo install` dhe e provova çdo hap në iPhone;
-- i lexova `git diff` para çdo commit-i dhe bëra commit pas çdo hapi që punonte;
-- e ndreqa variablën në `.env` kur aplikacioni tha "Mungon .env" (emri ishte `EXPO_PUBLIC_SUPABASE_KEY`, kodi pret `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
+## 3. What the agent did and what I did
 
-## 4. Siguria
+**The agent (Claude; Copilot Chat only for the M0 summary):**
+- wrote the "Urëza" section of `AGENTS.md`, `.env.example` and the `.gitignore` rule that keeps `.env` out of Git;
+- wrote the Supabase client, the SQL for the table with 5 test rows, and the RLS policies;
+- changed `src/app/index.tsx` to read from Supabase, added the form with `insert` and the status saving with `update`;
+- changed the details screen to read from Supabase and wrote `supabase/tasks_update.sql` (UPDATE for the `status` column only);
+- updated `AGENTS.md`, `README.md` and `EKIPI.md` when the state of the project changed.
 
-- Çelësi publik (`sb_publishable_…`) është vetëm te `.env`, që nuk hyn në Git; `.env.example` ka vetëm emrat e variablave.
-- Asnjë çelës sekret (`service_role`) nuk është në aplikacion ose në repo.
-- RLS është aktive. Roli `anon` mund të lexojë, të shtojë rreshta (status `pending`, titull dhe vendndodhje 1–80 shkronja) dhe të ndryshojë vetëm kolonën `status` (`pending` ose `completed`); fshirja nuk lejohet.
-- Të dhënat janë sintetike. Pa hyrje (login), çdokush me çelësin publik mund të shtojë rreshta ose të ndryshojë statuset; kjo pranohet vetëm për demo.
+**Me:**
+- created the organization and the project in Supabase, ran the SQL and created `.env` with the keys;
+- installed the packages with `npx expo install` and tested every step on my iPhone;
+- read `git diff` before every commit and committed after every working step;
+- fixed the variable name in `.env` when the app reported the missing-`.env` error (it was `EXPO_PUBLIC_SUPABASE_KEY`, the code expects `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
 
-## 5. Probleme që hasëm
+## 4. Security
 
-- `.env` me emër të gabuar të variablës: aplikacioni u ndal me "Mungon .env" derisa u ndreq.
-- INSERT u bllokua nga RLS ("new row violates row-level security policy") derisa u ekzekutua `supabase/tasks_insert.sql`. Gabimi u pa në ekran.
-- Telefoni e tregonte paketën e vjetër derisa e rifreskuam Expo Go.
-- Një UPDATE i bllokuar nga RLS nuk jep gabim, vetëm 0 rreshta të ndryshuar. Prandaj kodi kërkon që Supabase ta kthejë rreshtin e ndryshuar (`.select("id")`) dhe e kthen statusin mbrapsht nëse nuk u kthye asnjë.
+- The publishable key (`sb_publishable_…`) is only in `.env`, which is not committed to Git; `.env.example` contains only the variable names.
+- No secret key (`service_role`) is in the app or in the repo.
+- RLS is on. The `anon` role can read, insert rows (status `pending`, title and location 1–80 characters) and change only the `status` column (`pending` or `completed`); delete is not allowed.
+- All data is synthetic. Without login, anyone with the publishable key can add rows or change statuses; this is accepted for the demo only.
 
-## 6. Hapi tjetër
+## 5. Problems we ran into
 
-1. Ekrani 2 i HARTA-s, "Krijo kërkesë", me llojin e vizitës dhe udhëzimet (kolona të reja në tabelë; shënimet e Tringës te `HARTA.md` pika 9).
-2. Hyrja me Supabase Auth dhe rolet Klient dhe Miku, që politikat RLS të jenë për përdorues dhe jo për të gjithë.
-3. Pranimi i detyrës nga Miku dhe dëshmitë e vizitës (GPS, foto, zë).
+- A wrongly named variable in `.env`: the app stopped with the missing-`.env` error until it was fixed.
+- INSERT was blocked by RLS ("new row violates row-level security policy") until `supabase/tasks_insert.sql` was run. The error was visible on screen.
+- The phone showed the old bundle until we reloaded Expo Go.
+- An UPDATE blocked by RLS gives no error, only 0 changed rows. So the code asks Supabase to return the changed row (`.select("id")`) and rolls the status back if none is returned.
 
-## 7. Deklarimi i AI
+## 6. Next step
 
--- AI: po — Claude (Anthropic) ndihmoi me `AGENTS.md`, klientin Supabase, SQL-in, politikat RLS dhe formën; GitHub Copilot Chat e përmblodhi projektin nga `AGENTS.md`. Unë i lexova ndryshimet, i provova në telefon dhe vendosa çka të commit-oj.
+1. Screen 2 of HARTA, "Create Request", with the visit type and instructions (new columns in the table; Tringa's notes in `HARTA.md` section 9).
+2. Login with Supabase Auth and the Client and Miku roles, so the RLS policies are per user and not for everyone.
+3. Task acceptance by Miku and the visit evidence (GPS, photo, voice).
+
+## 7. AI usage declaration
+
+-- AI: po — Claude (Anthropic) helped with `AGENTS.md`, the Supabase client, the SQL, the RLS policies and the forms; GitHub Copilot Chat summarized the project from `AGENTS.md`. I read the changes, tested them on my phone and decided what to commit.
