@@ -129,6 +129,7 @@ We use a shared public GitHub repository to organize development, review contrib
 - Defined task status indicators using colors and icons.
 - Proposed an alternative visual design direction.
 - Documented her UI/UX decisions in `HARTA.md`.
+- Tested the application on her own phone throughout development; both team members tried the steps on their phones.
 
 ### GitHub Collaboration
 

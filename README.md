@@ -157,7 +157,7 @@ including:
 
 We selected the project idea, provided the product requirements,
 conducted the user interviews, reviewed the suggested code,
-tested the application on an iPhone, and made the final decisions.
+tested the application on our phones, and made the final decisions.
 
 AI-assisted code was reviewed and adapted during development.
 The application currently uses synthetic task data.

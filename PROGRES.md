@@ -37,9 +37,13 @@ Today I connected the app to Supabase while working with an AI agent. This docum
 
 **Me:**
 - created the organization and the project in Supabase, ran the SQL and created `.env` with the keys;
-- installed the packages with `npx expo install` and tested every step on my iPhone;
+- installed the packages with `npx expo install` and tested every step on my phone;
 - read `git diff` before every commit and committed after every working step;
 - fixed the variable name in `.env` when the app reported the missing-`.env` error (it was `EXPO_PUBLIC_SUPABASE_KEY`, the code expects `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
+
+**Tringa:**
+- tested the app on her own phone throughout the day; we tried every step on both phones, and the phone screenshots in the submission were taken on her phone;
+- continues the UI/UX work for the next step (`HARTA.md` section 9).
 
 ## 4. Security
 
@@ -57,7 +61,7 @@ Today I connected the app to Supabase while working with an AI agent. This docum
 
 ## 6. Next step
 
-1. Screen 2 of HARTA, "Create Request", with the visit type and instructions (new columns in the table; Tringa's notes in `HARTA.md` section 9).
+1. Screen 2 of HARTA, "Create Request", with the visit type and instructions (new columns in the table; Tringa continues the UI/UX work, starting from her notes in `HARTA.md` section 9).
 2. Login with Supabase Auth and the Client and Miku roles, so the RLS policies are per user and not for everyone.
 3. Task acceptance by Miku and the visit evidence (GPS, photo, voice).
 
