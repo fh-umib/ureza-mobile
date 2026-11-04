@@ -98,13 +98,14 @@ The existing Expo prototype currently includes:
 - A working home screen with sample tasks.
 - A reusable `TaskCard` component.
 - A task list using `FlatList`.
-- Task status changes using `useState`.
+- Task status changes using `useState`, now saved to Supabase.
 - Dynamic task details using Expo Router.
 - Navigation between the list and task details.
 - Handling of invalid task IDs.
 - A Supabase connection (`src/lib/supabase.ts`); the keys are kept in a local `.env` file that is never committed.
 - The task list loads from a `tasks` table in Supabase and falls back to local sample data when offline.
 - A form that adds a new task from the phone and saves it to Supabase (tested on an iPhone).
+- The task details screen reads the task from Supabase, so tasks added from the phone also open.
 
 The remaining MVP features are planned and have not yet been implemented.
 

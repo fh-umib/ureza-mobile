@@ -87,8 +87,8 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 - Home screen with synthetic inspection tasks
 - Reusable `TaskCard` (Karta e Detyrës) component
 - `FlatList` with unique task IDs
-- Local status changes using `useState`
-- Dynamic `[id].tsx` task-detail screen
+- Status changes saved to Supabase (local fallback when offline)
+- Dynamic `[id].tsx` task-detail screen that reads the task from Supabase
 - List-to-details navigation and invalid-ID handling
 - Supabase connection (`src/lib/supabase.ts`): the task list loads from a `tasks` table and falls back to local sample data when offline
 - A form that adds a new task from the phone and saves it to Supabase
@@ -106,7 +106,7 @@ npm install
 cp .env.example .env
 ```
 
-Open `.env` and fill in `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your own Supabase project. The keys are never committed to Git. In the Supabase SQL Editor, run `supabase/tasks.sql` and then `supabase/tasks_insert.sql` to create the demo `tasks` table (synthetic data, Row Level Security enabled). Then start the app:
+Open `.env` and fill in `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your own Supabase project. The keys are never committed to Git. In the Supabase SQL Editor, run `supabase/tasks.sql`, `supabase/tasks_insert.sql` and `supabase/tasks_update.sql` to create the demo `tasks` table (synthetic data, Row Level Security enabled). Then start the app:
 
 ```bash
 npx expo start -c

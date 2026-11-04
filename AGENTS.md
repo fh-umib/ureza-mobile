@@ -55,7 +55,7 @@ Urëza is a mobile app (Route 3 — Startup) that lets a Kosovo diaspora family 
 
 - Backend is Supabase. The client lives in `src/lib/supabase.ts`; it reads `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from `.env`.
 - `.env` is never committed (see `.gitignore`); `.env.example` shows the variable names. Never put a `service_role` key in the app.
-- Row Level Security is always on. The demo `tasks` table (`supabase/tasks.sql`, `supabase/tasks_insert.sql`) lets the `anon` role read rows and insert new ones (status `pending`, title and location 1-80 characters). Update and delete are not allowed. This is acceptable only for synthetic demo data; real data needs login and per-user policies.
+- Row Level Security is always on. The demo `tasks` table (`supabase/tasks.sql`, `supabase/tasks_insert.sql`, `supabase/tasks_update.sql`) lets the `anon` role read rows, insert new ones (status `pending`, title and location 1-80 characters) and change only the `status` column (`pending` or `completed`). Delete is not allowed. This is acceptable only for synthetic demo data; real data needs login and per-user policies.
 
 ### Working rules
 
