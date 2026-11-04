@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   FlatList,
@@ -12,6 +12,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import TaskCard from "../components/TaskCard";
 import { initialTasks, type Task } from "../data/tasks";
+import { supabase } from "../lib/supabase";
+
+type Source = "loading" | "supabase" | "local";
 
 const icons: Record<string, string> = {
   "shtepia-1": "🏠",
@@ -22,7 +25,39 @@ const icons: Record<string, string> = {
 export default function HomeScreen() {
   const router = useRouter();
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [source, setSource] = useState<Source>("loading");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadTasks() {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("id, title, location, status")
+        .order("created_at", { ascending: true });
+
+      if (!active) return;
+
+      if (error || !data) {
+        // Pa rrjet ose pa tabelë: kthehemi te të dhënat lokale.
+        setErrorMessage(error?.message ?? "Nuk u morën të dhëna");
+        setTasks(initialTasks);
+        setSource("local");
+        return;
+      }
+
+      setTasks(data as Task[]);
+      setSource("supabase");
+    }
+
+    loadTasks();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const completedCount = tasks.filter(
     (task) => task.status === "completed"
@@ -35,6 +70,7 @@ export default function HomeScreen() {
         ? "Android"
         : "Web";
 
+  // Statusi ndryshon vetëm lokalisht; ende nuk ruhet në Supabase.
   function toggleStatus(id: string) {
     setTasks((previous) =>
       previous.map((task) =>
@@ -134,6 +170,18 @@ export default function HomeScreen() {
                 </Text>
                 <Text style={styles.sectionSubtitle}>
                   Menaxho vizitat dhe kërkesat
+                </Text>
+                <Text
+                  style={[
+                    styles.sourceNote,
+                    source === "local" && styles.sourceNoteWarn,
+                  ]}
+                >
+                  {source === "loading"
+                    ? "Duke ngarkuar nga Supabase…"
+                    : source === "supabase"
+                      ? `● Të dhëna nga Supabase (${tasks.length})`
+                      : `Offline: të dhëna lokale. ${errorMessage ?? ""}`}
                 </Text>
               </View>
             </View>
@@ -280,6 +328,14 @@ const styles = StyleSheet.create({
     color: "#8798A2",
     fontSize: 13,
     marginTop: 5,
+  },
+  sourceNote: {
+    color: "#738493",
+    fontSize: 12,
+    marginTop: 6,
+  },
+  sourceNoteWarn: {
+    color: "#A96817",
   },
   footer: {
     alignItems: "center",
