@@ -97,12 +97,12 @@ The current prototype uses synthetic data. The remaining features are planned an
 
 ### Rehearsals
 
-- [ ] First rehearsal — Duration: Not determined.
-- [ ] Second rehearsal — Duration: Not determined.
-- [ ] Both team members can explain their sections without reading.
-- [ ] The presentation includes all five required elements.
-- [ ] The Expo application opens successfully on the phone.
-- [ ] The task list and dynamic task details work during the demonstration.
+- [x] First rehearsal — November 3, 2026, started at 13:10. Duration: 50 seconds.
+- [ ] Second rehearsal — Not held; only one rehearsal took place before the presentation.
+- [x] Both team members can explain their sections without reading.
+- [x] The presentation includes all five required elements.
+- [x] The Expo application opens successfully on the phone.
+- [x] The task list and dynamic task details work during the demonstration.
 
 **Presentation target:** Approximately one minute.
 
