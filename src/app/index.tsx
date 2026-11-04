@@ -1,11 +1,13 @@
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   FlatList,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,35 +31,64 @@ export default function HomeScreen() {
   const [source, setSource] = useState<Source>("loading");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    let active = true;
+  // Formulari "Shto detyrë" (M2)
+  const [newTitle, setNewTitle] = useState("");
+  const [newLocation, setNewLocation] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [formMessage, setFormMessage] = useState<string | null>(null);
 
-    async function loadTasks() {
-      const { data, error } = await supabase
-        .from("tasks")
-        .select("id, title, location, status")
-        .order("created_at", { ascending: true });
+  const loadTasks = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("id, title, location, status")
+      .order("created_at", { ascending: false }); // më e reja në krye
 
-      if (!active) return;
-
-      if (error || !data) {
-        // Pa rrjet ose pa tabelë: kthehemi te të dhënat lokale.
-        setErrorMessage(error?.message ?? "Nuk u morën të dhëna");
-        setTasks(initialTasks);
-        setSource("local");
-        return;
-      }
-
-      setTasks(data as Task[]);
-      setSource("supabase");
+    if (error || !data) {
+      // Pa rrjet ose pa tabelë: kthehemi te të dhënat lokale.
+      setErrorMessage(error?.message ?? "Nuk u morën të dhëna");
+      setTasks(initialTasks);
+      setSource("local");
+      return;
     }
 
-    loadTasks();
-
-    return () => {
-      active = false;
-    };
+    setTasks(data as Task[]);
+    setSource("supabase");
   }, []);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
+  // M2: përdoruesi shton një detyrë të re; ruhet në Supabase.
+  async function addTask() {
+    const title = newTitle.trim();
+    const location = newLocation.trim();
+
+    if (!title || !location) {
+      setFormMessage("Shkruaj titullin dhe vendndodhjen.");
+      return;
+    }
+
+    setSaving(true);
+    setFormMessage(null);
+
+    // id dhe created_at i jep vetë baza; statusi fillon "pending".
+    const { error } = await supabase
+      .from("tasks")
+      .insert({ title, location, status: "pending" });
+
+    setSaving(false);
+
+    if (error) {
+      setFormMessage(`Nuk u ruajt: ${error.message}`);
+      return;
+    }
+
+    setNewTitle("");
+    setNewLocation("");
+    setFormMessage("✓ U ruajt në Supabase.");
+    await loadTasks();
+  }
 
   const completedCount = tasks.filter(
     (task) => task.status === "completed"
@@ -108,6 +139,7 @@ export default function HomeScreen() {
         data={tasks}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View>
             <View style={styles.brandRow}>
@@ -184,6 +216,41 @@ export default function HomeScreen() {
                       : `Offline: të dhëna lokale. ${errorMessage ?? ""}`}
                 </Text>
               </View>
+            </View>
+
+            <View style={styles.form}>
+              <Text style={styles.formTitle}>Shto detyrë të re</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Titulli (p.sh. Kontrolli i çatisë)"
+                placeholderTextColor="#8798A2"
+                value={newTitle}
+                onChangeText={setNewTitle}
+                maxLength={80}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Vendndodhja (p.sh. Ferizaj, Kosovë)"
+                placeholderTextColor="#8798A2"
+                value={newLocation}
+                onChangeText={setNewLocation}
+                maxLength={80}
+              />
+
+              <Pressable
+                style={[styles.addButton, saving && styles.addButtonDisabled]}
+                onPress={addTask}
+                disabled={saving}
+              >
+                <Text style={styles.addButtonText}>
+                  {saving ? "Duke ruajtur…" : "Shto detyrën"}
+                </Text>
+              </Pressable>
+
+              {formMessage ? (
+                <Text style={styles.formMessage}>{formMessage}</Text>
+              ) : null}
             </View>
           </View>
         }
@@ -336,6 +403,48 @@ const styles = StyleSheet.create({
   },
   sourceNoteWarn: {
     color: "#A96817",
+  },
+  form: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#E3EAF0",
+    padding: 16,
+    marginBottom: 18,
+    gap: 10,
+  },
+  formTitle: {
+    color: "#173C48",
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#D4E2E7",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: "#173C48",
+    backgroundColor: "#F5F8FA",
+  },
+  addButton: {
+    backgroundColor: "#175568",
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  addButtonDisabled: {
+    opacity: 0.6,
+  },
+  addButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 14,
+  },
+  formMessage: {
+    color: "#647B85",
+    fontSize: 12,
   },
   footer: {
     alignItems: "center",
