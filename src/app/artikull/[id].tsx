@@ -1,4 +1,6 @@
 
+import { useEffect, useState } from "react";
+
 import {
   useLocalSearchParams,
   useRouter,
@@ -13,7 +15,8 @@ import {
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import { findTaskById } from "../../data/tasks";
+import { findTaskById, type Task } from "../../data/tasks";
+import { supabase } from "../../lib/supabase";
 
 export default function TaskDetailsScreen() {
   const router = useRouter();
@@ -23,7 +26,41 @@ export default function TaskDetailsScreen() {
     status?: string;
   }>();
 
-  const task = findTaskById(id);
+  const [task, setTask] = useState<Task | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fromSupabase, setFromSupabase] = useState(false);
+
+  // M3: detajet lexohen nga Supabase sipas id-së, kështu hapen edhe detyrat
+  // e reja. Nëse nuk ka rrjet, përdorim të dhënat lokale.
+  useEffect(() => {
+    let active = true;
+
+    async function loadTask() {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("id, title, location, status")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (!active) return;
+
+      if (error) {
+        setTask(findTaskById(id) ?? null);
+        setFromSupabase(false);
+      } else {
+        setTask((data as Task | null) ?? null);
+        setFromSupabase(true);
+      }
+
+      setLoading(false);
+    }
+
+    loadTask();
+
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   function goBack() {
     if (router.canGoBack()) {
@@ -31,6 +68,18 @@ export default function TaskDetailsScreen() {
     } else {
       router.replace("/");
     }
+  }
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.empty}>
+          <Text style={styles.emptyText}>
+            Duke ngarkuar detyrën…
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   if (!task) {
@@ -132,7 +181,9 @@ export default function TaskDetailsScreen() {
           </View>
 
           <Text style={styles.helper}>
-            Status demonstrues për ushtrimet e Javës 3.
+            {fromSupabase
+              ? "Të dhëna nga Supabase."
+              : "Offline: të dhëna lokale."}
           </Text>
         </View>
 

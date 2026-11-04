@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import TaskCard from "../components/TaskCard";
+import TaskCard, { type TaskStatus } from "../components/TaskCard";
 import { initialTasks, type Task } from "../data/tasks";
 import { supabase } from "../lib/supabase";
 
@@ -30,6 +30,7 @@ export default function HomeScreen() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [source, setSource] = useState<Source>("loading");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Formulari "Shto detyrë" (M2)
   const [newTitle, setNewTitle] = useState("");
@@ -101,21 +102,44 @@ export default function HomeScreen() {
         ? "Android"
         : "Web";
 
-  // Statusi ndryshon vetëm lokalisht; ende nuk ruhet në Supabase.
-  function toggleStatus(id: string) {
+  // M3: statusi ruhet në Supabase. Ekrani ndryshon menjëherë; nëse ruajtja
+  // dështon, e kthejmë statusin mbrapsht dhe e tregojmë gabimin.
+  async function toggleStatus(id: string) {
+    const current = tasks.find((task) => task.id === id);
+    if (!current) return;
+
+    const next: TaskStatus =
+      current.status === "pending" ? "completed" : "pending";
+
+    setStatusMessage(null);
     setTasks((previous) =>
       previous.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status:
-                task.status === "pending"
-                  ? "completed"
-                  : "pending",
-            }
-          : task
+        task.id === id ? { ...task, status: next } : task
       )
     );
+
+    // Offline (të dhëna lokale): ndryshimi mbetet vetëm në telefon.
+    if (source !== "supabase") return;
+
+    const { data, error } = await supabase
+      .from("tasks")
+      .update({ status: next })
+      .eq("id", id)
+      .select("id");
+
+    // RLS mund ta injorojë ndryshimin pa gabim; atëherë "data" është bosh.
+    if (error || !data || data.length === 0) {
+      setTasks((previous) =>
+        previous.map((task) =>
+          task.id === id ? { ...task, status: current.status } : task
+        )
+      );
+      setStatusMessage(
+        `Statusi nuk u ruajt: ${
+          error?.message ?? "Supabase nuk e lejoi ndryshimin"
+        }`
+      );
+    }
   }
 
   function openDetails(task: Task) {
@@ -215,6 +239,11 @@ export default function HomeScreen() {
                       ? `● Të dhëna nga Supabase (${tasks.length})`
                       : `Offline: të dhëna lokale. ${errorMessage ?? ""}`}
                 </Text>
+                {statusMessage ? (
+                  <Text style={[styles.sourceNote, styles.sourceNoteWarn]}>
+                    {statusMessage}
+                  </Text>
+                ) : null}
               </View>
             </View>
 
