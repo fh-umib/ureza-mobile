@@ -80,7 +80,7 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 
 ## 6. Current Prototype
 
-**Stack:** React Native, Expo SDK 58, TypeScript, and Expo Router.
+**Stack:** React Native, Expo SDK 58, TypeScript, Expo Router, and Supabase.
 
 **Implemented and tested:**
 
@@ -90,6 +90,8 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 - Local status changes using `useState`
 - Dynamic `[id].tsx` task-detail screen
 - List-to-details navigation and invalid-ID handling
+- Supabase connection (`src/lib/supabase.ts`): the task list loads from a `tasks` table and falls back to local sample data when offline
+- A form that adds a new task from the phone and saves it to Supabase
 
 **Not yet implemented:** Real request creation, Miku task acceptance, camera/GPS/voice collection, real or simulated AI report screens, approval/dispute workflow, non-medical parent visits, and Oda.
 
@@ -101,8 +103,16 @@ Install Node.js and npm, and Expo Go on the phone. In the project directory run:
 
 ```bash
 npm install
-npm start
+cp .env.example .env
 ```
+
+Open `.env` and fill in `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your own Supabase project. The keys are never committed to Git. In the Supabase SQL Editor, run `supabase/tasks.sql` and then `supabase/tasks_insert.sql` to create the demo `tasks` table (synthetic data, Row Level Security enabled). Then start the app:
+
+```bash
+npx expo start -c
+```
+
+Without a `.env` file the app stops with a message that the variables are missing.
 
 Scan the Expo QR code on the phone. The phone and computer should normally be on the same Wi-Fi network.
 
@@ -127,6 +137,10 @@ The three interviews support the existence of problems for those participants on
 documentation, TypeScript and React Native development, and
 technical troubleshooting.
 
+-- AI: po — Claude (Anthropic) was used in November 2026 for
+`AGENTS.md`, the Supabase connection and SQL files, the add-task
+form, and UI mock-up images.
+
 ### AI Assistance in Code
 
 AI helped draft, explain, and improve parts of the Expo prototype,
@@ -137,6 +151,7 @@ including:
 - Sample task data and TypeScript definitions in `src/data/tasks.ts`.
 - Dynamic task navigation and details in `src/app/artikull/[id].tsx`.
 - Debugging TypeScript errors and Expo navigation issues.
+- The Supabase client, SQL files and the add-task form in `src/lib/supabase.ts`, `supabase/*.sql` and `src/app/index.tsx`.
 
 ### Team Contribution
 

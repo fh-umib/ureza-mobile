@@ -102,6 +102,9 @@ The existing Expo prototype currently includes:
 - Dynamic task details using Expo Router.
 - Navigation between the list and task details.
 - Handling of invalid task IDs.
+- A Supabase connection (`src/lib/supabase.ts`); the keys are kept in a local `.env` file that is never committed.
+- The task list loads from a `tasks` table in Supabase and falls back to local sample data when offline.
+- A form that adds a new task from the phone and saves it to Supabase (tested on an iPhone).
 
 The remaining MVP features are planned and have not yet been implemented.
 
@@ -116,6 +119,7 @@ We use a shared public GitHub repository to organize development, review contrib
 - Organized the user research and project documentation.
 - Tested the application on an iPhone.
 - Reviewed and merged the team's contributions.
+- Set up the Supabase project and connected the prototype to it.
 
 ### Tringa's Contribution
 
@@ -142,6 +146,8 @@ The UI/UX color palette proposed by Tringa is a possible future design direction
 
 -- AI: po — ChatGPT was used to assist with project planning, documentation, technical explanations, prototype development, and debugging.
 
+-- AI: po — Claude (Anthropic) was used in November 2026 for `AGENTS.md`, the Supabase connection and SQL files, the add-task form in `src/app/index.tsx`, and UI mock-up images. GitHub Copilot Chat was used to summarize the project from `AGENTS.md`.
+
 ### AI Assistance in Code
 
 AI helped draft, explain, and improve parts of the Expo prototype, including:
@@ -151,6 +157,7 @@ AI helped draft, explain, and improve parts of the Expo prototype, including:
 - Sample task data and TypeScript definitions in `src/data/tasks.ts`.
 - Dynamic navigation and task details in `src/app/artikull/[id].tsx`.
 - TypeScript troubleshooting and Expo Router navigation.
+- Supabase client, SQL tables and the add-task form in `src/lib/supabase.ts`, `supabase/*.sql` and `src/app/index.tsx`.
 
 ### AI Assistance in Documentation
 
