@@ -39,3 +39,26 @@ Docs: https://docs.expo.dev/eas/index.md
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+
+## Project: Urëza
+
+Urëza is a mobile app (Route 3 — Startup) that lets a Kosovo diaspora family order a trusted local visitor ("Miku") to check a house, land or a parent's wellbeing (non-medical) in Kosovo.
+
+- **One job:** turn a request from abroad into a documented local visit: GPS, live photo (camera only, never the gallery), voice recording and a clear report.
+- **Roles:** Client (creates requests, approves or disputes the report), Miku (accepts, records evidence), Admin (reviews disputes, verifies Mikus). Each role has its own space.
+- **Oda:** the client's chronological visit history. The report is shown in the client's language (AI-generated in the planned version).
+- **UI language:** Albanian. Use only synthetic data (no real names, phone numbers or addresses).
+- **Current prototype:** task list (`FlatList`), `TaskCard`, status toggle with `useState`, task details at `/artikull/[id]` with `useLocalSearchParams`. Everything else is planned, not built.
+- **Docs:** README.md, HARTA.md (product map, 5 screens), EKIPI.md, BISEDAT.md, PITCH.md.
+
+### Data (Supabase)
+
+- Backend is Supabase. The client lives in `src/lib/supabase.ts`; it reads `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from `.env`.
+- `.env` is never committed (see `.gitignore`); `.env.example` shows the variable names. Never put a `service_role` key in the app.
+- Row Level Security is always on. The demo `tasks` table (`supabase/tasks.sql`) is read-only for the `anon` role.
+
+### Working rules
+
+- Commit after every step that works, and read the diff before committing.
+- Test on the phone (Expo Go, SDK 58), not only in code.
+- Declare AI use in commit messages: `-- AI: po — what it helped with`.
