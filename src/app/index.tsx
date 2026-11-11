@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import {
@@ -14,6 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import TaskCard, { type TaskStatus } from "../components/TaskCard";
 import { initialTasks, type Task } from "../data/tasks";
+import { ButoniDil } from "../components/ButoniDil";
+import { useSesioni } from "../lib/sesioni";
 import { supabase } from "../lib/supabase";
 
 type Source = "loading" | "supabase" | "local";
@@ -26,6 +27,7 @@ const icons: Record<string, string> = {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { perdoruesi } = useSesioni();
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [source, setSource] = useState<Source>("loading");
@@ -166,6 +168,10 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <Text>{perdoruesi?.email}</Text>
+              <ButoniDil />
+            </View>
             <View style={styles.brandRow}>
               <View style={styles.logo}>
                 <Text style={styles.logoText}>U</Text>
