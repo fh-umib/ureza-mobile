@@ -44,3 +44,6 @@ example
 # generated native folders
 /ios
 /android
+
+# files Claude sends to the project folder (not part of the app)
+Claude outputs/
