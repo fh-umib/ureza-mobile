@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
@@ -151,10 +151,19 @@ function KartaETeDhenave() {
   const [duke, setDuke] = useState(false);
   const [statusi, setStatusi] = useState<Statusi>(null);
 
-  // what is saved changed (the profile arrived, or the save worked): the form shows it
-  useEffect(() => setEmri(emriRuajtur), [emriRuajtur]);
-  useEffect(() => setTelefoni(telefoniRuajtur), [telefoniRuajtur]);
-  useEffect(() => setGjuha(gjuhaRuajtur), [gjuhaRuajtur]);
+  // what is saved changed (the profile arrived, or the save worked): the form shows it.
+  // Adjusted while rendering (not in an effect), so the old value never shows for a frame.
+  const [ruajturParaprak, setRuajturParaprak] = useState({ emri: emriRuajtur, telefoni: telefoniRuajtur, gjuha: gjuhaRuajtur });
+  if (
+    ruajturParaprak.emri !== emriRuajtur ||
+    ruajturParaprak.telefoni !== telefoniRuajtur ||
+    ruajturParaprak.gjuha !== gjuhaRuajtur
+  ) {
+    if (ruajturParaprak.emri !== emriRuajtur) setEmri(emriRuajtur);
+    if (ruajturParaprak.telefoni !== telefoniRuajtur) setTelefoni(telefoniRuajtur);
+    if (ruajturParaprak.gjuha !== gjuhaRuajtur) setGjuha(gjuhaRuajtur);
+    setRuajturParaprak({ emri: emriRuajtur, telefoni: telefoniRuajtur, gjuha: gjuhaRuajtur });
+  }
 
   const eNdryshuar =
     emri.trim() !== emriRuajtur || pastroTelefonin(telefoni) !== telefoniRuajtur || gjuha !== gjuhaRuajtur;

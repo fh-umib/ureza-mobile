@@ -6,7 +6,9 @@ import * as offline from "./hyrja-offline";
 const burimi: typeof Supabase =
   process.env.EXPO_PUBLIC_OFFLINE === "1"
     ? (offline satisfies typeof Supabase)
-    : require("./hyrja");
+    : // loaded only when online, so offline mode never loads the Supabase client (which needs .env)
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require("./hyrja");
 
 export type { Perdoruesi } from "./hyrja";
 export const { hyr, krijoLlogari, dil } = burimi;

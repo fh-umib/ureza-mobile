@@ -97,6 +97,16 @@ export function useDeshmite(vizitaId: string | undefined, meSkedare = true): Per
   const [burimi, setBurimi] = useState<Burimi>("duke_ngarkuar");
   const gjenerata = useRef(0);
 
+  // Another visit (or the same visit with or without files): clear the previous evidence while
+  // rendering (not in an effect) so it never shows for a frame under the new visit.
+  const celesi = `${vizitaId ?? ""}|${meSkedare}`;
+  const [celesiParaprak, setCelesiParaprak] = useState(celesi);
+  if (celesiParaprak !== celesi) {
+    setCelesiParaprak(celesi);
+    setDeshmite([]);
+    setBurimi("duke_ngarkuar");
+  }
+
   const rifresko = useCallback(async () => {
     if (!vizitaId) return;
     const gj = ++gjenerata.current;
@@ -135,8 +145,7 @@ export function useDeshmite(vizitaId: string | undefined, meSkedare = true): Per
   }, [vizitaId, eLokale, meSkedare]);
 
   useEffect(() => {
-    setDeshmite([]);
-    setBurimi("duke_ngarkuar");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a load: Supabase rows arrive after an await; a local demo visit is read at once
     void rifresko();
   }, [rifresko]);
 

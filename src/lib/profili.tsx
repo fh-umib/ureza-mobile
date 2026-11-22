@@ -172,6 +172,27 @@ export function ProfiliProvider({ children }: { children: ReactNode }) {
   const duke = useRef(false); // the declared role is being saved
   const gjenerata = useRef(0); // drops answers that arrive after the user changed
 
+  // Somebody signed in, signed out or another user signed in: forget the previous user's data.
+  // Done while rendering (not in an effect) so no screen draws a frame with the old user's data.
+  const [uidParaprak, setUidParaprak] = useState(uid);
+  if (uidParaprak !== uid) {
+    setUidParaprak(uid);
+    setProfili(null);
+    setCilesimet(CILESIMET_BAZE);
+    setCilesimetNeLlogari(false);
+    setFshirjaKerkuar(null);
+    setBurimi("duke_ngarkuar");
+    if (!uid) setDeklarimi(null); // signing out forgets what was declared
+  } else if (
+    uid !== null &&
+    deklarimi !== null &&
+    (burimi === "supabase" || burimi === "demo") &&
+    (profili?.roli === "admin" || profili?.roli === deklarimi.roli)
+  ) {
+    // the profile already has the declared role (an Admin stays Admin): nothing left to save
+    setDeklarimi(null);
+  }
+
   const rifresko = useCallback(async () => {
     if (!uid) return;
     const gj = ++gjenerata.current;
@@ -211,14 +232,10 @@ export function ProfiliProvider({ children }: { children: ReactNode }) {
     setBurimi("supabase");
   }, [uid]);
 
-  // Load when somebody signs in; forget everything when they sign out or another user signs in.
+  // Load when somebody signs in (the old data was already cleared while rendering, above).
   useEffect(() => {
     gjenerata.current++;
-    setProfili(null);
-    setCilesimet(CILESIMET_BAZE);
-    setCilesimetNeLlogari(false);
-    setFshirjaKerkuar(null);
-    setBurimi("duke_ngarkuar");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- rifresko sets state only after its first await
     void rifresko();
   }, [uid, rifresko]);
 
@@ -352,11 +369,6 @@ export function ProfiliProvider({ children }: { children: ReactNode }) {
     setDeklarimi((d) => ({ roli: d?.roli ?? "klient", emri }));
   }, []);
 
-  // Signing out forgets what was declared.
-  useEffect(() => {
-    if (!uid) setDeklarimi(null);
-  }, [uid]);
-
   // Signed in with a declared role: make the profile match it. An Admin stays Admin; an
   // account with no profile and no name (an older account) is asked for its name on the role screen.
   const emriPerRuajtje = profili?.emri ?? deklarimi?.emri ?? null;
@@ -371,10 +383,8 @@ export function ProfiliProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (uid === null || deklarimi === null || (burimi !== "supabase" && burimi !== "demo")) return;
-    if (profili?.roli === "admin" || profili?.roli === deklarimi.roli) {
-      setDeklarimi(null);
-      return;
-    }
+    // already matching: cleared while rendering (see the top of ProfiliProvider)
+    if (profili?.roli === "admin" || profili?.roli === deklarimi.roli) return;
     if (emriPerRuajtje === null || duke.current) return;
     duke.current = true;
     void ruaje(emriPerRuajtje, deklarimi.roli).finally(() => {

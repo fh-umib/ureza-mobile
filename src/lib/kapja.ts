@@ -20,7 +20,7 @@ export async function merrVendndodhjen(): Promise<Kapja<Pozicioni>> {
       return { ok: false, mesazh: "Vendndodhja është e fikur në telefon. Ndize dhe provo përsëri." };
     }
     const pozicioni = await Promise.race([
-      Location.getCurrentPositionAsync({ accuracy: Location.LocationAccuracy.High }),
+      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }),
       new Promise<null>((zgjidhe) => setTimeout(() => zgjidhe(null), KOHA_E_LEJUAR_MS)),
     ]);
     if (!pozicioni) {

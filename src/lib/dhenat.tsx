@@ -147,6 +147,17 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
   // times too (deshmia.sql not run), 3 = without the Miku too (roli.sql not run)
   const niveliShtyllave = useRef(0);
 
+  // Somebody signed in, signed out or another user signed in: clear the previous user's rows.
+  // Done while rendering (not in an effect) so no screen draws a frame with the old user's data.
+  const [uidParaprak, setUidParaprak] = useState(uid);
+  if (uidParaprak !== uid) {
+    setUidParaprak(uid);
+    setPronat([]);
+    setVizitat([]);
+    setBurimiPronat("duke_ngarkuar");
+    setBurimiVizitat("duke_ngarkuar");
+  }
+
   const rifresko = useCallback(async () => {
     if (!uid) return;
     const gj = ++gjenerata.current;
@@ -212,16 +223,14 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
     setBurimiVizitat("supabase");
   }, [uid]);
 
-  // Load when somebody signs in; clear everything when they sign out or another user signs in.
+  // Load when somebody signs in; forget what was added locally by the previous user
+  // (the rows on screen were already cleared while rendering, above).
   useEffect(() => {
     gjenerata.current++;
     pronatLokale.current = [];
     vendetLokale.current = new Map();
     vizitatLokale.current = [];
-    setPronat([]);
-    setVizitat([]);
-    setBurimiPronat("duke_ngarkuar");
-    setBurimiVizitat("duke_ngarkuar");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- rifresko sets state only after its first await
     void rifresko();
   }, [uid, rifresko]);
 

@@ -1,5 +1,5 @@
 import { useRouter, type Href } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
@@ -18,7 +18,8 @@ export default function ZgjidhRolin() {
   const router = useRouter();
   const { profili, burimi } = useProfili();
   // opened to choose the first role (as opposed to changing the one already chosen)
-  const eParia = useRef(profili === null).current;
+  // (kept from the first render, so it does not change when the profile arrives)
+  const [eParia] = useState(profili === null);
 
   // If the profile turns up while this screen is open (e.g. after "Provo përsëri"), move on.
   useEffect(() => {

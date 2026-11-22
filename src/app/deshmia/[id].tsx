@@ -361,8 +361,10 @@ function KartaZeri({ d }: { d: PerdorimiIDeshmive }) {
     setDuke(false);
   }
 
-  // a note never runs longer than two minutes
+  // a note never runs longer than two minutes: the recorder (an external system) reached the
+  // limit, so it is stopped and saved, which also shows the saving spinner
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reacts to the recorder's own state, not to React state
     if (gjendja.isRecording && sekonda >= MAKS_ZE_SEKONDA) void ndalo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gjendja.isRecording, sekonda]);

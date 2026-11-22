@@ -66,7 +66,8 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    loadTasks();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a load: loadTasks sets state only after its await
+    void loadTasks();
   }, [loadTasks]);
 
   // M2: the user adds a new task; it is saved to Supabase.

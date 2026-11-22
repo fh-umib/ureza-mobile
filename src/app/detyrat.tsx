@@ -63,6 +63,7 @@ function Lista() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a load: the rows arrive after an await
     void ngarko();
   }, [ngarko, uid]);
 
