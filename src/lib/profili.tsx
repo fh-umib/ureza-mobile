@@ -198,10 +198,12 @@ export function ProfiliProvider({ children }: { children: ReactNode }) {
     const gj = ++gjenerata.current;
     // The settings columns exist after supabase/profili.sql; without them only name and role are read.
     let plote = true;
-    let r: Lexim<Partial<RreshtPlote>[]> = await lexo(supabase.from("profiles").select(SHTYLLAT_PLOTE));
+    // Filtered by id on purpose: the policies return only the user's own row today, but the first
+    // row must never be somebody else's if a role is ever allowed to read more profiles.
+    let r: Lexim<Partial<RreshtPlote>[]> = await lexo(supabase.from("profiles").select(SHTYLLAT_PLOTE).eq("id", uid));
     if (r.tipi === "mungon" && r.kodi === "42703") {
       plote = false;
-      r = await lexo(supabase.from("profiles").select(SHTYLLAT_BAZE));
+      r = await lexo(supabase.from("profiles").select(SHTYLLAT_BAZE).eq("id", uid));
     }
     if (gj !== gjenerata.current) return;
 

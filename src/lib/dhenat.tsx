@@ -16,7 +16,7 @@ import { PRONAT_DEMO, type Lloji, type Prona } from "./pronat";
 import { useProfili } from "./profili";
 import { useSesioni } from "./sesioni";
 import { supabase } from "./supabase";
-import type { LlojiVizites, Statusi, Vizita } from "./vizitat";
+import type { LlojiVizites, Statusi, VendimiAdminit, Vizita } from "./vizitat";
 
 // The signed-in user's properties and visits, shared by every screen.
 // Row Level Security in Supabase returns only their own rows.
@@ -53,6 +53,9 @@ type Dhenat = {
   // The client approves the report, or objects to it with a reason (the database allows this
   // only for the client who owns the visit, and only while the report is ready).
   vendosRaportin: (id: string, miratuar: boolean, arsyeja?: string) => Promise<string | null>;
+  // An admin closes a disputed case: the client was right, or the report stands, with a note
+  // (the database allows this only for an admin, and only once per case).
+  shqyrtoRastin: (id: string, neFavorTeKlientit: boolean, shenimi: string) => Promise<string | null>;
   rifresko: () => Promise<void>;
 };
 
@@ -71,13 +74,20 @@ function meVendetLokale(lista: Prona[], vendet: Map<string, Koordinata | null>):
 }
 const SHTYLLAT_BAZE = "id, prona_id, lloji, data_vizites, udhezime, statusi, created_at";
 // The Miku columns exist after supabase/roli.sql, the start/send times after supabase/deshmia.sql,
-// the decision after supabase/raporti.sql; each level is tried in turn until the database
-// knows all its columns.
+// the decision after supabase/raporti.sql, the admin's review after supabase/admini.sql; each
+// level is tried in turn until the database knows all its columns.
 const SHTYLLAT_ME_MIKUN = `${SHTYLLAT_BAZE}, miku_id, miku_emri, pranuar_at`;
 const SHTYLLAT_ME_DESHMI = `${SHTYLLAT_ME_MIKUN}, filluar_at, derguar_at`;
-const SHTYLLAT_PLOTE = `${SHTYLLAT_ME_DESHMI}, vendosur_at, arsyeja`;
-const NIVELET_E_SHTYLLAVE = [SHTYLLAT_PLOTE, SHTYLLAT_ME_DESHMI, SHTYLLAT_ME_MIKUN, SHTYLLAT_BAZE];
+const SHTYLLAT_ME_VENDIM = `${SHTYLLAT_ME_DESHMI}, vendosur_at, arsyeja`;
+const SHTYLLAT_PLOTE = `${SHTYLLAT_ME_VENDIM}, shqyrtuar_at, vendimi_adminit, shenimi_adminit`;
+const NIVELET_E_SHTYLLAVE = [SHTYLLAT_PLOTE, SHTYLLAT_ME_VENDIM, SHTYLLAT_ME_DESHMI, SHTYLLAT_ME_MIKUN, SHTYLLAT_BAZE];
+// The highest level (index above) at which each step's columns still exist.
+const NIVELI_ADMIN = 0;
+const NIVELI_RAPORTI = 1;
+const NIVELI_DESHMIA = 2;
+const NIVELI_MIKU = 3;
 const MUNGON_RAPORTI = "Për ta vendosur raportin duhet të ekzekutohet supabase/raporti.sql në Supabase.";
+const MUNGON_ADMINI = "Për ta shqyrtuar rastin duhet të ekzekutohet supabase/admini.sql në Supabase.";
 
 type RreshtVizite = {
   id: string;
@@ -94,6 +104,9 @@ type RreshtVizite = {
   derguar_at?: string | null;
   vendosur_at?: string | null;
   arsyeja?: string | null;
+  shqyrtuar_at?: string | null;
+  vendimi_adminit?: VendimiAdminit | null;
+  shenimi_adminit?: string | null;
 };
 
 // Typed as a plain string on purpose: which columns exist depends on which SQL files were run.
@@ -117,6 +130,9 @@ function ngaRreshti(r: RreshtVizite): Vizita {
     derguarAt: r.derguar_at ?? null,
     vendosurAt: r.vendosur_at ?? null,
     arsyeja: r.arsyeja ?? null,
+    shqyrtuarAt: r.shqyrtuar_at ?? null,
+    vendimiAdminit: r.vendimi_adminit ?? null,
+    shenimiAdminit: r.shenimi_adminit ?? null,
   };
 }
 
@@ -143,8 +159,9 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
   const vendetLokale = useRef(new Map<string, Koordinata | null>()); // positions set on demo properties
   const vizitatLokale = useRef<Vizita[]>([]);
   const gjenerata = useRef(0); // drops answers that arrive after the user changed
-  // 0 = all columns, 1 = without the decision (raporti.sql not run), 2 = without the start/send
-  // times too (deshmia.sql not run), 3 = without the Miku too (roli.sql not run)
+  // 0 = all columns, 1 = without the admin's review (admini.sql not run), 2 = without the decision
+  // too (raporti.sql not run), 3 = without the start/send times too (deshmia.sql not run),
+  // 4 = without the Miku too (roli.sql not run)
   const niveliShtyllave = useRef(0);
 
   // Somebody signed in, signed out or another user signed in: clear the previous user's rows.
@@ -332,6 +349,9 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
           derguarAt: null,
           vendosurAt: null,
           arsyeja: null,
+          shqyrtuarAt: null,
+          vendimiAdminit: null,
+          shenimiAdminit: null,
         };
         vizitatLokale.current = [...vizitatLokale.current, vizita];
         setVizitat((v) => rendit([...v, vizita]));
@@ -396,7 +416,7 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
         setVizitat((v) => v.map(pranuar));
         return null;
       }
-      if (burimiProfilit !== "supabase" || niveliShtyllave.current > 2) {
+      if (burimiProfilit !== "supabase" || niveliShtyllave.current > NIVELI_MIKU) {
         return "Për ta pranuar vizitën duhet të ekzekutohet supabase/roli.sql në Supabase.";
       }
       try {
@@ -443,7 +463,7 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
         setVizitat((v) => v.map(ndrysho));
         return null;
       }
-      if (niveliShtyllave.current > 1) {
+      if (niveliShtyllave.current > NIVELI_DESHMIA) {
         return "Për ta vazhduar vizitën duhet të ekzekutohet supabase/deshmia.sql në Supabase.";
       }
       try {
@@ -507,7 +527,7 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
         setVizitat((v) => v.map(ndrysho));
         return null;
       }
-      if (niveliShtyllave.current > 0) return MUNGON_RAPORTI;
+      if (niveliShtyllave.current > NIVELI_RAPORTI) return MUNGON_RAPORTI;
       try {
         const { error } = await supabase.rpc("vendos_raportin", {
           vid: id,
@@ -532,6 +552,45 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
     [uid, rifresko],
   );
 
+  // An admin closes a disputed case. In the database this is one function (shqyrto_rastin in
+  // supabase/admini.sql) that checks the role and that the case is still open.
+  const shqyrtoRastin = useCallback(
+    async (id: string, neFavorTeKlientit: boolean, shenimi: string): Promise<string | null> => {
+      if (!uid) return "Hyr përsëri në llogari.";
+      const shenimiIPastruar = shenimi.trim();
+      if (shenimiIPastruar.length < 10) return "Shkruaj shënimin e vendimit (të paktën 10 shkronja).";
+      if (shenimiIPastruar.length > 500) return "Shënimi është shumë i gjatë (më së shumti 500 shkronja).";
+      if (id.startsWith("lokal-") || niveliShtyllave.current > NIVELI_ADMIN) return MUNGON_ADMINI;
+      try {
+        const { error } = await supabase.rpc("shqyrto_rastin", {
+          vid: id,
+          ne_favor_te_klientit: neFavorTeKlientit,
+          shenimi: shenimiIPastruar,
+        });
+        if (error) {
+          if (error.code === "PGRST202" || error.code === "42883") return MUNGON_ADMINI;
+          if (error.code === "P0002") {
+            void rifresko();
+            return "Ky rast nuk pret më shqyrtim: ndoshta u shqyrtua tashmë. Rifreskova listën.";
+          }
+          return error.code ? error.message : PA_LIDHJE;
+        }
+        const tani = new Date().toISOString();
+        const vendimi: VendimiAdminit = neFavorTeKlientit ? "klienti" : "miku";
+        setVizitat((v) =>
+          v.map((x) =>
+            x.id === id ? { ...x, shqyrtuarAt: tani, vendimiAdminit: vendimi, shenimiAdminit: shenimiIPastruar } : x,
+          ),
+        );
+        void rifresko(); // takes the server's time of the decision
+        return null;
+      } catch {
+        return PA_LIDHJE;
+      }
+    },
+    [uid, rifresko],
+  );
+
   const vlera = useMemo<Dhenat>(
     () => ({
       pronat,
@@ -546,6 +605,7 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
       filloVizite,
       dergoRaportin,
       vendosRaportin,
+      shqyrtoRastin,
       rifresko,
     }),
     [
@@ -561,6 +621,7 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
       filloVizite,
       dergoRaportin,
       vendosRaportin,
+      shqyrtoRastin,
       rifresko,
     ],
   );

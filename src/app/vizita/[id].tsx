@@ -7,6 +7,7 @@ import { Ecuria } from "@/components/Ecuria";
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { PermbledhjaERaportit, VendimiIRaportit } from "@/components/RaportiVizites";
 import { SeShpejti } from "@/components/SeShpejti";
+import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
@@ -37,6 +38,8 @@ export default function DetajetEVizites() {
   const { vizitat, pronat, burimiVizitat, anuloVizite, filloVizite } = useDhenat();
   const { profili } = useProfili();
   const eMiku = profili?.roli === "miku";
+  // an admin only ever sees disputed visits here (supabase/admini.sql)
+  const eAdmin = profili?.roli === "admin";
   const [tab, setTab] = useState<Tab>("permbledhje");
   const [konfirmo, setKonfirmo] = useState(false);
   const [duke, setDuke] = useState(false);
@@ -67,11 +70,20 @@ export default function DetajetEVizites() {
     return <PranoDetyren vizita={vizita} prona={prona} onPranuar={() => setSapoPranuar(true)} />;
   }
 
-  const tekstiIStatusit = eMiku
-    ? (TEKSTI_STATUSIT_MIKU[vizita.statusi] ?? TEKSTI_STATUSIT[vizita.statusi])
-    : vizita.statusi === "pranuar" && vizita.mikuEmri
-      ? `${vizita.mikuEmri} e pranoi kërkesën dhe do të shkojë në datën e caktuar.`
-      : TEKSTI_STATUSIT[vizita.statusi];
+  const shqyrtuar = vizita.statusi === "kundershtuar" && vizita.shqyrtuarAt !== null;
+  const tekstiIStatusit = eAdmin
+    ? shqyrtuar
+      ? "Ti e shqyrtove këtë rast. Vendimi u shfaqet klientit dhe Mikut."
+      : "Klienti e kundërshtoi raportin. Lexo arsyen, shiko dëshmitë dhe vendos."
+    : shqyrtuar
+      ? eMiku
+        ? "Klienti e kundërshtoi raportin dhe admini e shqyrtoi rastin."
+        : "Ti e kundërshtove raportin dhe admini e shqyrtoi rastin."
+      : eMiku
+        ? (TEKSTI_STATUSIT_MIKU[vizita.statusi] ?? TEKSTI_STATUSIT[vizita.statusi])
+        : vizita.statusi === "pranuar" && vizita.mikuEmri
+          ? `${vizita.mikuEmri} e pranoi kërkesën dhe do të shkojë në datën e caktuar.`
+          : TEKSTI_STATUSIT[vizita.statusi];
 
   async function anulo() {
     if (!vizita || duke) return;
@@ -146,7 +158,7 @@ export default function DetajetEVizites() {
           {raportiGati ? <PermbledhjaERaportit vizita={vizita} onShikoDeshmite={() => setTab("deshmi")} /> : null}
 
           <View style={styles.karta}>
-            <Text style={styles.titulli}>{eMiku ? "Çka kërkon klienti" : "Çka kërkove"}</Text>
+            <Text style={styles.titulli}>{eMiku ? "Çka kërkon klienti" : eAdmin ? "Çka kërkoi klienti" : "Çka kërkove"}</Text>
             <Text style={styles.udhezime}>{vizita.udhezime}</Text>
             <Rresht etiketa="Lloji" vlera={titulliIVizites(vizita.lloji)} />
             <Rresht etiketa="Data" vlera={dataEPlote(vizita.data)} />
@@ -208,7 +220,10 @@ export default function DetajetEVizites() {
             </View>
           ) : null}
 
-          {!eMiku ? <VendimiIRaportit vizita={vizita} /> : null}
+          {!eMiku ? <VendimiIRaportit vizita={vizita} admin={eAdmin} /> : null}
+
+          {/* the admin decides here; once decided, every side sees the outcome */}
+          <ShqyrtimiIRastit vizita={vizita} admin={eAdmin} />
 
           {vizita.statusi === "kerkuar" && !eMiku ? (
             <View style={styles.anulim}>
@@ -243,7 +258,8 @@ export default function DetajetEVizites() {
 
       {tab === "deshmi" ? <DeshmiteVizites vizita={vizita} /> : null}
 
-      {tab === "historiku" ? <Ecuria vizita={vizita} miku={eMiku} /> : null}
+      {/* the admin reads the history from the outside, like the Miku ("Klienti e kundërshtoi ...") */}
+      {tab === "historiku" ? <Ecuria vizita={vizita} miku={eMiku || eAdmin} /> : null}
     </EkraniMeHero>
   );
 }

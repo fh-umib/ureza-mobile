@@ -19,7 +19,7 @@ export function DeshmiteVizites({ vizita }: { vizita: Vizita }) {
   const { pronat } = useDhenat();
   const { profili } = useProfili();
   const prona = pronat.find((p) => p.id === vizita.pronaId);
-  const eKlient = profili?.roli !== "miku";
+  const eKlient = profili?.roli !== "miku" && profili?.roli !== "admin";
 
   if (d.burimi === "duke_ngarkuar") return <ActivityIndicator color={colors.petrol} />;
 

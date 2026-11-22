@@ -23,6 +23,18 @@ export type Vizita = {
   // set when the client approves or objects to the report (the reason only when objecting)
   vendosurAt: string | null;
   arsyeja: string | null;
+  // set when an admin closes a disputed case: who was right, and the admin's note
+  shqyrtuarAt: string | null;
+  vendimiAdminit: VendimiAdminit | null;
+  shenimiAdminit: string | null;
+};
+
+// "klienti": the client was right; "miku": the report stands.
+export type VendimiAdminit = "klienti" | "miku";
+
+export const VENDIMET_E_ADMINIT: Record<VendimiAdminit, { titulli: string; teksti: string }> = {
+  klienti: { titulli: "Kundërshtimi u pranua", teksti: "Admini i dha të drejtë klientit." },
+  miku: { titulli: "Raporti qëndron", teksti: "Admini gjeti se vizita u krye siç u kërkua." },
 };
 
 export const LLOJET_E_VIZITES: { vlera: LlojiVizites; titulli: string; nentitulli: string; icon: IconName }[] = [

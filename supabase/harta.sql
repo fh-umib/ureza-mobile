@@ -7,7 +7,8 @@
 --   * the owner (client) reads and sets it;
 --   * a Miku reads it only while they hold the visit: from the moment they accept it until the
 --     client has decided on the report, never on an open request that nobody accepted yet;
---   * an admin reads it;
+--   * an admin reads it only for a property whose visit report was disputed (for the GPS check
+--     of the case, see supabase/admini.sql), never for the others;
 --   * nobody writes the table directly: the position is saved through vendos_vendndodhjen().
 
 -- 1 · The table ------------------------------------------------------------------------
@@ -35,7 +36,10 @@ set search_path = ''
 as $$
   select
     exists (select 1 from public.pronat p where p.id = pid and p.pronari_id = (select auth.uid()))
-    or public.roli_im() = 'admin'
+    or (
+      public.roli_im() = 'admin'
+      and exists (select 1 from public.vizitat v where v.prona_id = pid and v.statusi = 'kundershtuar')
+    )
     or (
       public.roli_im() = 'miku'
       and exists (
@@ -51,7 +55,8 @@ revoke all on function public.mund_ta_shohe_vendin(uuid) from public, anon;
 grant execute on function public.mund_ta_shohe_vendin(uuid) to authenticated;
 
 drop policy if exists "read vendi of own, held or any (admin)" on public.pronat_vendi;
-create policy "read vendi of own, held or any (admin)"
+drop policy if exists "read vendi of own, held or disputed (admin)" on public.pronat_vendi;
+create policy "read vendi of own, held or disputed (admin)"
   on public.pronat_vendi for select to authenticated
   using (public.mund_ta_shohe_vendin(prona_id));
 

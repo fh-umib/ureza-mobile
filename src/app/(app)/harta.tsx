@@ -35,7 +35,7 @@ function shumes(n: number, njejes: string, shumes: string): string {
 
 // The map tab (design: Harta). The client sees their properties on the map of Kosovo and the visits
 // of the selected one; a Miku sees the properties of the visits they can see (the exact position only
-// of the ones they have accepted); the admin's map comes with the admin step.
+// of the ones they have accepted); the admin's map comes in a later step (the panel is on Paneli).
 export default function Harta() {
   const { profili } = useProfili();
   const roli = profili?.roli ?? "klient";
@@ -43,7 +43,7 @@ export default function Harta() {
   if (roli === "admin") {
     return (
       <EkraniMeHero kicker="HARTA" title="Harta" subtitle="Rastet në një vend.">
-        <SeShpejti titulli="Harta e rasteve" teksti="Harta me rastet e të gjitha vizitave vjen me hapin e Adminit." />
+        <SeShpejti titulli="Harta e rasteve" teksti="Harta e rasteve të kundërshtuara vjen më vonë. Rastet dhe dëshmitë e tyre janë te Paneli." />
       </EkraniMeHero>
     );
   }

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/ureza";
-import { dataMeOre, hapiIVizites, type Vizita } from "@/lib/vizitat";
+import { VENDIMET_E_ADMINIT, dataMeOre, hapiIVizites, type Vizita } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
 
@@ -52,6 +52,18 @@ export function Ecuria({ vizita, miku = false }: { vizita: Vizita; miku?: boolea
       arritur: vendim,
     },
   ];
+
+  // a disputed report gets one more step: the admin's review (supabase/admini.sql)
+  if (vizita.statusi === "kundershtuar") {
+    hapat.push({
+      titulli: vizita.shqyrtuarAt ? "Admini e shqyrtoi rastin" : "Shqyrtimi i adminit",
+      nen:
+        vizita.shqyrtuarAt && vizita.vendimiAdminit
+          ? `${VENDIMET_E_ADMINIT[vizita.vendimiAdminit].titulli} · ${dataMeOre(vizita.shqyrtuarAt)}`
+          : "Në pritje",
+      arritur: vizita.shqyrtuarAt !== null,
+    });
+  }
 
   return (
     <View style={styles.karta}>

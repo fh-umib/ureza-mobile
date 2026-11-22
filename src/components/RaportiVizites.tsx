@@ -61,7 +61,8 @@ export function PermbledhjaERaportit({ vizita, onShikoDeshmite }: { vizita: Vizi
 }
 
 // The decision: two buttons while the report waits, the outcome once the client has decided.
-export function VendimiIRaportit({ vizita }: { vizita: Vizita }) {
+// `admin` words the dispute card for the admin who reviews it ("Kundërshtimi i klientit").
+export function VendimiIRaportit({ vizita, admin = false }: { vizita: Vizita; admin?: boolean }) {
   const { vendosRaportin } = useDhenat();
   const revealSoon = useRevealOnFocus();
   const [paneli, setPaneli] = useState<"mirato" | "kundershto" | null>(null);
@@ -89,11 +90,14 @@ export function VendimiIRaportit({ vizita }: { vizita: Vizita }) {
       <View style={[styles.karta, styles.kundershtuar]}>
         <View style={styles.rreshtIkone}>
           <UrezaIcon name="warning" size={22} color={KUNDERSHTO} strokeWidth={2.4} />
-          <Text style={[styles.titulli, styles.kundershtuarTitulli]}>Kundërshtimi yt</Text>
+          <Text style={[styles.titulli, styles.kundershtuarTitulli]}>
+            {admin ? "Kundërshtimi i klientit" : "Kundërshtimi yt"}
+          </Text>
         </View>
         {vizita.arsyeja ? <Text style={styles.arsyeja}>“{vizita.arsyeja}”</Text> : null}
         <Text style={styles.kundershtuarTekst}>
-          {vizita.vendosurAt ? `Dërguar më ${dataMeOre(vizita.vendosurAt)}. ` : ""}Një admin e shqyrton rastin.
+          {vizita.vendosurAt ? `Dërguar më ${dataMeOre(vizita.vendosurAt)}. ` : ""}
+          {vizita.shqyrtuarAt ? "" : admin ? "Rasti pret vendimin tënd." : "Një admin e shqyrton rastin."}
         </Text>
       </View>
     );

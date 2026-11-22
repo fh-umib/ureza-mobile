@@ -5,10 +5,11 @@ import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
 import { useSesioni } from "@/lib/sesioni";
-import { LLOJET_E_VIZITES, dataShkurt, titulliIVizites, type Vizita } from "@/lib/vizitat";
+import { LLOJET_E_VIZITES, dataMeOre, dataShkurt, titulliIVizites, type Vizita } from "@/lib/vizitat";
 
 // The Miku's home (design: Miku pranon detyrën): the requests that wait for a Miku, and
 // the visits this Miku has accepted. Opening a request shows its details and the button to accept.
@@ -20,6 +21,7 @@ export default function KerkesatPerMiken() {
   const tePritura = vizitat.filter((v) => v.statusi === "kerkuar").sort((a, b) => a.data.localeCompare(b.data));
   const timet = vizitat.filter((v) => v.mikuId !== null && v.mikuId === perdoruesi?.id);
   const demo = burimiVizitat === "demo" || burimiProfilit === "demo";
+  const verifikimi = useVerifikimiIm();
 
   return (
     <EkraniMeHero
@@ -45,6 +47,21 @@ export default function KerkesatPerMiken() {
           <Text style={styles.shenimText}>
             Modalitet provë: shfaqen vetëm kërkesat e bëra në këtë telefon. Pas supabase/roli.sql shfaqen kërkesat e
             vërteta të klientëve.
+          </Text>
+        </View>
+      ) : null}
+
+      {verifikimi.njohur ? (
+        <View style={[styles.shenim, verifikimi.verifikuarAt ? styles.verifikuar : styles.paVerifikuar]}>
+          <UrezaIcon
+            name={verifikimi.verifikuarAt ? "shield" : "clock"}
+            size={20}
+            color={verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210"}
+          />
+          <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210" }]}>
+            {verifikimi.verifikuarAt
+              ? `Je Miku i verifikuar nga ekipi i Urëzës (që më ${dataMeOre(verifikimi.verifikuarAt)}).`
+              : "Ekipi i Urëzës ende nuk të ka verifikuar. Deri atëherë mund të pranosh kërkesa si zakonisht."}
           </Text>
         </View>
       ) : null}
@@ -118,6 +135,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8F5F3",
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  verifikuar: { backgroundColor: "#E4F6EB" },
+  paVerifikuar: { backgroundColor: "#FFF2DE" },
   rreshti: {
     flexDirection: "row",
     alignItems: "flex-start",
