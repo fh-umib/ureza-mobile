@@ -81,13 +81,15 @@ The three "next steps" above are now done, apart from the Admin side.
 | Welcome, role choice, new sign-in and a tab space per role | Done | `8e0b47d` |
 | ESLint set up; lint and typecheck pass | Done | `558a03f` |
 | Admin panel: status counts, dispute review with a decision and a note, Miku verification | Done | `5204585` |
+| Each role lands on its own home (an Admin goes straight to Paneli) | Done | `ff757c2` |
+| Admin dashboard: key figures, 14-day chart, visits per step and kind | Done | this commit |
 | AI report in the client's language | Not built | — |
 
 **What works now:** a new user sees the welcome screen, chooses Klient or Miku and signs in. The client adds properties (with the position on the map), requests a visit, follows its steps on Ballina and reads the report; a Miku accepts the request, starts the visit and sends a GPS position, live photos and a voice note; the client approves or disputes, and the visit stays in Oda. I tested every screen on my phone.
 
 **Security:** every new table has Row Level Security by owner and by role; the photos and voice notes are in a private storage bucket that only the visit's client and Miku can read; the Admin role is given only in SQL. The SQL files use example emails (`klienti@example.com`, `admini@example.com`) instead of a real address.
 
-**Admin panel:** the admin sees how many visits are in each status (numbers only), opens each disputed report with the evidence and the client's reason, and closes it with a decision ("Klienti ka të drejtë" or "Raporti qëndron") and a note that the client and the Miku read. The admin also verifies Mikus; a Miku sees their own status on Kërkesat. The SQL (`supabase/admini.sql`) was tested on a local PostgreSQL 18 with 24 checks for the admin, client and Miku roles.
+**Admin panel:** the admin opens on a dashboard (cases waiting for a decision, visits in total, approval rate, average time to acceptance, verified Mikus, requests of the last 14 days, visits per step and kind; numbers only), opens each disputed report with the evidence and the client's reason, and closes it with a decision ("Klienti ka të drejtë" or "Raporti qëndron") and a note that the client and the Miku read. The admin also verifies Mikus; a Miku sees their own status on Kërkesat. The SQL (`supabase/admini.sql`) was tested on a local PostgreSQL 18 with 24 checks for the admin, client and Miku roles.
 
 **Next step:**
 1. Decide whether a Miku must be verified before accepting a visit.

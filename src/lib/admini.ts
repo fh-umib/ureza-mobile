@@ -4,11 +4,31 @@ import { useCallback, useRef, useState } from "react";
 import { PA_LIDHJE, lexo } from "./lexo";
 import { useSesioni } from "./sesioni";
 import { supabase } from "./supabase";
-import type { Statusi } from "./vizitat";
+import type { LlojiVizites, Statusi } from "./vizitat";
 
-// The Admin panel's own data (supabase/admini.sql): how many visits are in each status (numbers
-// only, the admin never reads the other visits), and the Mikus with their verification.
+// The Admin panel's own data (supabase/admini.sql): the dashboard numbers (numbers only, the
+// admin never reads the other visits), and the Mikus with their verification.
 // The disputed visits themselves come through DhenatProvider, like any other visit.
+
+export type TreguesitEPanelit = {
+  statuset: Partial<Record<Statusi, number>>;
+  llojet: Partial<Record<LlojiVizites, number>>;
+  ditet: { dita: string; numri: number }[]; // the last 14 days, oldest first, "YYYY-MM-DD"
+  pranimiMesatarOre: number | null; // average hours from a request to its acceptance
+  klientet: number;
+  mikut: number;
+  mikutVerifikuar: number;
+};
+
+const TREGUESIT_BOSH: TreguesitEPanelit = {
+  statuset: {},
+  llojet: {},
+  ditet: [],
+  pranimiMesatarOre: null,
+  klientet: 0,
+  mikut: 0,
+  mikutVerifikuar: 0,
+};
 
 export type MikuPerAdminin = {
   id: string;
@@ -23,7 +43,28 @@ export type BurimiIPanelit = "duke_ngarkuar" | "supabase" | "mungon" | "pa_lidhj
 
 export const MUNGON_ADMINI_SQL = "Paneli punon pasi të ekzekutohet supabase/admini.sql në Supabase.";
 
-type RreshtNumri = { gjendja: Statusi; numri: number | string };
+type TreguesitNgaServeri = {
+  statuset?: Partial<Record<Statusi, number>>;
+  llojet?: Partial<Record<LlojiVizites, number>>;
+  ditet?: { dita: string; numri: number }[] | null;
+  pranimi_mesatar_ore?: number | string | null;
+  klientet?: number;
+  mikut?: number;
+  mikut_verifikuar?: number;
+};
+
+function ngaServeri(t: TreguesitNgaServeri): TreguesitEPanelit {
+  return {
+    statuset: t.statuset ?? {},
+    llojet: t.llojet ?? {},
+    ditet: (t.ditet ?? []).map((d) => ({ dita: d.dita, numri: Number(d.numri) })),
+    pranimiMesatarOre: t.pranimi_mesatar_ore === null || t.pranimi_mesatar_ore === undefined ? null : Number(t.pranimi_mesatar_ore),
+    klientet: Number(t.klientet ?? 0),
+    mikut: Number(t.mikut ?? 0),
+    mikutVerifikuar: Number(t.mikut_verifikuar ?? 0),
+  };
+}
+
 type RreshtMiku = {
   miku_id: string;
   emri: string;
@@ -33,23 +74,28 @@ type RreshtMiku = {
   vizita: number | string;
 };
 
-// "Function not found" (the SQL file was not run) and "not an admin" get their own words.
+// "Function not found" (the SQL file was not run, or an older version of it) and "not an admin"
+// get their own words.
 function mesazhiINgarkimit(kodi: string | undefined): string {
   if (kodi === "42501") return "Kjo llogari nuk ka rolin Admin në databazë.";
+  if (kodi === "PGRST202" || kodi === "42883") {
+    return "Paneli i ri kërkon versionin e fundit të supabase/admini.sql: ekzekutoje sërish në Supabase.";
+  }
   return MUNGON_ADMINI_SQL;
 }
 
 export function usePaneliIAdminit() {
-  const [numrat, setNumrat] = useState<Partial<Record<Statusi, number>>>({});
+  const [treguesit, setTreguesit] = useState<TreguesitEPanelit>(TREGUESIT_BOSH);
   const [mikut, setMikut] = useState<MikuPerAdminin[]>([]);
   const [burimi, setBurimi] = useState<BurimiIPanelit>("duke_ngarkuar");
   const [mesazhi, setMesazhi] = useState<string | null>(null);
+  const [perditesuarAt, setPerditesuarAt] = useState<string | null>(null);
   const gjenerata = useRef(0);
 
   const rifresko = useCallback(async () => {
     const gj = ++gjenerata.current;
     const [p, m] = await Promise.all([
-      lexo<RreshtNumri[]>(supabase.rpc("permbledhja_e_vizitave")),
+      lexo<TreguesitNgaServeri>(supabase.rpc("treguesit_e_panelit")),
       lexo<RreshtMiku[]>(supabase.rpc("mikut_per_adminin")),
     ]);
     if (gj !== gjenerata.current) return;
@@ -64,9 +110,7 @@ export function usePaneliIAdminit() {
       setBurimi("mungon");
       return;
     }
-    const n: Partial<Record<Statusi, number>> = {};
-    for (const r of p.data) n[r.gjendja] = Number(r.numri);
-    setNumrat(n);
+    setTreguesit(ngaServeri(p.data));
     setMikut(
       m.data.map((r) => ({
         id: r.miku_id,
@@ -78,6 +122,7 @@ export function usePaneliIAdminit() {
       })),
     );
     setMesazhi(null);
+    setPerditesuarAt(new Date().toISOString());
     setBurimi("supabase");
   }, []);
 
@@ -97,6 +142,7 @@ export function usePaneliIAdminit() {
         return error.code ? error.message : PA_LIDHJE;
       }
       const koha = typeof data === "string" ? data : null;
+      // (the dashboard counts the verified Mikus from this list, so it follows at once)
       setMikut((lista) => lista.map((x) => (x.id === id ? { ...x, verifikuarAt: koha } : x)));
       return null;
     } catch {
@@ -104,7 +150,7 @@ export function usePaneliIAdminit() {
     }
   }, []);
 
-  return { numrat, mikut, burimi, mesazhi, rifresko, verifikoMikun };
+  return { treguesit, mikut, burimi, mesazhi, perditesuarAt, rifresko, verifikoMikun };
 }
 
 // For a Miku: has the Urëza team verified this account? `njohur` is false while loading, offline,

@@ -4,7 +4,8 @@
 -- raporti.sql first. The admin role itself is given by hand (see the end of roli.sql).
 --
 -- What an admin can do, and nothing more:
---   * see how many visits there are in each status (numbers only, through one function);
+--   * see the dashboard numbers (visits per status, kind and day, the average time to
+--     acceptance, the number of profiles), through treguesit_e_panelit(), never a visit itself;
 --   * read a visit only when its client has disputed the report ('kundershtuar'), with the
 --     property name, the evidence rows and the evidence files of that visit;
 --   * close a disputed case with a decision and a note, through shqyrto_rastin();
@@ -88,26 +89,65 @@ create policy "admin reads files of disputed vizitat"
     )
   );
 
--- 3 · The overview: how many visits are in each status (numbers only) --------------------
+-- 3 · The dashboard: numbers only, never a visit's content ------------------------------
+-- One JSON object for the Paneli tab:
+--   statuset             visits per status, e.g. {"kerkuar": 3, "miratuar": 5}
+--   llojet               visits per kind ("inspektim", "kujdes")
+--   ditet                requests per day for the last 14 days, oldest first, Kosovo time
+--   pranimi_mesatar_ore  average hours from a request to a Miku accepting it (null: none yet)
+--   klientet, mikut, mikut_verifikuar   number of profiles
 -- Errors: 42501 the caller is not an admin.
-create or replace function public.permbledhja_e_vizitave()
-returns table (gjendja text, numri bigint)
+-- (It replaces permbledhja_e_vizitave(), which gave the status counts only.)
+drop function if exists public.permbledhja_e_vizitave();
+
+create or replace function public.treguesit_e_panelit()
+returns jsonb
 language plpgsql
 stable
 security definer
 set search_path = ''
 as $$
+declare
+  sot date := (now() at time zone 'Europe/Belgrade')::date;  -- Kosovo's time zone
+  rezultati jsonb;
 begin
   if public.roli_im() is distinct from 'admin' then
-    raise exception 'Vetëm admini e sheh këtë përmbledhje.' using errcode = '42501';
+    raise exception 'Vetëm admini e sheh panelin.' using errcode = '42501';
   end if;
-  return query
-    select v.statusi, count(*) from public.vizitat v group by v.statusi;
+
+  select jsonb_build_object(
+    'statuset', coalesce(
+      (select jsonb_object_agg(s.statusi, s.numri)
+         from (select v.statusi, count(*) as numri from public.vizitat v group by v.statusi) s),
+      '{}'::jsonb),
+    'llojet', coalesce(
+      (select jsonb_object_agg(s.lloji, s.numri)
+         from (select v.lloji, count(*) as numri from public.vizitat v group by v.lloji) s),
+      '{}'::jsonb),
+    'ditet', (
+      select jsonb_agg(jsonb_build_object('dita', d.dita, 'numri', coalesce(k.numri, 0)) order by d.dita)
+        from (select (sot - i) as dita from generate_series(0, 13) as i) d
+        left join (
+          select (v.created_at at time zone 'Europe/Belgrade')::date as dita, count(*) as numri
+            from public.vizitat v
+           where v.created_at >= (sot - 13)::timestamp at time zone 'Europe/Belgrade'
+           group by 1
+        ) k on k.dita = d.dita),
+    'pranimi_mesatar_ore', (
+      select round((extract(epoch from avg(v.pranuar_at - v.created_at)) / 3600.0)::numeric, 1)
+        from public.vizitat v
+       where v.pranuar_at is not null),
+    'klientet', (select count(*) from public.profiles p where p.roli = 'klient'),
+    'mikut', (select count(*) from public.profiles p where p.roli = 'miku'),
+    'mikut_verifikuar', (select count(*) from public.profiles p where p.roli = 'miku' and p.verifikuar_at is not null)
+  ) into rezultati;
+
+  return rezultati;
 end;
 $$;
 
-revoke all on function public.permbledhja_e_vizitave() from public, anon;
-grant execute on function public.permbledhja_e_vizitave() to authenticated;
+revoke all on function public.treguesit_e_panelit() from public, anon;
+grant execute on function public.treguesit_e_panelit() to authenticated;
 
 -- 4 · The Mikus ---------------------------------------------------------------------------
 -- Every profile with the Miku role, the ones not verified yet first, with the number of visits

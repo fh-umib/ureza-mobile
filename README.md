@@ -91,7 +91,7 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 - Miku accepts a request, starts the visit and records evidence: GPS, live camera photos (never the gallery) and a voice note, stored in a private Supabase Storage bucket
 - The client reads the report and approves or disputes it; Oda shows every visit by month
 - Profile: personal data, report language, notification choices, data download and account-deletion request
-- Admin panel: visit counts by status, disputed reports with the evidence and the client's reason, a decision with a note that the client and the Miku read, and Miku verification
+- Admin panel: a dashboard (cases waiting for a decision, key figures, requests of the last 14 days, visits per step and kind), disputed reports with the evidence and the client's reason, a decision with a note that the client and the Miku read, and Miku verification
 - Row Level Security on every table, by owner and by role
 
 **From the course weeks (still in the project):**
