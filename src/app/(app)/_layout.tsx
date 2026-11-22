@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { faqjaLejohet } from "@/lib/faqet";
 import { useProfili, type Roli } from "@/lib/profili";
 
 // The signed-in app. Each role sees its own tabs:
@@ -12,11 +13,13 @@ import { useProfili, type Roli } from "@/lib/profili";
 //   Admin:  Paneli, Profili
 export const unstable_settings = { anchor: "ballina" };
 
-function tab(label: string, icon: IconName, roleteQeShohin: Roli[], roli: Roli) {
+// The roles that see each tab come from ROLET_E_FAQES (src/lib/faqet.ts), the same list the root
+// layout uses to send a user away from another role's screen.
+function tab(label: string, icon: IconName, faqja: string, roli: Roli) {
   return {
     title: label,
     // `href: null` hides the tab button for the other roles
-    href: roleteQeShohin.includes(roli) ? undefined : null,
+    href: faqjaLejohet(roli, faqja) ? undefined : null,
     tabBarLabel: ({ focused }: { focused: boolean }) => (
       <Text style={[styles.label, focused && styles.labelActive]}>{label}</Text>
     ),
@@ -49,13 +52,13 @@ export default function AppTabs() {
         tabBarItemStyle: { minHeight: 52 },
       }}
     >
-      <Tabs.Screen name="ballina" options={tab("Ballina", "home", ["klient"], roli)} />
-      <Tabs.Screen name="miku" options={tab("Kërkesat", "list", ["miku"], roli)} />
-      <Tabs.Screen name="admini" options={tab("Paneli", "shield", ["admin"], roli)} />
-      <Tabs.Screen name="pronat" options={tab("Pronat", "key", ["klient"], roli)} />
-      <Tabs.Screen name="harta" options={tab("Harta", "map", ["klient", "miku", "admin"], roli)} />
-      <Tabs.Screen name="oda" options={tab("Oda", "list", ["klient"], roli)} />
-      <Tabs.Screen name="profili" options={tab("Profili", "user", ["klient", "miku", "admin"], roli)} />
+      <Tabs.Screen name="ballina" options={tab("Ballina", "home", "/ballina", roli)} />
+      <Tabs.Screen name="miku" options={tab("Kërkesat", "list", "/miku", roli)} />
+      <Tabs.Screen name="admini" options={tab("Paneli", "shield", "/admini", roli)} />
+      <Tabs.Screen name="pronat" options={tab("Pronat", "key", "/pronat", roli)} />
+      <Tabs.Screen name="harta" options={tab("Harta", "map", "/harta", roli)} />
+      <Tabs.Screen name="oda" options={tab("Oda", "list", "/oda", roli)} />
+      <Tabs.Screen name="profili" options={tab("Profili", "user", "/profili", roli)} />
     </Tabs>
   );
 }

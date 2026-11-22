@@ -4,7 +4,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import { colors } from "@/constants/ureza";
 import { DhenatProvider } from "@/lib/dhenat";
-import { FAQJA_KRYESORE } from "@/lib/faqet";
+import { FAQJA_KRYESORE, faqjaLejohet } from "@/lib/faqet";
 import { ProfiliProvider, useProfili } from "@/lib/profili";
 import { SesioniProvider, useSesioni } from "@/lib/sesioni";
 
@@ -25,12 +25,14 @@ function Rrugat() {
   // Where to go next:
   //  * no role chosen yet -> the "Zgjidh rolin" screen;
   //  * "/" is index.tsx, the course's task list (it stays in the project as the history of
-  //    the weekly tasks) -> signed in, the app opens on the home tab of the user's role.
+  //    the weekly tasks) -> signed in, the app opens on the home tab of the user's role;
+  //  * a screen of another role (e.g. Ballina, after the account was made Admin in Supabase)
+  //    -> the home tab of the user's role, so an Admin always lands on Paneli.
   let drejto: Href | null = null;
   if (hyri && !dukeLexuarProfilin) {
     if (!profili) {
       if (pathname !== "/roli") drejto = "/roli";
-    } else if (pathname === "/") {
+    } else if (pathname === "/" || !faqjaLejohet(profili.roli, pathname)) {
       drejto = FAQJA_KRYESORE[profili.roli] as Href;
     }
   }
