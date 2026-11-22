@@ -44,7 +44,7 @@ The first target user is **a diaspora homeowner who needs a trusted property ins
 - **Miku (local visitor):** Accepts a task, completes the visit, and submits evidence.
 - **Admin:** Reviews disputed submissions and supports accountability.
 
-The initial prototype does not yet have real accounts or backend authentication.
+The prototype has real accounts (Supabase Auth). Each account chooses Klient or Miku and can switch from the profile to try both sides; Admin is given only in SQL.
 
 ## 4. Main Service Flow
 
@@ -82,7 +82,18 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 
 **Stack:** React Native, Expo SDK 58, TypeScript, Expo Router, and Supabase.
 
-**Implemented and tested:**
+**Implemented and tested on the phone (November 2026):**
+
+- Welcome screen, role choice ("Kush je ti?") and sign-in / account creation with Supabase Auth
+- A tab space per role: Klient (Ballina, Pronat, Harta, Oda, Profili), Miku (Kërkesat, Harta, Profili), Admin (placeholder)
+- Properties with their exact position on a map of Kosovo
+- Visit requests: property, inspection or non-medical care visit, day and instructions
+- Miku accepts a request, starts the visit and records evidence: GPS, live camera photos (never the gallery) and a voice note, stored in a private Supabase Storage bucket
+- The client reads the report and approves or disputes it; Oda shows every visit by month
+- Profile: personal data, report language, notification choices, data download and account-deletion request
+- Row Level Security on every table, by owner and by role
+
+**From the course weeks (still in the project):**
 
 - Home screen with synthetic inspection tasks
 - Reusable `TaskCard` (Karta e Detyrës) component
@@ -93,7 +104,7 @@ See [HARTA.md](HARTA.md) for the five-screen flow and scope decisions.
 - Supabase connection (`src/lib/supabase.ts`): the task list loads from a `tasks` table and falls back to local sample data when offline
 - A form that adds a new task from the phone and saves it to Supabase
 
-**Not yet implemented:** Real request creation, Miku task acceptance, camera/GPS/voice collection, real or simulated AI report screens, approval/dispute workflow, non-medical parent visits, and Oda.
+**Not yet implemented:** the Admin panel (dispute review, Miku verification) and the AI report in the client's language (the report currently lists the evidence the Miku sent).
 
 The current data is synthetic. Urëza is not yet a live service.
 
@@ -106,7 +117,7 @@ npm install
 cp .env.example .env
 ```
 
-Open `.env` and fill in `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your own Supabase project. The keys are never committed to Git. In the Supabase SQL Editor, run `supabase/tasks.sql`, `supabase/tasks_insert.sql` and `supabase/tasks_update.sql` to create the demo `tasks` table (synthetic data, Row Level Security enabled). Then start the app:
+Open `.env` and fill in `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your own Supabase project. The keys are never committed to Git. In the Supabase SQL Editor, run `supabase/tasks.sql`, `supabase/tasks_insert.sql` and `supabase/tasks_update.sql` to create the demo `tasks` table (synthetic data, Row Level Security enabled), then `supabase/j6-hyrja-rls.sql`. For the Urëza screens, run in this order: `pronat.sql`, `vizitat.sql`, `roli.sql`, `profili.sql`, `harta.sql`, `deshmia.sql`, `raporti.sql`. Each file is safe to run again; until a file is run, the app shows demo data and says so. Then start the app:
 
 ```bash
 npx expo start -c
@@ -139,7 +150,9 @@ technical troubleshooting.
 
 -- AI: po — Claude (Anthropic) was used in November 2026 for
 `AGENTS.md`, the Supabase connection and SQL files, the add-task
-form, and UI mock-up images.
+form, and UI mock-up images; and later in November 2026 for the
+sign-in, the role-based screens, the evidence capture, the report
+decision and their SQL and RLS policies.
 
 ### AI Assistance in Code
 

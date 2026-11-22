@@ -65,6 +65,33 @@ Today I connected the app to Supabase while working with an AI agent. This docum
 2. Login with Supabase Auth and the Client and Miku roles, so the RLS policies are per user and not for everyone.
 3. Task acceptance by Miku and the visit evidence (GPS, photo, voice).
 
-## 7. AI usage declaration
+## 7. Update — after J5 (up to November 22, 2026)
+
+The three "next steps" above are now done, apart from the Admin side.
+
+| Step | Status | Commits |
+|---|---|---|
+| Login with Supabase Auth, per-user RLS on `tasks` (J6) | Done | `91f4c09`, `ff72f35`, `a06e104` |
+| Packages for location, camera, audio, maps and SVG; camera-only permissions | Done | `e45cf78` |
+| Keyboard only scrolls when it would cover the field | Done | `c5d9848` |
+| Urëza design kit (colours, icons, hero screen) | Done | `b2c7094` |
+| Properties and visits with owner RLS (`pronat`, `vizitat`, `harta`) | Done | `f04f006` |
+| Roles Klient / Miku / Admin and profile settings, RLS by role | Done | `fafc8b9` |
+| Visit evidence (GPS, live photo, voice) and the client's approve/dispute decision | Done | `4877542`, `91d3767` |
+| Welcome, role choice, new sign-in and a tab space per role | Done | `8e0b47d` |
+| ESLint set up; lint and typecheck pass | Done | `558a03f` |
+| Admin panel (dispute review, Miku verification) | Not built ("Së shpejti") | — |
+| AI report in the client's language | Not built | — |
+
+**What works now:** a new user sees the welcome screen, chooses Klient or Miku and signs in. The client adds properties (with the position on the map), requests a visit, follows its steps on Ballina and reads the report; a Miku accepts the request, starts the visit and sends a GPS position, live photos and a voice note; the client approves or disputes, and the visit stays in Oda. I tested every screen on my phone.
+
+**Security:** every new table has Row Level Security by owner and by role; the photos and voice notes are in a private storage bucket that only the visit's client and Miku can read; the Admin role is given only in SQL. The SQL files use example emails (`klienti@example.com`, `admini@example.com`) instead of a real address.
+
+**Next step:**
+1. The Admin panel: review disputed reports and verify Mikus.
+2. The report in the client's language (simulated AI first, as `HARTA.md` plans).
+3. Consent and privacy steps for the non-medical parent visits.
+
+## 8. AI usage declaration
 
 -- AI: po — Claude (Anthropic) helped with `AGENTS.md`, the Supabase client, the SQL, the RLS policies and the forms; GitHub Copilot Chat summarized the project from `AGENTS.md`. I read the changes, tested them on my phone and decided what to commit.

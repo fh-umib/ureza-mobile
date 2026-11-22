@@ -105,7 +105,7 @@ The report is intended to appear in the client's language. **AI generation will 
 - Online payments and subscriptions
 - Push notifications
 - Public web application
-- Real backend authentication
+- Real backend authentication *(moved in: Supabase Auth was added in J6)*
 - Real AI service integration
 - Medical advice and healthcare services
 
@@ -113,17 +113,22 @@ These may be explored later when appropriate; medical advice is not part of Urë
 
 ## 6. Current Prototype Status
 
-The current Expo prototype implements:
+*Updated November 22, 2026.* The Expo prototype now covers the main flow with real accounts and Supabase data:
 
-- Home screen with synthetic tasks
-- Reusable `TaskCard` (Karta e Detyrës) component
-- `FlatList` with unique task IDs
-- Local status updates with `useState`
-- Dynamic task details using Expo Router
-- Navigation between list and detail screens
-- Invalid task ID handling
+| Screen | Status | Where in the code |
+|---|---|---|
+| Before sign-in: welcome, "Kush je ti?" (role), sign-in / create account | Built | `src/app/miresevini.tsx`, `kush-je.tsx`, `hyrja.tsx` |
+| 1 — Home / My Tasks (Ballina, plus Pronat and Harta tabs) | Built | `src/app/(app)/ballina.tsx`, `pronat.tsx`, `harta.tsx` |
+| 2 — Create Request: property, inspection or non-medical care visit, day, instructions | Built | `src/app/kerko-vizite.tsx` |
+| 3 — Task Details: Miku accepts; the client reads the report and approves or disputes | Built | `src/app/vizita/[id].tsx`, `src/app/(app)/miku.tsx` |
+| 4 — Visit Evidence: GPS, live camera photos (no gallery), voice note, timestamps | Built | `src/app/deshmia/[id].tsx` |
+| 5 — Oda / Visit History, grouped by month | Built | `src/app/(app)/oda.tsx` |
+| Profile: data, report language, notifications, data download, deletion request | Built | `src/app/(app)/profili.tsx` |
+| Admin dispute review and Miku verification | Placeholder ("Së shpejti") | `src/app/(app)/admini.tsx` |
 
-**Not implemented yet:** Request creation, Miku acceptance, evidence capture, report generation/review, disputes, care visits, and Oda. Current data is synthetic.
+Login now uses Supabase Auth, and Row Level Security limits every table by owner and role. One account can switch between Klient and Miku from the profile, to try both sides of the prototype; Admin is given only in SQL.
+
+**Not implemented yet:** the Admin panel (disputes, Miku verification) and the AI-generated report in the client's language: the report currently lists the evidence the Miku sent. All data is still synthetic.
 
 ## 7. MVP Priority
 
@@ -220,6 +225,12 @@ to preserve consistency and functionality.
 These notes describe the proposed interface and design direction.
 They do not describe completed functionality; implementation status
 is tracked in the code.
+
+*Update, November 22, 2026:* the bottom tab bar, the detailed cards and
+the status shown with both a colour and an icon are now in the app
+(`src/app/(app)/_layout.tsx`, `src/components/StatusiChip.tsx`). The app
+uses the petrol-blue palette in `src/constants/ureza.ts`; the terracotta
+direction above has not been adopted.
 
 ### AI Usage
 
