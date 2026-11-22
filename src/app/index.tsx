@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   FlatList,
@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TaskCard, { type TaskStatus } from "../components/TaskCard";
 import { initialTasks, type Task } from "../data/tasks";
 import { ButoniDil } from "../components/ButoniDil";
+import { useKeyboardReveal } from "../hooks/use-keyboard-reveal";
 import { useSesioni } from "../lib/sesioni";
 import { supabase } from "../lib/supabase";
 
@@ -39,6 +40,12 @@ export default function HomeScreen() {
   const [newLocation, setNewLocation] = useState("");
   const [saving, setSaving] = useState(false);
   const [formMessage, setFormMessage] = useState<string | null>(null);
+
+  // Keyboard: the page stays as it is; it only scrolls when the keyboard would cover the field.
+  const listRef = useRef<FlatList<Task>>(null);
+  const { keyboardHeight, revealSoon, trackScroll } = useKeyboardReveal((y) =>
+    listRef.current?.scrollToOffset({ offset: y, animated: true }),
+  );
 
   const loadTasks = useCallback(async () => {
     const { data, error } = await supabase
@@ -160,11 +167,15 @@ export default function HomeScreen() {
       edges={["top", "bottom"]}
     >
       <FlatList
+        ref={listRef}
+        onScroll={trackScroll}
+        scrollEventThrottle={16}
         style={styles.list}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: 28 + keyboardHeight }]}
         data={tasks}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View>
@@ -262,6 +273,7 @@ export default function HomeScreen() {
                 placeholderTextColor="#8798A2"
                 value={newTitle}
                 onChangeText={setNewTitle}
+                onFocus={revealSoon}
                 maxLength={80}
               />
               <TextInput
@@ -270,6 +282,9 @@ export default function HomeScreen() {
                 placeholderTextColor="#8798A2"
                 value={newLocation}
                 onChangeText={setNewLocation}
+                onFocus={revealSoon}
+                returnKeyType="done"
+                onSubmitEditing={addTask}
                 maxLength={80}
               />
 
