@@ -104,9 +104,15 @@ export default function Paneli() {
       ) : null}
 
       {paneli.burimi === "mungon" ? (
-        <View style={styles.shenim}>
-          <UrezaIcon name="warning" size={20} color={colors.petrol} />
-          <Text style={styles.shenimText}>{paneli.mesazhi}</Text>
+        <View style={styles.shenimKolone}>
+          <View style={styles.rreshtIkone}>
+            <UrezaIcon name="warning" size={20} color={colors.petrol} />
+            <Text style={styles.shenimText}>{paneli.mesazhi}</Text>
+          </View>
+          {/* e.g. after running the SQL file while this screen was open */}
+          <Pressable style={styles.dytesor} onPress={rifreskoKrejt} accessibilityRole="button">
+            <Text style={styles.dytesorText}>Provo përsëri</Text>
+          </Pressable>
         </View>
       ) : null}
 
@@ -398,6 +404,7 @@ const styles = StyleSheet.create({
   tekst: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
   shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
 
   kartaRast: { backgroundColor: "#FBE9E9", borderColor: "#F3CFCF" },

@@ -76,11 +76,13 @@ type RreshtMiku = {
 
 // "Function not found" (the SQL file was not run, or an older version of it) and "not an admin"
 // get their own words.
-function mesazhiINgarkimit(kodi: string | undefined): string {
+// Any other error shows the server's own words and code, so the cause can be found.
+function mesazhiINgarkimit(kodi: string | undefined, mesazhi: string | undefined): string {
   if (kodi === "42501") return "Kjo llogari nuk ka rolin Admin në databazë.";
   if (kodi === "PGRST202" || kodi === "42883") {
     return "Paneli i ri kërkon versionin e fundit të supabase/admini.sql: ekzekutoje sërish në Supabase.";
   }
+  if (kodi || mesazhi) return `${MUNGON_ADMINI_SQL}\nServeri: ${mesazhi ?? "pa mesazh"}${kodi ? ` (${kodi})` : ""}`;
   return MUNGON_ADMINI_SQL;
 }
 
@@ -106,7 +108,8 @@ export function usePaneliIAdminit() {
       return;
     }
     if (p.tipi === "mungon" || m.tipi === "mungon") {
-      setMesazhi(mesazhiINgarkimit(p.tipi === "mungon" ? p.kodi : m.tipi === "mungon" ? m.kodi : undefined));
+      const gabimi = p.tipi === "mungon" ? p : m.tipi === "mungon" ? m : null;
+      setMesazhi(mesazhiINgarkimit(gabimi?.kodi, gabimi?.mesazhi));
       setBurimi("mungon");
       return;
     }

@@ -4,7 +4,7 @@ export type Pergjigje = PromiseLike<{ data: unknown; error: { code?: string; mes
 
 export type Lexim<T> =
   | { tipi: "ok"; data: T }
-  | { tipi: "mungon"; kodi?: string } // the table (or a column) is not ready, e.g. a SQL file was not run yet
+  | { tipi: "mungon"; kodi?: string; mesazhi?: string } // the table (or a column) is not ready, e.g. a SQL file was not run yet
   | { tipi: "pa_lidhje" }; // the request never reached the server
 
 export const PA_LIDHJE = "Nuk u lidh me serverin. Kontrollo internetin dhe provo përsëri.";
@@ -15,7 +15,7 @@ export async function lexo<T>(kerkesa: Pergjigje): Promise<Lexim<T>> {
   try {
     const { data, error } = await kerkesa;
     if (error && !error.code) return { tipi: "pa_lidhje" };
-    if (error) return { tipi: "mungon", kodi: error.code };
+    if (error) return { tipi: "mungon", kodi: error.code, mesazhi: error.message };
     if (data === null || data === undefined) return { tipi: "mungon" };
     return { tipi: "ok", data: data as T };
   } catch {
