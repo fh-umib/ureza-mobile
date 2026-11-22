@@ -124,11 +124,13 @@ These may be explored later when appropriate; medical advice is not part of Urë
 | 4 — Visit Evidence: GPS, live camera photos (no gallery), voice note, timestamps | Built | `src/app/deshmia/[id].tsx` |
 | 5 — Oda / Visit History, grouped by month | Built | `src/app/(app)/oda.tsx` |
 | Profile: data, report language, notifications, data download, deletion request | Built | `src/app/(app)/profili.tsx` |
-| Admin dispute review and Miku verification | Placeholder ("Së shpejti") | `src/app/(app)/admini.tsx` |
+| Admin panel: status counts, disputed cases (evidence, client's reason, decision with a note), Miku verification | Built | `src/app/(app)/admini.tsx`, `src/components/ShqyrtimiIRastit.tsx`, `supabase/admini.sql` |
 
 Login now uses Supabase Auth, and Row Level Security limits every table by owner and role. One account can switch between Klient and Miku from the profile, to try both sides of the prototype; Admin is given only in SQL.
 
-**Not implemented yet:** the Admin panel (disputes, Miku verification) and the AI-generated report in the client's language: the report currently lists the evidence the Miku sent. All data is still synthetic.
+The admin sees only disputed visits in full; the overview shows numbers only. A closed case keeps the status "Kundërshtuar", and the client and the Miku both read the admin's decision and note.
+
+**Not implemented yet:** the admin's map, verification as a requirement before a Miku can accept a visit, and the AI-generated report in the client's language: the report currently lists the evidence the Miku sent. All data is still synthetic.
 
 ## 7. MVP Priority
 

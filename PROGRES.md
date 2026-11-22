@@ -80,15 +80,17 @@ The three "next steps" above are now done, apart from the Admin side.
 | Visit evidence (GPS, live photo, voice) and the client's approve/dispute decision | Done | `4877542`, `91d3767` |
 | Welcome, role choice, new sign-in and a tab space per role | Done | `8e0b47d` |
 | ESLint set up; lint and typecheck pass | Done | `558a03f` |
-| Admin panel (dispute review, Miku verification) | Not built ("Së shpejti") | — |
+| Admin panel: status counts, dispute review with a decision and a note, Miku verification | Done | `5204585` |
 | AI report in the client's language | Not built | — |
 
 **What works now:** a new user sees the welcome screen, chooses Klient or Miku and signs in. The client adds properties (with the position on the map), requests a visit, follows its steps on Ballina and reads the report; a Miku accepts the request, starts the visit and sends a GPS position, live photos and a voice note; the client approves or disputes, and the visit stays in Oda. I tested every screen on my phone.
 
 **Security:** every new table has Row Level Security by owner and by role; the photos and voice notes are in a private storage bucket that only the visit's client and Miku can read; the Admin role is given only in SQL. The SQL files use example emails (`klienti@example.com`, `admini@example.com`) instead of a real address.
 
+**Admin panel:** the admin sees how many visits are in each status (numbers only), opens each disputed report with the evidence and the client's reason, and closes it with a decision ("Klienti ka të drejtë" or "Raporti qëndron") and a note that the client and the Miku read. The admin also verifies Mikus; a Miku sees their own status on Kërkesat. The SQL (`supabase/admini.sql`) was tested on a local PostgreSQL 18 with 24 checks for the admin, client and Miku roles.
+
 **Next step:**
-1. The Admin panel: review disputed reports and verify Mikus.
+1. Decide whether a Miku must be verified before accepting a visit.
 2. The report in the client's language (simulated AI first, as `HARTA.md` plans).
 3. Consent and privacy steps for the non-medical parent visits.
 

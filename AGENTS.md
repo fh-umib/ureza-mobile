@@ -48,7 +48,7 @@ Urëza is a mobile app (Route 3 — Startup) that lets a Kosovo diaspora family 
 - **Roles:** Client (creates requests, approves or disputes the report), Miku (accepts, records evidence), Admin (reviews disputes, verifies Mikus). Each role has its own space.
 - **Oda:** the client's chronological visit history. The report is shown in the client's language (AI-generated in the planned version).
 - **UI language:** Albanian. Use only synthetic data (no real names, phone numbers or addresses).
-- **Current prototype:** sign-in with Supabase Auth, a role per account (`profiles`), and one tab space per role in `src/app/(app)/` (Klient: Ballina, Pronat, Harta, Oda, Profili; Miku: Kërkesat, Harta, Profili; Admin: Paneli, Profili). Built: properties, visit requests (`/kerko-vizite`), Miku acceptance, visit details (`/vizita/[id]`), evidence capture (`/deshmia/[id]`: GPS, camera-only photos, voice note), the client's approve/dispute decision, and Oda. Not built yet: the Admin panel (dispute review, Miku verification) and the AI report in the client's language. The course task list (`index.tsx`, `/artikull/[id]`) stays as the history of the weekly tasks.
+- **Current prototype:** sign-in with Supabase Auth, a role per account (`profiles`), and one tab space per role in `src/app/(app)/` (Klient: Ballina, Pronat, Harta, Oda, Profili; Miku: Kërkesat, Harta, Profili; Admin: Paneli, Profili). Built: properties, visit requests (`/kerko-vizite`), Miku acceptance, visit details (`/vizita/[id]`), evidence capture (`/deshmia/[id]`: GPS, camera-only photos, voice note), the client's approve/dispute decision, Oda, and the Admin panel (`(app)/admini.tsx`: status counts, disputed cases closed with a decision and a note, Miku verification). Not built yet: the admin's map, verification as a requirement for accepting visits, and the AI report in the client's language. The course task list (`index.tsx`, `/artikull/[id]`) stays as the history of the weekly tasks.
 - **Docs:** README.md, HARTA.md (product map, 5 screens), EKIPI.md, BISEDAT.md, PITCH.md.
 
 ### Data (Supabase)
@@ -56,7 +56,8 @@ Urëza is a mobile app (Route 3 — Startup) that lets a Kosovo diaspora family 
 - Backend is Supabase. The client lives in `src/lib/supabase.ts`; it reads `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from `.env`.
 - `.env` is never committed (see `.gitignore`); `.env.example` shows the variable names. Never put a `service_role` key in the app.
 - Row Level Security is always on. The `tasks` table started as an `anon` demo (`supabase/tasks.sql`, `tasks_insert.sql`, `tasks_update.sql`); since J6 (`supabase/j6-hyrja-rls.sql`) each signed-in user sees only their own rows.
-- The Urëza tables have per-user and per-role policies. Run the SQL files in this order: `pronat.sql`, `vizitat.sql`, `roli.sql`, `profili.sql`, `harta.sql`, `deshmia.sql` (also creates the private `deshmite` storage bucket), `raporti.sql`. Every file is safe to run again. Until a file is run, the app falls back to demo data on the phone and says so.
+- The Urëza tables have per-user and per-role policies. Run the SQL files in this order: `pronat.sql`, `vizitat.sql`, `roli.sql`, `profili.sql`, `harta.sql`, `deshmia.sql` (also creates the private `deshmite` storage bucket), `raporti.sql`, `admini.sql`. Every file is safe to run again.
+- An admin reads only disputed visits (and their property, position and evidence); the overview is numbers only, from `permbledhja_e_vizitave()`. Admin writes go through `shqyrto_rastin()` and `verifiko_mikun()`, never direct updates. Until a file is run, the app falls back to demo data on the phone and says so.
 - The Admin role is given by hand in SQL (see the end of `supabase/roli.sql`), never from the app.
 
 ### Working rules
