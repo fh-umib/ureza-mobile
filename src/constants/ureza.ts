@@ -1,0 +1,19 @@
+// Colors of the Urëza design system (petrol blue). Body text #173C48, secondary
+// text #4A626E. Mint is only used on dark backgrounds.
+export const colors = {
+  ink: "#173C48",
+  textSecondary: "#4A626E",
+  petrol: "#175568",
+  hero: "#173F4E",
+  teal: "#17695A",
+  mint: "#8CE0CB",
+  amber: "#F2C46B",
+  line: "#D3DEE4",
+  inputBorder: "#7C949F",
+  background: "#F5F8FA",
+  white: "#FFFFFF",
+  onHeroText: "#D6E6EA",
+  error: "#9B2C2C",
+  // days that already have a visit in the calendar
+  vizita: "#C9302C",
+};
