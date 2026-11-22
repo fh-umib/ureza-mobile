@@ -33,7 +33,27 @@
           "imageWidth": 76
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Urëza e përdor vendndodhjen për ta regjistruar vizitën te prona."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Urëza e përdor kamerën për fotot e vizitës.",
+          "photosPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Urëza e përdor mikrofonin për shënimin zanor të vizitës."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
