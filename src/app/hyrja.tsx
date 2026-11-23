@@ -33,6 +33,9 @@ type Message = { kind: "error" | "info"; text: string };
 function inAlbanian(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("invalid login credentials")) return "Email-i ose fjalëkalimi është i gabuar.";
+  if (m.includes("email not confirmed")) {
+    return "Email-i nuk është konfirmuar ende. Hap email-in nga Urëza, shtyp lidhjen, pastaj hyr.";
+  }
   if (m.includes("user already registered")) return "Ky email ka tashmë llogari. Provo të hysh.";
   if (m.includes("at least 6 characters")) return "Fjalëkalimi duhet të ketë të paktën 6 shkronja.";
   if (m.includes("unable to validate email") || m.includes("invalid format")) {

@@ -318,10 +318,10 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
             </View>
           </View>
         ))}
-        <View style={styles.pill}>
-          <Text style={styles.pillText}>Së shpejti</Text>
-        </View>
-        <Text style={styles.tekst}>Mbledhja e dëshmive vjen me hapin e ardhshëm. Tani pranon vetëm detyrën.</Text>
+        <Text style={styles.tekst}>
+          Kur të jesh te prona në datën e vizitës, shtyp “Fillo vizitën” dhe mblidhi këtu. Raporti dërgohet vetëm kur ka
+          GPS, të paktën një foto dhe shënimin zanor.
+        </Text>
       </View>
 
       {gabim ? <Text style={styles.gabim}>{gabim}</Text> : null}
@@ -372,8 +372,6 @@ const styles = StyleSheet.create({
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
   etiketa: { color: colors.textSecondary, fontSize: 15, fontWeight: "600" },
   vlera: { flex: 1, color: colors.ink, fontSize: 16, fontWeight: "700", textAlign: "right" },
-  pill: { alignSelf: "flex-start", backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 3 },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
   anulim: { gap: 8 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   anuloButon: {
