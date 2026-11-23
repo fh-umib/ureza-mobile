@@ -53,7 +53,11 @@
         {
           "microphonePermission": "Urëza e përdor mikrofonin për shënimin zanor të vizitës."
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
