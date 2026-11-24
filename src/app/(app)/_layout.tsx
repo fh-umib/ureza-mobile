@@ -25,7 +25,7 @@ function tab(label: string, icon: IconName, faqja: string, roli: Roli) {
     ),
     tabBarIcon: ({ focused }: { focused: boolean }) => (
       <View style={[styles.pill, focused && styles.pillActive]}>
-        <UrezaIcon name={icon} size={24} color={focused ? colors.petrol : colors.textSecondary} strokeWidth={focused ? 2.2 : 2} />
+        <UrezaIcon name={icon} size={23} color={focused ? colors.white : colors.textSecondary} strokeWidth={focused ? 2.3 : 2} />
       </View>
     ),
   };
@@ -41,13 +41,20 @@ export default function AppTabs() {
       backBehavior={roli === "klient" ? "firstRoute" : "none"}
       screenOptions={{
         headerShown: false,
+        sceneStyle: { backgroundColor: colors.background },
         tabBarStyle: {
           backgroundColor: colors.white,
-          borderTopColor: "#E3EAF0",
-          borderTopWidth: 1,
-          height: 64 + insets.bottom,
-          paddingTop: 8,
+          borderTopWidth: 0,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          height: 68 + insets.bottom,
+          paddingTop: 10,
           paddingBottom: insets.bottom,
+          shadowColor: "#0B2530",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+          elevation: 12,
         },
         tabBarItemStyle: { minHeight: 52 },
       }}
@@ -55,9 +62,9 @@ export default function AppTabs() {
       <Tabs.Screen name="ballina" options={tab("Ballina", "home", "/ballina", roli)} />
       <Tabs.Screen name="miku" options={tab("Kërkesat", "list", "/miku", roli)} />
       <Tabs.Screen name="admini" options={tab("Paneli", "shield", "/admini", roli)} />
-      <Tabs.Screen name="pronat" options={tab("Pronat", "key", "/pronat", roli)} />
+      <Tabs.Screen name="pronat" options={tab("Pronat", "houses", "/pronat", roli)} />
       <Tabs.Screen name="harta" options={tab("Harta", "map", "/harta", roli)} />
-      <Tabs.Screen name="oda" options={tab("Oda", "list", "/oda", roli)} />
+      <Tabs.Screen name="oda" options={tab("Oda", "book", "/oda", roli)} />
       <Tabs.Screen name="profili" options={tab("Profili", "user", "/profili", roli)} />
     </Tabs>
   );
@@ -66,6 +73,13 @@ export default function AppTabs() {
 const styles = StyleSheet.create({
   label: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
   labelActive: { color: colors.petrol, fontWeight: "800" },
-  pill: { width: 56, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },
-  pillActive: { backgroundColor: "#E8F5F3" },
+  pill: { width: 52, height: 34, borderRadius: 17, alignItems: "center", justifyContent: "center" },
+  pillActive: {
+    backgroundColor: colors.petrol,
+    shadowColor: colors.petrol,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
 });

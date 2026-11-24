@@ -27,7 +27,16 @@ export type IconName =
   | "globe"
   | "download"
   | "trash"
-  | "logout";
+  | "logout"
+  | "houses"
+  | "book"
+  | "compass"
+  | "sun"
+  | "moon"
+  | "eye"
+  | "heart"
+  | "sparkle"
+  | "doc";
 
 export function UrezaIcon({
   name,
@@ -157,6 +166,54 @@ export function UrezaIcon({
         <>
           <Path d="M10 4H5v16h5" />
           <Path d="M15 8l4 4-4 4M19 12H9" />
+        </>
+      )}
+      {name === "houses" && (
+        <>
+          <Path d="M2.5 11 8 6.5l5.5 4.5" />
+          <Path d="M4 10v9.5h8V10" />
+          <Path d="M13.5 8.5 17 5.5l4.5 3.8" />
+          <Path d="M20 8.5v11h-8" />
+          <Path d="M7 19.5V16h2v3.5" />
+        </>
+      )}
+      {name === "book" && (
+        <>
+          <Path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z" />
+          <Path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19" />
+          <Path d="M9 7.5h6M9 11h4" />
+        </>
+      )}
+      {name === "compass" && (
+        <>
+          <Circle cx="12" cy="12" r="9" />
+          <Path d="M15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5z" />
+        </>
+      )}
+      {name === "sun" && (
+        <>
+          <Circle cx="12" cy="12" r="4" />
+          <Path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
+        </>
+      )}
+      {name === "moon" && <Path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />}
+      {name === "eye" && (
+        <>
+          <Path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" />
+          <Circle cx="12" cy="12" r="3" />
+        </>
+      )}
+      {name === "heart" && <Path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z" />}
+      {name === "sparkle" && (
+        <>
+          <Path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z" />
+          <Path d="M19 16.5c.2 1.4.9 2.1 2.3 2.3-1.4.2-2.1.9-2.3 2.3-.2-1.4-.9-2.1-2.3-2.3 1.4-.2 2.1-.9 2.3-2.3z" />
+        </>
+      )}
+      {name === "doc" && (
+        <>
+          <Path d="M6 3h8l4 4v14H6z" />
+          <Path d="M14 3v4h4M9 12h6M9 16h4" />
         </>
       )}
       {name === "warning" && (

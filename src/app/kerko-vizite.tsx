@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -40,9 +40,11 @@ function Forma() {
   const router = useRouter();
   const revealSoon = useRevealOnFocus();
   const { pronat, burimiPronat, vizitat, kerkoVizite, rifresko } = useDhenat();
+  // Ballina can open this form with the kind of visit (and the property) already chosen.
+  const params = useLocalSearchParams<{ lloji?: string; pronaId?: string }>();
 
-  const [pronaId, setPronaId] = useState<string | null>(null);
-  const [lloji, setLloji] = useState<LlojiVizites>("inspektim");
+  const [pronaId, setPronaId] = useState<string | null>(params.pronaId ?? null);
+  const [lloji, setLloji] = useState<LlojiVizites>(params.lloji === "kujdes" ? "kujdes" : "inspektim");
   const [data, setData] = useState(() => {
     const sot = new Date();
     return dataNeTekst(new Date(sot.getFullYear(), sot.getMonth(), sot.getDate() + 1)); // tomorrow
@@ -54,7 +56,7 @@ function Forma() {
   const [derguar, setDerguar] = useState<Derguar | null>(null);
 
   // the first property is chosen until the user picks another one
-  const zgjedhurId = pronaId ?? pronat[0]?.id ?? null;
+  const zgjedhurId = pronat.find((p) => p.id === pronaId)?.id ?? pronat[0]?.id ?? null;
 
   // days that already have a visit (shown in red in the calendar)
   const meVizita: Record<string, number> = {};
