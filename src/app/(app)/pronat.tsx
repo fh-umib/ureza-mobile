@@ -1,17 +1,19 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { useState, type ReactNode } from "react";
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { FletaModale } from "@/components/FletaModale";
-import { PronaKarta } from "@/components/PronaKarta";
+import { PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { VendndodhjaFusha } from "@/components/VendndodhjaFusha";
 import { Ditari } from "@/components/Ditari";
 import { colors } from "@/constants/ureza";
 import { useDhenat, type RezultatiShtimit } from "@/lib/dhenat";
 import { gjejQytetin, type Koordinata } from "@/lib/gjeo";
-import type { Lloji } from "@/lib/pronat";
+import type { Lloji, Prona } from "@/lib/pronat";
+import { dataNeTekst, dataNgaTekst, type Vizita } from "@/lib/vizitat";
 
 const LLOJET: { vlera: Lloji; emri: string }[] = [
   { vlera: "shtepi", emri: "Shtëpi" },
@@ -19,14 +21,36 @@ const LLOJET: { vlera: Lloji; emri: string }[] = [
   { vlera: "toke", emri: "Tokë" },
 ];
 
+const DITA_MS = 24 * 60 * 60 * 1000;
+const DITE_PA_KONTROLL = 45;
+
+// Days since the last visit of a property up to today (null when never visited).
+function ditePara(pronaId: string, vizitat: Vizita[]): number | null {
+  const sot = dataNgaTekst(dataNeTekst(new Date())).getTime();
+  const data = vizitat
+    .filter((v) => v.pronaId === pronaId && dataNgaTekst(v.data).getTime() <= sot)
+    .map((v) => dataNgaTekst(v.data).getTime());
+  return data.length ? Math.round((sot - Math.max(...data)) / DITA_MS) : null;
+}
+
+function Hyrje({ i, children }: { i: number; children: ReactNode }) {
+  return <Animated.View entering={FadeInDown.delay(80 * Math.min(i, 8)).duration(420)}>{children}</Animated.View>;
+}
+
 export default function Pronat() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const { pronat, burimiPronat: burimi, shtoPronen: shto, rifresko } = useDhenat();
+  const { pronat, vizitat, burimiPronat: burimi, shtoPronen: shto, rifresko } = useDhenat();
   const [hapur, setHapur] = useState(false);
   const [lajmerim, setLajmerim] = useState<string | null>(null);
 
-  const kartaWidth = (width - 40 - 12) / 2;
+  const meGps = pronat.filter((p) => p.koordinatat).length;
+  const kerkojneKontroll = pronat.filter((p) => {
+    const d = ditePara(p.id, vizitat);
+    return d === null || d > DITE_PA_KONTROLL;
+  }).length;
+
+  const kerko = (p: Prona) =>
+    router.push({ pathname: "/kerko-vizite", params: { pronaId: p.id, lloji: p.lloji === "prindert" ? "kujdes" : "inspektim" } });
 
   return (
     <EkraniMeHero kicker="PRONAT E FAMILJES" title="Pronat e mia" subtitle="Çdo pronë me ditarin e saj.">
@@ -60,6 +84,12 @@ export default function Pronat() {
         </View>
       ) : null}
 
+      {pronat.length > 0 ? (
+        <Hyrje i={0}>
+          <ShifratEPronave gjithsej={pronat.length} meGps={meGps} kerkojneKontroll={kerkojneKontroll} />
+        </Hyrje>
+      ) : null}
+
       {burimi === "supabase" && pronat.length === 0 ? (
         <View style={styles.bosh}>
           <Text style={styles.boshTitle}>Ende nuk ke asnjë pronë</Text>
@@ -67,25 +97,58 @@ export default function Pronat() {
         </View>
       ) : null}
 
-      <View style={styles.grid}>
-        {pronat.map((prona) => (
-          <PronaKarta key={prona.id} prona={prona} width={kartaWidth} />
-        ))}
-      </View>
+      {pronat.map((prona, i) => (
+        <Hyrje key={prona.id} i={i + 1}>
+          <PronaKarta
+            prona={prona}
+            vizita={vizitat.filter((v) => v.pronaId === prona.id).length}
+            ditePara={ditePara(prona.id, vizitat)}
+            aktive={
+              vizitat.find(
+                (v) => v.pronaId === prona.id && v.statusi !== "miratuar" && v.statusi !== "kundershtuar",
+              ) ?? null
+            }
+            onKerko={() => kerko(prona)}
+            onHistoria={() => router.navigate("/oda")}
+          />
+        </Hyrje>
+      ))}
 
-      <Pressable style={styles.shtoButon} onPress={() => setHapur(true)} accessibilityRole="button">
-        <UrezaIcon name="plus" size={22} color={colors.petrol} strokeWidth={2.4} />
-        <Text style={styles.shtoText}>Shto pronë</Text>
-      </Pressable>
+      <Hyrje i={pronat.length + 1}>
+        <Pressable
+          style={({ pressed }) => [styles.shtoKarta, pressed && styles.shtypur]}
+          onPress={() => setHapur(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Shto pronë"
+        >
+          <View style={styles.shtoRrethi}>
+            <UrezaIcon name="plus" size={26} color={colors.white} strokeWidth={2.6} />
+          </View>
+          <View style={styles.flex}>
+            <Text style={styles.shtoText}>Shto pronë</Text>
+            <Text style={styles.shtoNen}>Shtëpi, tokë ose prindërit</Text>
+          </View>
+          <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+        </Pressable>
+      </Hyrje>
 
       <Ditari onShikoTeGjitha={() => router.navigate("/oda")} />
 
-      <Pressable style={styles.detyrat} onPress={() => router.push("/detyrat")} accessibilityRole="button">
+      <Pressable
+        style={({ pressed }) => [styles.detyrat, pressed && styles.shtypur]}
+        onPress={() => router.push("/detyrat")}
+        accessibilityRole="button"
+      >
+        <View style={styles.detyratIkona}>
+          <UrezaIcon name="list" size={20} color={colors.teal} strokeWidth={2.4} />
+        </View>
         <View style={styles.detyratTekst}>
           <Text style={styles.detyratTitulli}>Detyrat</Text>
           <Text style={styles.detyratNen}>Punët që duhen bërë për pronat e tua</Text>
         </View>
-        <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+        <View style={styles.shigjeta}>
+          <UrezaIcon name="arrow" size={16} color={colors.white} strokeWidth={2.6} />
+        </View>
       </Pressable>
 
       <ShtoPronen hapur={hapur} mbyll={() => setHapur(false)} shto={shto} onLajmerim={setLajmerim} />
@@ -228,34 +291,63 @@ const styles = StyleSheet.create({
   boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
   riprovo: { marginTop: 10, minHeight: 44, alignItems: "center", justifyContent: "center", borderRadius: 14, borderWidth: 1.5, borderColor: colors.petrol },
   riprovoText: { color: colors.petrol, fontSize: 15, fontWeight: "700" },
+  flex: { flex: 1 },
+  shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+  shtoKarta: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    padding: 16,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderColor: "#9FB6C0",
+    backgroundColor: "#F9FCFD",
+  },
+  shtoRrethi: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.petrol,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shtoNen: { color: colors.textSecondary, fontSize: 14, fontWeight: "500" },
   detyrat: {
-    minHeight: 64,
+    minHeight: 72,
     backgroundColor: colors.white,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E3EAF0",
-    paddingHorizontal: 20,
+    borderRadius: 22,
+    paddingHorizontal: 16,
     paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    shadowColor: "#0B2530",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    elevation: 3,
+  },
+  detyratIkona: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    backgroundColor: "#E8F5F3",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shigjeta: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.petrol,
+    alignItems: "center",
+    justifyContent: "center",
   },
   detyratTekst: { flex: 1, gap: 2 },
   detyratTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
   detyratNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  shtoButon: {
-    minHeight: 56,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderColor: colors.inputBorder,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  shtoText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  shtoText: { color: colors.petrol, fontSize: 17, fontWeight: "800" },
   fusha: { gap: 6 },
   label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
   input: {
