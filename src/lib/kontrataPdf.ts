@@ -104,6 +104,7 @@ export function htmlIKontrates(d: DhenatEKontrates, z: Zgjedhjet, n: Nenshkrimi)
 <style>
   @page { size: A4; margin: 28px 32px; }
   * { box-sizing: border-box; }
+  html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; color: #173C48; font-size: 11.5px; line-height: 1.5; margin: 0; }
   .krye { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #175568; padding-bottom: 12px; }
   .marka { display: flex; align-items: center; gap: 10px; }
