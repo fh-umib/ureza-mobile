@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { FletaModale } from "@/components/FletaModale";
+import { KartaEProfilitTePunes } from "@/components/ProfiliIPunes";
 import { RreshtiNdezes } from "@/components/RreshtiNdezes";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
@@ -32,6 +33,7 @@ export default function Profili() {
           <KartaEPlotesimit />
           <KartaETeDhenave />
           {roli === "klient" ? <KartaENjoftimeve /> : null}
+          {roli === "miku" ? <KartaEProfilitTePunes /> : null}
           <KartaEPrivatesise />
 
           {roli !== "admin" ? (

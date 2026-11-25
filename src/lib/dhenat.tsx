@@ -12,6 +12,7 @@ import { AppState } from "react-native";
 
 import type { Koordinata } from "./gjeo";
 import { PA_LIDHJE, lexo } from "./lexo";
+import { KONTRATA_VERSIONI } from "./kontrata";
 import { KUSHTET_VERSIONI } from "./kushtet";
 import { PRONAT_DEMO, type Lloji, type Prona } from "./pronat";
 import { useProfili } from "./profili";
@@ -431,12 +432,19 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
         return "Për ta pranuar vizitën duhet të ekzekutohet supabase/roli.sql në Supabase.";
       }
       try {
-        const { data, error } = await supabase
-          .from("vizitat")
-          .update({ statusi: "pranuar", miku_id: uid, miku_emri: emriIMikut, pranuar_at: tani })
-          .eq("id", id)
-          .eq("statusi", "kerkuar")
-          .select(shtyllatEVizitave(niveliShtyllave.current));
+        // the Miku accepted the contract on screen before this (supabase/besimi.sql requires it)
+        const ndryshimi: Record<string, string> = { statusi: "pranuar", miku_id: uid, miku_emri: emriIMikut, pranuar_at: tani };
+        const pranoje = (meKontrate: boolean) =>
+          supabase
+            .from("vizitat")
+            .update(meKontrate ? { ...ndryshimi, kontrata_versioni: KONTRATA_VERSIONI, kontrata_pranuar_at: tani } : ndryshimi)
+            .eq("id", id)
+            .eq("statusi", "kerkuar")
+            .select(shtyllatEVizitave(niveliShtyllave.current));
+        let pergjigja = await pranoje(true);
+        // "column does not exist": besimi.sql has not been run yet, so accept without the contract columns
+        if (pergjigja.error?.code === "42703" || pergjigja.error?.code === "PGRST204") pergjigja = await pranoje(false);
+        const { data, error } = pergjigja;
         if (error) return error.code ? error.message : PA_LIDHJE;
         const rreshti = (data as unknown as RreshtVizite[] | null)?.[0];
         if (!rreshti) {

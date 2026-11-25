@@ -11,7 +11,10 @@ import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { Kutia } from "@/components/Kutia";
 import { useMikuIVerifikuar } from "@/lib/admini";
+import { PJESA_E_DEMIT, useKontrata, useProfiliIPunes } from "@/lib/kontrata";
+import { CMIMI_TEKST } from "@/lib/kushtet";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
 import {
@@ -174,6 +177,8 @@ export default function DetajetEVizites() {
             />
           </View>
 
+          <KartaEKontrates vizitaId={vizita.id} />
+
           {eMiku && vizita.statusi === "pranuar" ? (
             <View style={styles.anulim}>
               {gabim ? <Text style={styles.gabim}>{gabim}</Text> : null}
@@ -283,11 +288,23 @@ const DESHMITE: { icon: IconName; titulli: string; nen: string }[] = [
 function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Prona; onPranuar: () => void }) {
   const router = useRouter();
   const { pranoVizite } = useDhenat();
+  const puna = useProfiliIPunes();
+  const [kontrata, setKontrata] = useState(false);
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
+  // without "Si punon si Miku" the contract has no party; the database refuses the acceptance too
+  const paProfil = puna.gati && !puna.profili?.lloji;
 
   async function prano() {
     if (duke) return;
+    if (paProfil) {
+      setGabim("Së pari plotëso “Si punon si Miku” te Profili.");
+      return;
+    }
+    if (!kontrata) {
+      setGabim("Lexo kontratën dhe shëno që e pranon, pastaj prano detyrën.");
+      return;
+    }
     setDuke(true);
     setGabim(null);
     const mesazh = await pranoVizite(vizita.id);
@@ -332,10 +349,47 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
         </Text>
       </View>
 
+      <View style={styles.karta}>
+        <View style={styles.kontrataKrye}>
+          <View style={styles.deshmiIkona}>
+            <UrezaIcon name="doc" size={22} color={colors.petrol} />
+          </View>
+          <Text style={[styles.titulli, styles.flex]}>Kontrata me klientin</Text>
+        </View>
+        <PikaEKontrates tekst={`${CMIMI_TEKST} për vizitën e kryer.`} />
+        <PikaEKontrates
+          tekst={`Dëm nga pakujdesia gjatë vizitës: paguan ${PJESA_E_DEMIT}% të vlerës. Me qëllim ose nga pakujdesia e rëndë: dëmin e plotë.`}
+        />
+        <PikaEKontrates tekst="Punon i pavarur, 08:00–20:00, dhe mund ta refuzosh punën e rrezikshme." />
+        <Pressable
+          style={styles.kontrataLidhje}
+          onPress={() => router.push({ pathname: "/kontrata/[id]", params: { id: vizita.id } })}
+          accessibilityRole="link"
+        >
+          <Text style={styles.kontrataLidhjeTeksti}>Lexo kontratën e plotë</Text>
+          <UrezaIcon name="arrow" size={16} color={colors.petrol} strokeWidth={2.6} />
+        </Pressable>
+        {paProfil ? (
+          <Pressable style={styles.paProfil} onPress={() => router.push("/profili")} accessibilityRole="button">
+            <UrezaIcon name="warning" size={18} color="#8A5210" strokeWidth={2.2} />
+            <Text style={styles.paProfilTeksti}>
+              Së pari plotëso “Si punon si Miku” te Profili (kompani, individ, student ose mjeshtër).
+            </Text>
+            <UrezaIcon name="chevron" size={18} color="#8A5210" strokeWidth={2.4} />
+          </Pressable>
+        ) : (
+          <Kutia
+            zgjedhur={kontrata}
+            onPress={() => setKontrata((x) => !x)}
+            teksti="E lexova kontratën dhe e pranoj, me kushtet e punës dhe përgjegjësinë për dëmin."
+          />
+        )}
+      </View>
+
       {gabim ? <Text style={styles.gabim}>{gabim}</Text> : null}
 
       <Pressable
-        style={[styles.primary, duke && styles.disabled]}
+        style={[styles.primary, (duke || !kontrata || paProfil) && styles.disabled]}
         onPress={prano}
         disabled={duke}
         accessibilityRole="button"
@@ -346,6 +400,69 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
         <Text style={styles.joText}>Jo tani</Text>
       </Pressable>
     </EkraniMeHero>
+  );
+}
+
+// The contract of the visit: who has accepted it, and the way to read it.
+function KartaEKontrates({ vizitaId }: { vizitaId: string }) {
+  const router = useRouter();
+  const { burimi, dhenat } = useKontrata(vizitaId);
+  if (burimi === "duke_ngarkuar") return null;
+  const klienti = dhenat?.pelqimiAt ?? null;
+  const miku = dhenat?.kontrataPranuarAt ?? null;
+  const teDy = klienti !== null && miku !== null;
+  return (
+    <Pressable
+      style={styles.karta}
+      onPress={() => router.push({ pathname: "/kontrata/[id]", params: { id: vizitaId } })}
+      accessibilityRole="button"
+      accessibilityLabel="Hap kontratën e vizitës"
+    >
+      <View style={styles.kontrataKrye}>
+        <View style={styles.deshmiIkona}>
+          <UrezaIcon name="doc" size={22} color={colors.petrol} />
+        </View>
+        <View style={styles.flex}>
+          <Text style={styles.titulli}>Kontrata</Text>
+          <Text style={styles.tekst}>
+            {burimi === "mungon"
+              ? "Kushtet mes teje dhe Mikut për këtë vizitë."
+              : teDy
+                ? "E pranuar nga të dy palët."
+                : miku === null
+                  ? "Pret që Miku ta pranojë."
+                  : "Pret pranimin e klientit."}
+          </Text>
+        </View>
+        <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+      </View>
+      {burimi === "supabase" ? (
+        <View style={styles.kontrataPalet}>
+          <ShenjaEPales emri="Klienti" kur={klienti} />
+          <ShenjaEPales emri="Miku" kur={miku} />
+        </View>
+      ) : null}
+    </Pressable>
+  );
+}
+
+function ShenjaEPales({ emri, kur }: { emri: string; kur: string | null }) {
+  return (
+    <View style={[styles.pala, kur ? styles.palaPo : styles.palaJo]}>
+      <UrezaIcon name={kur ? "check" : "clock"} size={14} color={kur ? "#1E6B3E" : "#8A5210"} strokeWidth={2.6} />
+      <Text style={[styles.palaTeksti, { color: kur ? "#1E6B3E" : "#8A5210" }]}>
+        {emri}: {kur ? dataShkurt(kur.slice(0, 10)) : "pret"}
+      </Text>
+    </View>
+  );
+}
+
+function PikaEKontrates({ tekst }: { tekst: string }) {
+  return (
+    <View style={styles.kontrataPika}>
+      <UrezaIcon name="check" size={16} color={colors.teal} strokeWidth={2.6} />
+      <Text style={[styles.tekst, styles.flex]}>{tekst}</Text>
+    </View>
   );
 }
 
@@ -377,6 +494,25 @@ function Rresht({
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  kontrataKrye: { flexDirection: "row", alignItems: "center", gap: 12 },
+  kontrataPika: { flexDirection: "row", gap: 10, alignItems: "flex-start" },
+  kontrataPalet: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
+  pala: { flexDirection: "row", alignItems: "center", gap: 6, height: 28, paddingHorizontal: 10, borderRadius: 14 },
+  palaPo: { backgroundColor: "#E4F6EB" },
+  palaJo: { backgroundColor: "#FFF2DE" },
+  palaTeksti: { fontSize: 13, fontWeight: "700" },
+  kontrataLidhje: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44 },
+  kontrataLidhjeTeksti: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  paProfil: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 12,
+    borderRadius: 14,
+    backgroundColor: "#FFF2DE",
+  },
+  paProfilTeksti: { flex: 1, color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600" },
   vleraKolona: { flexShrink: 1, alignItems: "flex-end", gap: 4 },
   distinktiv: {
     flexDirection: "row",

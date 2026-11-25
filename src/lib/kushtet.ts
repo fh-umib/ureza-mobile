@@ -9,6 +9,10 @@ export const KUSHTET_VERSIONI = "2026-11-25";
 export const CMIMI_EURO = 15;
 export const CMIMI_TEKST = `${CMIMI_EURO} €`;
 
+// The Miku pays this share of a damage they cause by ordinary negligence during the visit.
+// (Damage done on purpose or by gross negligence cannot be limited in advance: the law applies.)
+export const PJESA_E_DEMIT = 3; // %
+
 export type SeksioniIKushteve = { ikona: IconName; titulli: string; pikat: string[] };
 
 export const KUSHTET: SeksioniIKushteve[] = [
@@ -35,19 +39,22 @@ export const KUSHTET: SeksioniIKushteve[] = [
     ikona: "shield",
     titulli: "Kush e bën vizitën dhe kush përgjigjet",
     pikat: [
+      "Miku mund të jetë një kompani e regjistruar në Kosovë, një individ, një student ose një mjeshtër pa kompani. Kush është, shkruhet në kontratë.",
       "Vetëm Mikutë e verifikuar nga ekipi i Urëzës i shohin dhe i pranojnë kërkesat.",
+      "Për çdo vizitë ka një kontratë mes teje dhe Mikut: ti e pranon kur dërgon kërkesën, Miku para se ta pranojë vizitën.",
       "Nëse raporti nuk përputhet me kërkesën, e kundërshton. Admini i Urëzës i shqyrton dëshmitë dhe vendos.",
       "Nëse kundërshtimi pranohet, vizita nuk paguhet, ose përsëritet pa pagesë.",
     ],
   },
   {
     ikona: "warning",
-    titulli: "Për çka nuk mbajmë përgjegjësi",
+    titulli: "Dëmi dhe përgjegjësia",
     pikat: [
-      "Për dëmet që ekzistonin para vizitës, ose që ndodhin pas saj.",
-      "Për riparime: Miku vetëm kontrollon dhe raporton, nuk rregullon asgjë.",
-      "Për këshilla mjekësore: vizita te prindërit është jo mjekësore. Në rast urgjence thirr 112.",
-      "Për pjesët e pronës ku Miku nuk ka qasje, ose që nuk janë përmendur te udhëzimet.",
+      `Nëse Miku shkakton dëm gjatë vizitës nga pakujdesia, paguan ${PJESA_E_DEMIT}% të vlerës së dëmit. Për dëm me qëllim ose nga pakujdesia e rëndë përgjigjet për dëmin e plotë, sipas ligjit.`,
+      "Nuk përgjigjemi për dëmet që ekzistonin para vizitës, ose që ndodhin pas saj.",
+      "Nuk bëjmë riparime: Miku vetëm kontrollon dhe raporton.",
+      "Nuk japim këshilla mjekësore: vizita te prindërit është jo mjekësore. Në rast urgjence thirr 112.",
+      "Nuk përgjigjemi për pjesët e pronës ku Miku nuk ka qasje, ose që nuk janë te udhëzimet.",
     ],
   },
   {

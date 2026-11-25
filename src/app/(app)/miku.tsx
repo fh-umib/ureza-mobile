@@ -6,6 +6,7 @@ import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
+import { useProfiliIPunes } from "@/lib/kontrata";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
 import { useSesioni } from "@/lib/sesioni";
@@ -21,7 +22,9 @@ export default function KerkesatPerMiken() {
   const tePritura = vizitat.filter((v) => v.statusi === "kerkuar").sort((a, b) => a.data.localeCompare(b.data));
   const timet = vizitat.filter((v) => v.mikuId !== null && v.mikuId === perdoruesi?.id);
   const demo = burimiVizitat === "demo" || burimiProfilit === "demo";
+  const router = useRouter();
   const verifikimi = useVerifikimiIm();
+  const puna = useProfiliIPunes();
 
   return (
     <EkraniMeHero
@@ -64,6 +67,21 @@ export default function KerkesatPerMiken() {
               : "Ekipi i Urëzës ende nuk të ka verifikuar. Kërkesat e reja i sheh dhe i pranon vetëm pasi të verifikohesh."}
           </Text>
         </View>
+      ) : null}
+
+      {puna.gati && !puna.profili?.lloji ? (
+        <Pressable
+          style={[styles.shenim, styles.paVerifikuar]}
+          onPress={() => router.push("/profili")}
+          accessibilityRole="button"
+          accessibilityLabel="Plotëso si punon si Miku te Profili"
+        >
+          <UrezaIcon name="warning" size={20} color="#8A5210" />
+          <Text style={[styles.shenimText, { color: "#8A5210" }]}>
+            Para se të pranosh vizita, trego si punon te Profili: kompani, individ, student ose mjeshtër. Del në kontratë.
+          </Text>
+          <UrezaIcon name="chevron" size={18} color="#8A5210" strokeWidth={2.4} />
+        </Pressable>
       ) : null}
 
       <Text style={styles.seksioni}>Kërkesa të reja</Text>

@@ -50,6 +50,7 @@ function Rrugat() {
           <Stack.Screen name="roli" />
           <Stack.Screen name="kerko-vizite" />
           <Stack.Screen name="vizita/[id]" />
+          <Stack.Screen name="kontrata/[id]" />
           <Stack.Screen name="deshmia/[id]" />
           <Stack.Screen name="detyrat" />
           <Stack.Screen name="index" />
