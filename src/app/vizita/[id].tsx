@@ -366,7 +366,7 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
           onPress={() => router.push({ pathname: "/kontrata/[id]", params: { id: vizita.id } })}
           accessibilityRole="link"
         >
-          <Text style={styles.kontrataLidhjeTeksti}>Lexo kontratën e plotë</Text>
+          <Text style={styles.kontrataLidhjeTeksti}>Hap kontratën dhe gjeneroje si PDF</Text>
           <UrezaIcon name="arrow" size={16} color={colors.petrol} strokeWidth={2.6} />
         </Pressable>
         {paProfil ? (

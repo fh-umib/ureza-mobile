@@ -1,24 +1,32 @@
+import * as Print from "expo-print";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import * as Sharing from "expo-sharing";
+import { useState, type ReactNode } from "react";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { EkraniMeHero } from "@/components/EkraniMeHero";
+import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
+import { Kutia } from "@/components/Kutia";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
-import {
-  KONTRATA_VERSIONI,
-  nenetEKontrates,
-  paleMiku,
-  useKontrata,
-  useProfiliIPunes,
-  type DhenatEKontrates,
-} from "@/lib/kontrata";
 import { useDhenat } from "@/lib/dhenat";
+import { paleMiku, useKontrata, useProfiliIPunes, type DhenatEKontrates } from "@/lib/kontrata";
+import {
+  AFATET,
+  HYRJET,
+  PAGESAT,
+  htmlIKontrates,
+  type Afati,
+  type Hyrja,
+  type Pagesa,
+} from "@/lib/kontrataPdf";
+import { CMIMI_TEKST, PJESA_E_DEMIT } from "@/lib/kushtet";
 import { useProfili } from "@/lib/profili";
-import { dataEPlote, dataMeOre } from "@/lib/vizitat";
+import { dataEPlote, dataMeOre, titulliIVizites } from "@/lib/vizitat";
 
-// The contract of one visit, the same text for the client and the Miku (src/lib/kontrata.ts).
-// It comes from kontrata_e_vizites() (supabase/besimi.sql); until that file is run it is built
-// from what this phone already knows about the visit.
+// The contract of one visit as a form: choose the options (how the Miku gets in, payment), sign
+// with the full name, then generate the digital contract as a PDF (src/lib/kontrataPdf.ts) and
+// save or send it from the phone's share sheet. The data comes from kontrata_e_vizites()
+// (supabase/besimi.sql); until that file is run it is built from what the phone knows.
 export default function Kontrata() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -67,53 +75,229 @@ export default function Kontrata() {
     <EkraniMeHero
       kicker={`KONTRATË · NR. ${d.vizitaId.slice(0, 8).toUpperCase()}`}
       title="Kontrata"
-      subtitle="Mes klientit dhe Mikut, për këtë vizitë."
+      subtitle="Plotësoje dhe gjenero kontratën digjitale."
       kthehu={mbrapa}
     >
+      <Forma d={d} roli={eMiku ? "miku" : "klient"} emriIProfilit={profili?.emri ?? ""} />
+    </EkraniMeHero>
+  );
+}
+
+function Forma({ d, roli, emriIProfilit }: { d: DhenatEKontrates; roli: "klient" | "miku"; emriIProfilit: string }) {
+  const revealSoon = useRevealOnFocus();
+  const [hyrja, setHyrja] = useState<Hyrja>("jashte");
+  const [pagesa, setPagesa] = useState<Pagesa>("para_ne_dore");
+  const [afati, setAfati] = useState<Afati>("dita_e_vizites");
+  const [foto, setFoto] = useState(true);
+  const [shenime, setShenime] = useState("");
+  const [emri, setEmri] = useState(emriIProfilit);
+  const [vendi, setVendi] = useState(d.pronaVendi);
+  const [konfirmo, setKonfirmo] = useState(false);
+  const [fokus, setFokus] = useState<"shenime" | "emri" | "vendi" | null>(null);
+  const [duke, setDuke] = useState(false);
+  const [gabim, setGabim] = useState<string | null>(null);
+  const [gati, setGati] = useState<{ uri: string | null; faqe: number | null; kodi: string } | null>(null);
+
+  const mundet = emri.trim().length >= 3 && vendi.trim().length >= 2 && konfirmo;
+
+  async function ndaje(uri: string) {
+    if (Platform.OS === "web" || !(await Sharing.isAvailableAsync())) return;
+    await Sharing.shareAsync(uri, { mimeType: "application/pdf", UTI: "com.adobe.pdf", dialogTitle: "Kontrata e vizitës" });
+  }
+
+  async function gjenero() {
+    if (duke) return;
+    if (!mundet) {
+      setGabim("Shkruaj emrin e plotë dhe vendin, dhe konfirmo nënshkrimin.");
+      return;
+    }
+    setDuke(true);
+    setGabim(null);
+    try {
+      const { html, kodi } = htmlIKontrates(
+        d,
+        { hyrja, pagesa, afati, fotoParaFillimit: foto, shenime },
+        { roli, emriIPlote: emri.trim(), vendi: vendi.trim(), kur: new Date() },
+      );
+      // A4 in points; on iOS the margins come from here, on Android from @page in the HTML
+      const rezultati = await Print.printToFileAsync({
+        html,
+        width: 595,
+        height: 842,
+        margins: { top: 28, bottom: 28, left: 32, right: 32 },
+      });
+      // on web this opens the print dialog instead of making a file
+      const uri = rezultati?.uri ?? null;
+      setGati({ uri, faqe: rezultati?.numberOfPages ?? null, kodi });
+      if (uri) await ndaje(uri);
+    } catch {
+      setGabim("Kontrata nuk u gjenerua. Provo përsëri.");
+    } finally {
+      setDuke(false);
+    }
+  }
+
+  return (
+    <>
       <View style={styles.palet}>
-        <Pala ikona="home" roli="KLIENTI" emri={d.klientiEmri ?? "Klienti i Urëzës"} />
+        <Pala ikona="home" roli="KLIENTI" emri={d.klientiEmri ?? "Klienti i Urëzës"} pranoi={d.pelqimiAt} />
         <View style={styles.lidhja}>
           <UrezaIcon name="doc" size={18} color={colors.mint} strokeWidth={2.2} />
         </View>
-        <Pala ikona="shield" roli="MIKU" emri={paleMiku(d)} verifikuar={d.mikuVerifikuarAt !== null} />
+        <Pala ikona="shield" roli="MIKU" emri={paleMiku(d)} pranoi={d.kontrataPranuarAt} />
       </View>
 
-      {nenetEKontrates(d).map((n) => (
-        <View key={n.titulli} style={styles.neni}>
-          <Text style={styles.neniTitulli} accessibilityRole="header">
-            {n.titulli}
-          </Text>
-          {n.pikat.map((p) => (
-            <View key={p} style={styles.pika}>
-              <View style={styles.pikaShenja} />
-              <Text style={styles.teksti}>{p}</Text>
-            </View>
+      <View style={styles.karta}>
+        <Text style={styles.kicker}>VIZITA</Text>
+        <Text style={styles.titulli}>{titulliIVizites(d.lloji)}</Text>
+        <Text style={styles.teksti}>
+          {d.pronaEmri}, {d.pronaVendi} · {dataEPlote(d.data)}
+        </Text>
+        <View style={styles.permbledhje}>
+          <Fakt ikona="doc" tekst={`${CMIMI_TEKST} për vizitën e kryer`} />
+          <Fakt ikona="warning" tekst={`Dëm nga pakujdesia: ${PJESA_E_DEMIT}% e vlerës; me qëllim: dëmi i plotë`} />
+          <Fakt ikona="clock" tekst="Puna 08:00–20:00, pa punë të rrezikshme" />
+        </View>
+      </View>
+
+      <Seksioni numri="1" titulli="Si hyn Miku në pronë?">
+        {HYRJET.map((h) => (
+          <Opsion
+            key={h.vlera}
+            zgjedhur={hyrja === h.vlera}
+            onPress={() => setHyrja(h.vlera)}
+            emri={h.emri}
+            pershkrimi={h.pershkrimi}
+          />
+        ))}
+      </Seksioni>
+
+      <Seksioni numri="2" titulli="Pagesa">
+        <View style={styles.chipat}>
+          {PAGESAT.map((p) => (
+            <Chip key={p.vlera} zgjedhur={pagesa === p.vlera} onPress={() => setPagesa(p.vlera)} emri={p.emri} />
           ))}
         </View>
-      ))}
+        <Text style={styles.etiketa}>Afati</Text>
+        <View style={styles.chipat}>
+          {AFATET.map((a) => (
+            <Chip key={a.vlera} zgjedhur={afati === a.vlera} onPress={() => setAfati(a.vlera)} emri={a.emri} />
+          ))}
+        </View>
+      </Seksioni>
 
-      <View style={styles.neni}>
-        <Text style={styles.neniTitulli}>Pranimi i palëve</Text>
-        <Nenshkrimi
-          kush="Klienti"
-          kur={d.pelqimiAt ? `Pranoi më ${dataMeOre(d.pelqimiAt)}, kur dërgoi kërkesën.` : "Pranon kur dërgon kërkesën."}
-          bere={d.pelqimiAt !== null}
+      <Seksioni numri="3" titulli="Gjendja dhe shënimet">
+        <Kutia
+          zgjedhur={foto}
+          onPress={() => setFoto((x) => !x)}
+          teksti="Miku bën foto të gjendjes para se të fillojë, që çdo dëm i vjetër të dallohet."
         />
-        <Nenshkrimi
-          kush="Miku"
-          kur={d.kontrataPranuarAt ? `Pranoi më ${dataMeOre(d.kontrataPranuarAt)}.` : "Pret që Miku ta pranojë, para vizitës."}
-          bere={d.kontrataPranuarAt !== null}
+        <TextInput
+          style={[styles.input, styles.inputShume, fokus === "shenime" && styles.inputFokus]}
+          value={shenime}
+          onChangeText={setShenime}
+          onFocus={() => {
+            setFokus("shenime");
+            revealSoon();
+          }}
+          onBlur={() => setFokus(null)}
+          placeholder="Shënime shtesë (opsionale), p.sh. qeni është në oborr, kodi i kutisë jepet me telefon."
+          placeholderTextColor="#8FA3AC"
+          multiline
+          maxLength={300}
+          textAlignVertical="top"
+          accessibilityLabel="Shënime shtesë"
         />
-      </View>
+      </Seksioni>
 
-      <View style={styles.shenim}>
-        <UrezaIcon name="warning" size={18} color="#8A5210" strokeWidth={2.2} />
-        <Text style={styles.shenimTeksti}>
-          Model kontrate për prototipin. Para përdorimit të vërtetë duhet ta rishikojë një jurist në Kosovë.
-        </Text>
-      </View>
-      <Text style={styles.versioni}>Versioni i kontratës: {dataEPlote(KONTRATA_VERSIONI)}</Text>
-    </EkraniMeHero>
+      <Seksioni numri="4" titulli="Nënshkrimi digjital">
+        <Text style={styles.etiketa}>Emri dhe mbiemri</Text>
+        <TextInput
+          style={[styles.input, fokus === "emri" && styles.inputFokus]}
+          value={emri}
+          onChangeText={setEmri}
+          onFocus={() => {
+            setFokus("emri");
+            revealSoon();
+          }}
+          onBlur={() => setFokus(null)}
+          placeholder="Emri i plotë"
+          placeholderTextColor="#8FA3AC"
+          maxLength={80}
+          accessibilityLabel="Emri dhe mbiemri"
+        />
+        <Text style={styles.etiketa}>Vendi</Text>
+        <TextInput
+          style={[styles.input, fokus === "vendi" && styles.inputFokus]}
+          value={vendi}
+          onChangeText={setVendi}
+          onFocus={() => {
+            setFokus("vendi");
+            revealSoon();
+          }}
+          onBlur={() => setFokus(null)}
+          placeholder="p.sh. Mitrovicë"
+          placeholderTextColor="#8FA3AC"
+          maxLength={60}
+          accessibilityLabel="Vendi i nënshkrimit"
+        />
+        {emri.trim().length >= 3 ? (
+          <View style={styles.firmaKuti} accessibilityLabel={`Nënshkrimi: ${emri.trim()}`}>
+            <Text style={styles.firma}>{emri.trim()}</Text>
+            <View style={styles.firmaVija} />
+            <Text style={styles.imet}>{roli === "klient" ? "Klienti" : "Miku"} · nënshkrim digjital</Text>
+          </View>
+        ) : null}
+        <Kutia
+          zgjedhur={konfirmo}
+          onPress={() => setKonfirmo((x) => !x)}
+          teksti="Konfirmoj që të dhënat janë të sakta dhe e nënshkruaj këtë kontratë në mënyrë digjitale."
+        />
+      </Seksioni>
+
+      {gabim ? <Text style={styles.gabim}>{gabim}</Text> : null}
+
+      <Pressable
+        style={({ pressed }) => [styles.primary, (!mundet || duke) && styles.disabled, pressed && styles.shtypur]}
+        onPress={gjenero}
+        disabled={duke}
+        accessibilityRole="button"
+        accessibilityLabel="Gjenero kontratën digjitale si PDF"
+      >
+        {duke ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <>
+            <UrezaIcon name="download" size={22} color={colors.white} strokeWidth={2.3} />
+            <Text style={styles.primaryText}>Gjenero kontratën digjitale (PDF)</Text>
+          </>
+        )}
+      </Pressable>
+
+      {gati ? (
+        <View style={styles.sukses}>
+          <View style={styles.suksesIkona}>
+            <UrezaIcon name="check" size={24} color={colors.white} strokeWidth={2.8} />
+          </View>
+          <View style={styles.flex}>
+            <Text style={styles.suksesTitulli}>Kontrata u gjenerua</Text>
+            <Text style={styles.teksti}>
+              {gati.faqe ? `${gati.faqe} faqe · ` : ""}Kodi i verifikimit: {gati.kodi}
+            </Text>
+          </View>
+          {gati.uri ? (
+            <Pressable
+              style={styles.ndaj}
+              onPress={() => void ndaje(gati.uri as string)}
+              accessibilityRole="button"
+              accessibilityLabel="Ruaje ose dërgoje kontratën"
+            >
+              <Text style={styles.ndajTeksti}>Ndaje</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
+    </>
   );
 }
 
@@ -121,63 +305,188 @@ function Pala({
   ikona,
   roli,
   emri,
-  verifikuar,
+  pranoi,
 }: {
   ikona: "home" | "shield";
   roli: string;
   emri: string;
-  verifikuar?: boolean;
+  pranoi: string | null;
 }) {
   return (
     <View style={styles.pala}>
       <UrezaIcon name={ikona} size={20} color={colors.mint} strokeWidth={2.2} />
       <Text style={styles.palaRoli}>{roli}</Text>
       <Text style={styles.palaEmri}>{emri}</Text>
-      {verifikuar ? <Text style={styles.palaVerifikuar}>✓ i verifikuar</Text> : null}
+      <Text style={styles.palaPranoi}>{pranoi ? `✓ pranoi ${dataMeOre(pranoi)}` : "pret pranimin"}</Text>
     </View>
   );
 }
 
-function Nenshkrimi({ kush, kur, bere }: { kush: string; kur: string; bere: boolean }) {
+function Fakt({ ikona, tekst }: { ikona: "doc" | "warning" | "clock"; tekst: string }) {
   return (
-    <View style={styles.nenshkrimi}>
-      <View style={[styles.nenshkrimiIkona, bere ? styles.bere : styles.pritet]}>
-        <UrezaIcon name={bere ? "check" : "clock"} size={16} color={bere ? "#1E6B3E" : "#8A5210"} strokeWidth={2.6} />
-      </View>
-      <View style={styles.flex}>
-        <Text style={styles.nenshkrimiKush}>{kush}</Text>
-        <Text style={styles.teksti}>{kur}</Text>
-      </View>
+    <View style={styles.fakt}>
+      <UrezaIcon name={ikona} size={16} color={colors.teal} strokeWidth={2.2} />
+      <Text style={[styles.teksti, styles.flex]}>{tekst}</Text>
     </View>
+  );
+}
+
+function Seksioni({ numri, titulli, children }: { numri: string; titulli: string; children: ReactNode }) {
+  return (
+    <View style={styles.karta}>
+      <View style={styles.seksionKrye}>
+        <View style={styles.numri}>
+          <Text style={styles.numriTeksti}>{numri}</Text>
+        </View>
+        <Text style={styles.titulli}>{titulli}</Text>
+      </View>
+      {children}
+    </View>
+  );
+}
+
+function Opsion({
+  zgjedhur,
+  onPress,
+  emri,
+  pershkrimi,
+}: {
+  zgjedhur: boolean;
+  onPress: () => void;
+  emri: string;
+  pershkrimi: string;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.opsion, zgjedhur && styles.opsionZgjedhur]}
+      accessibilityRole="radio"
+      accessibilityState={{ selected: zgjedhur }}
+      accessibilityLabel={`${emri}: ${pershkrimi}`}
+    >
+      <View style={[styles.radio, zgjedhur && styles.radioZgjedhur]}>{zgjedhur ? <View style={styles.radioPika} /> : null}</View>
+      <View style={styles.flex}>
+        <Text style={styles.opsionEmri}>{emri}</Text>
+        <Text style={styles.opsionNen}>{pershkrimi}</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+function Chip({ zgjedhur, onPress, emri }: { zgjedhur: boolean; onPress: () => void; emri: string }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.chip, zgjedhur && styles.chipZgjedhur]}
+      accessibilityRole="radio"
+      accessibilityState={{ selected: zgjedhur }}
+    >
+      <Text style={[styles.chipTeksti, zgjedhur && styles.chipTekstiZgjedhur]}>{emri}</Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  palet: {
-    flexDirection: "row",
-    alignItems: "stretch",
-    gap: 8,
-    backgroundColor: colors.hero,
-    borderRadius: 22,
-    padding: 14,
-  },
+  shtypur: { opacity: 0.85 },
+  palet: { flexDirection: "row", alignItems: "stretch", gap: 8, backgroundColor: colors.hero, borderRadius: 22, padding: 14 },
   pala: { flex: 1, gap: 4, padding: 6 },
   palaRoli: { color: colors.mint, fontSize: 11, fontWeight: "800", letterSpacing: 1.2, marginTop: 4 },
   palaEmri: { color: colors.white, fontSize: 15, lineHeight: 20, fontWeight: "800" },
-  palaVerifikuar: { color: colors.mint, fontSize: 12, fontWeight: "700" },
+  palaPranoi: { color: colors.onHeroText, fontSize: 12, fontWeight: "600" },
   lidhja: { justifyContent: "center" },
-  neni: { backgroundColor: colors.white, borderRadius: 18, padding: 16, gap: 8 },
-  neniTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
-  pika: { flexDirection: "row", gap: 10 },
-  pikaShenja: { width: 5, height: 5, borderRadius: 3, backgroundColor: colors.teal, marginTop: 9 },
-  teksti: { flex: 1, color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  nenshkrimi: { flexDirection: "row", gap: 12, alignItems: "flex-start", paddingTop: 4 },
-  nenshkrimiIkona: { width: 30, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center" },
-  bere: { backgroundColor: "#E4F6EB" },
-  pritet: { backgroundColor: "#FFF2DE" },
-  nenshkrimiKush: { color: colors.ink, fontSize: 15, fontWeight: "800" },
-  shenim: { flexDirection: "row", gap: 10, padding: 14, borderRadius: 16, backgroundColor: "#FFF2DE" },
-  shenimTeksti: { flex: 1, color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600" },
-  versioni: { color: colors.textSecondary, fontSize: 13, textAlign: "center" },
+  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 16, gap: 10 },
+  kicker: { color: colors.teal, fontSize: 12, fontWeight: "700", letterSpacing: 1.5 },
+  titulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800", flexShrink: 1 },
+  teksti: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
+  permbledhje: { gap: 6, marginTop: 4, paddingTop: 10, borderTopWidth: 1, borderTopColor: "#EDF2F5" },
+  fakt: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
+  seksionKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
+  numri: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
+  numriTeksti: { color: colors.white, fontSize: 14, fontWeight: "800" },
+  opsion: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 12,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: "#D3DEE4",
+  },
+  opsionZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },
+  opsionEmri: { color: colors.ink, fontSize: 15, fontWeight: "800" },
+  opsionNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  radio: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 2,
+    borderColor: colors.inputBorder,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  radioZgjedhur: { borderColor: colors.petrol },
+  radioPika: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.petrol },
+  etiketa: { color: colors.ink, fontSize: 15, fontWeight: "700", marginTop: 2 },
+  chipat: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  chip: {
+    minHeight: 40,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: colors.inputBorder,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chipZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
+  chipTeksti: { color: colors.ink, fontSize: 14, fontWeight: "700" },
+  chipTekstiZgjedhur: { color: colors.white },
+  input: {
+    minHeight: 52,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.white,
+    borderWidth: 1.5,
+    borderColor: colors.inputBorder,
+    borderRadius: 14,
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.ink,
+  },
+  inputShume: { minHeight: 90 },
+  inputFokus: { borderColor: colors.petrol },
+  firmaKuti: { padding: 12, borderRadius: 14, backgroundColor: "#F7FAFB", borderWidth: 1, borderColor: "#E3EAF0" },
+  firma: {
+    color: colors.petrol,
+    fontSize: 26,
+    fontStyle: "italic",
+    fontFamily: Platform.select({ ios: "Snell Roundhand", android: "cursive", default: "cursive" }),
+  },
+  firmaVija: { height: 1, backgroundColor: colors.inputBorder, marginVertical: 4 },
+  imet: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  primary: {
+    minHeight: 56,
+    borderRadius: 16,
+    backgroundColor: colors.petrol,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    paddingHorizontal: 16,
+  },
+  primaryText: { color: colors.white, fontSize: 16, fontWeight: "800" },
+  disabled: { opacity: 0.5 },
+  sukses: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 14,
+    borderRadius: 18,
+    backgroundColor: "#E4F6EB",
+  },
+  suksesIkona: { width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E6B3E", alignItems: "center", justifyContent: "center" },
+  suksesTitulli: { color: "#1E6B3E", fontSize: 16, fontWeight: "800" },
+  ndaj: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.white, justifyContent: "center" },
+  ndajTeksti: { color: "#1E6B3E", fontSize: 14, fontWeight: "800" },
 });
