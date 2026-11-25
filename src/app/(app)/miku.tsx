@@ -61,7 +61,7 @@ export default function KerkesatPerMiken() {
           <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210" }]}>
             {verifikimi.verifikuarAt
               ? `Je Miku i verifikuar nga ekipi i Urëzës (që më ${dataMeOre(verifikimi.verifikuarAt)}).`
-              : "Ekipi i Urëzës ende nuk të ka verifikuar. Deri atëherë mund të pranosh kërkesa si zakonisht."}
+              : "Ekipi i Urëzës ende nuk të ka verifikuar. Kërkesat e reja i sheh dhe i pranon vetëm pasi të verifikohesh."}
           </Text>
         </View>
       ) : null}

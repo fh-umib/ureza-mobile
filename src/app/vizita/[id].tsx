@@ -11,6 +11,7 @@ import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { useMikuIVerifikuar } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
 import {
@@ -48,6 +49,8 @@ export default function DetajetEVizites() {
 
   const vizita = vizitat.find((v) => v.id === id);
   const prona = vizita ? pronat.find((p) => p.id === vizita.pronaId) : undefined;
+  // the client sees whether their Miku is verified (supabase/besimi.sql)
+  const mikuVerifikuar = useMikuIVerifikuar(!eMiku && !eAdmin ? (vizita?.mikuId ?? null) : null);
   const mbrapa = { etiketa: "Mbrapa", onPress: () => router.back() };
 
   if (!vizita) {
@@ -163,7 +166,12 @@ export default function DetajetEVizites() {
             <Rresht etiketa="Lloji" vlera={titulliIVizites(vizita.lloji)} />
             <Rresht etiketa="Data" vlera={dataEPlote(vizita.data)} />
             <Rresht etiketa="Prona" vlera={prona?.emri ?? "Prona"} />
-            <Rresht etiketa="Miku" vlera={vizita.mikuEmri ?? "Pa caktuar ende"} fundit />
+            <Rresht
+              etiketa="Miku"
+              vlera={vizita.mikuEmri ?? "Pa caktuar ende"}
+              fundit
+              distinktiv={!eMiku && mikuVerifikuar ? "I verifikuar nga Urëza" : undefined}
+            />
           </View>
 
           {eMiku && vizita.statusi === "pranuar" ? (
@@ -341,16 +349,45 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
   );
 }
 
-function Rresht({ etiketa, vlera, fundit }: { etiketa: string; vlera: string; fundit?: boolean }) {
+function Rresht({
+  etiketa,
+  vlera,
+  fundit,
+  distinktiv,
+}: {
+  etiketa: string;
+  vlera: string;
+  fundit?: boolean;
+  distinktiv?: string; // a small green badge under the value (e.g. a verified Miku)
+}) {
   return (
     <View style={[styles.rreshti, !fundit && styles.ndarje]}>
       <Text style={styles.etiketa}>{etiketa}</Text>
-      <Text style={styles.vlera}>{vlera}</Text>
+      <View style={styles.vleraKolona}>
+        <Text style={styles.vlera}>{vlera}</Text>
+        {distinktiv ? (
+          <View style={styles.distinktiv}>
+            <UrezaIcon name="shield" size={14} color="#1E6B3E" strokeWidth={2.4} />
+            <Text style={styles.distinktivTeksti}>{distinktiv}</Text>
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  vleraKolona: { flexShrink: 1, alignItems: "flex-end", gap: 4 },
+  distinktiv: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 8,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#E4F6EB",
+  },
+  distinktivTeksti: { color: "#1E6B3E", fontSize: 12, fontWeight: "800" },
   tabet: { flexDirection: "row", gap: 4, padding: 4, borderRadius: 16, backgroundColor: "#E3EAF0" },
   tab: { flex: 1, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center" },
   tabAktiv: {
@@ -371,7 +408,7 @@ const styles = StyleSheet.create({
   rreshti: { minHeight: 52, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
   etiketa: { color: colors.textSecondary, fontSize: 15, fontWeight: "600" },
-  vlera: { flex: 1, color: colors.ink, fontSize: 16, fontWeight: "700", textAlign: "right" },
+  vlera: { color: colors.ink, fontSize: 16, fontWeight: "700", textAlign: "right" },
   anulim: { gap: 8 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   anuloButon: {

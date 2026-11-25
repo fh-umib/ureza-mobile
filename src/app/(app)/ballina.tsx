@@ -11,6 +11,7 @@ import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
+import { CMIMI_TEKST } from "@/lib/kushtet";
 import { useProfili } from "@/lib/profili";
 import type { Prona } from "@/lib/pronat";
 import { dataEPlote, dataNeTekst, dataShkurt, titulliIVizites, type LlojiVizites, type Vizita } from "@/lib/vizitat";
@@ -213,12 +214,19 @@ export default function Ballina() {
       </Hyrje>
 
       <Hyrje i={6}>
-        <View style={styles.besimi}>
+        <Pressable
+          style={({ pressed }) => [styles.besimi, pressed && styles.shtypur]}
+          onPress={() => router.push("/kushtet")}
+          accessibilityRole="link"
+          accessibilityLabel="Kushtet e vizitës: çmimi, përgjegjësia dhe pëlqimi"
+        >
           <UrezaIcon name="shield" size={22} color={colors.teal} strokeWidth={2.2} />
-          <Text style={styles.besimiTeksti}>
-            Çdo vizitë ka vendndodhje GPS, foto të drejtpërdrejta nga kamera dhe shënim zanor.
-          </Text>
-        </View>
+          <View style={styles.flex}>
+            <Text style={styles.besimiTitulli}>Miku i verifikuar · {CMIMI_TEKST} për vizitë</Text>
+            <Text style={styles.besimiTeksti}>GPS, foto të drejtpërdrejta dhe zë. Lexo kushtet dhe pëlqimin.</Text>
+          </View>
+          <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+        </Pressable>
       </Hyrje>
     </EkraniMeHero>
   );
@@ -529,5 +537,6 @@ const styles = StyleSheet.create({
     borderColor: "#CFE5DF",
     backgroundColor: colors.white,
   },
+  besimiTitulli: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800" },
   besimiTeksti: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
 });

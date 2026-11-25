@@ -12,6 +12,7 @@ import { AppState } from "react-native";
 
 import type { Koordinata } from "./gjeo";
 import { PA_LIDHJE, lexo } from "./lexo";
+import { KUSHTET_VERSIONI } from "./kushtet";
 import { PRONAT_DEMO, type Lloji, type Prona } from "./pronat";
 import { useProfili } from "./profili";
 import { useSesioni } from "./sesioni";
@@ -29,7 +30,8 @@ export type Burimi = "duke_ngarkuar" | "supabase" | "demo" | "pa_lidhje";
 
 export type RezultatiShtimit = { gabim: string | null; ruajtur: boolean };
 
-export type KerkeseVizite = { pronaId: string; lloji: LlojiVizites; data: string; udhezime: string };
+// `pelqimiAt`: when the client ticked the written consent and the terms (see src/lib/kushtet.ts).
+export type KerkeseVizite = { pronaId: string; lloji: LlojiVizites; data: string; udhezime: string; pelqimiAt: string };
 
 type Dhenat = {
   pronat: Prona[];
@@ -359,16 +361,25 @@ export function DhenatProvider({ children }: { children: ReactNode }) {
       }
       if (burimiVizitat === "duke_ngarkuar") return "Të dhënat po ngarkohen. Provo pas një çasti.";
       try {
-        const { data, error } = await supabase
-          .from("vizitat")
-          .insert({
-            prona_id: kerkesa.pronaId,
-            lloji: kerkesa.lloji,
-            data_vizites: kerkesa.data,
-            udhezime: kerkesa.udhezime,
-          })
-          .select(shtyllatEVizitave(niveliShtyllave.current))
-          .single();
+        const rreshti: Record<string, string> = {
+          prona_id: kerkesa.pronaId,
+          lloji: kerkesa.lloji,
+          data_vizites: kerkesa.data,
+          udhezime: kerkesa.udhezime,
+        };
+        const dergo = (mePelqim: boolean) =>
+          supabase
+            .from("vizitat")
+            .insert(
+              mePelqim ? { ...rreshti, pelqimi_at: kerkesa.pelqimiAt, kushtet_versioni: KUSHTET_VERSIONI } : rreshti,
+            )
+            .select(shtyllatEVizitave(niveliShtyllave.current))
+            .single();
+        let pergjigja = await dergo(true);
+        // "column does not exist": supabase/besimi.sql has not been run yet, so send the request
+        // without the consent columns (the consent was still asked on screen)
+        if (pergjigja.error?.code === "42703" || pergjigja.error?.code === "PGRST204") pergjigja = await dergo(false);
+        const { data, error } = pergjigja;
         if (error) return error.code ? error.message : PA_LIDHJE;
         if (!data) return "Nuk u dërgua kërkesa.";
         setVizitat((v) => rendit([...v, ngaRreshti(data as unknown as RreshtVizite)]));

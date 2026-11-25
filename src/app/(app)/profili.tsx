@@ -473,6 +473,7 @@ function RreshtiLidhje({
 }
 
 function KartaEPrivatesise() {
+  const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, fshirjaKerkuar, kerkoFshirjen } = useProfili();
   const roli = profili?.roli ?? "klient";
@@ -518,13 +519,20 @@ function KartaEPrivatesise() {
 
       <View style={styles.listaNdezesish}>
         {roli === "klient" ? (
-          <RreshtiNdezes
-            titulli="Pëlqimi për vizita te prindërit"
-            nentitulli="Prindërit konfirmojnë çdo vizitë."
-            vlera={false}
-            onNdrysho={() => {}}
-            seShpejti
-          />
+          <Pressable
+            style={styles.info}
+            onPress={() => router.push("/kushtet")}
+            accessibilityRole="link"
+            accessibilityLabel="Kushtet e vizitës dhe pëlqimi"
+          >
+            <View style={styles.lidhjaTekst}>
+              <Text style={styles.infoTitulli}>Kushtet e vizitës dhe pëlqimi</Text>
+              <Text style={styles.ndihme}>
+                Çmimi, përgjegjësia dhe pëlqimi me shkrim, që e jep në çdo kërkesë (edhe për prindërit).
+              </Text>
+            </View>
+            <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+          </Pressable>
         ) : null}
 
         {roli !== "admin" ? (
@@ -534,7 +542,9 @@ function KartaEPrivatesise() {
                 {roli === "klient" ? "Fotot ruhen vetëm në Odën time" : "Fotot e vizitave i sheh vetëm klienti"}
               </Text>
               <Text style={styles.ndihme}>
-                {roli === "klient" ? "Askush tjetër nuk i sheh, përveç Mikut që i bëri." : "Dhe ti, që i bëre."}
+                {roli === "klient"
+                  ? "Përveç teje, i sheh Miku që i bëri dhe, vetëm kur kundërshton, admini."
+                  : "Dhe ti, që i bëre. Admini vetëm kur klienti kundërshton."}
               </Text>
             </View>
             <View style={styles.aktive}>

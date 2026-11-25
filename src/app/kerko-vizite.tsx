@@ -8,6 +8,7 @@ import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
+import { CMIMI_TEKST } from "@/lib/kushtet";
 import {
   LLOJET_E_VIZITES,
   dataEPlote,
@@ -50,6 +51,14 @@ function Forma() {
     return dataNeTekst(new Date(sot.getFullYear(), sot.getMonth(), sot.getDate() + 1)); // tomorrow
   });
   const [udhezime, setUdhezime] = useState("");
+  // written consent (supabase/besimi.sql refuses a request without it); the consent text depends
+  // on the kind of visit, so it is asked again when the kind changes
+  const [pelqimi, setPelqimi] = useState(false);
+  const [kushtet, setKushtet] = useState(false);
+  const zgjidhLlojin = (l: LlojiVizites) => {
+    if (l !== lloji) setPelqimi(false);
+    setLloji(l);
+  };
   const [fokus, setFokus] = useState(false);
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
@@ -70,9 +79,13 @@ function Forma() {
       setGabim("Shkruaj çka duhet parë (të paktën 10 shkronja), që Miku ta dijë çka të bëjë.");
       return;
     }
+    if (!pelqimi || !kushtet) {
+      setGabim("Konfirmo pëlqimin dhe kushtet (dy kutitë më lart), pastaj dërgoje kërkesën.");
+      return;
+    }
     setDuke(true);
     setGabim(null);
-    const mesazh = await kerkoVizite({ pronaId: zgjedhurId, lloji, data, udhezime: tekst });
+    const mesazh = await kerkoVizite({ pronaId: zgjedhurId, lloji, data, udhezime: tekst, pelqimiAt: new Date().toISOString() });
     setDuke(false);
     if (mesazh) {
       setGabim(mesazh);
@@ -167,7 +180,7 @@ function Forma() {
           return (
             <Pressable
               key={l.vlera}
-              onPress={() => setLloji(l.vlera)}
+              onPress={() => zgjidhLlojin(l.vlera)}
               style={[styles.opsion, zgjedhur && styles.opsionZgjedhur]}
               accessibilityRole="radio"
               accessibilityState={{ selected: zgjedhur }}
@@ -224,17 +237,44 @@ function Forma() {
         />
       </View>
 
-      {lloji === "kujdes" ? (
-        <View style={styles.shenim}>
-          <UrezaIcon name="shield" size={22} color={colors.petrol} />
-          <Text style={styles.shenimText}>Vizitat te prindërit kërkojnë pëlqimin e tyre. Miku nuk jep këshilla mjekësore.</Text>
+      <View style={styles.seksion}>
+        <Text style={styles.kicker}>4 · ÇMIMI DHE PËLQIMI</Text>
+        <View style={styles.cmimi}>
+          <View style={styles.cmimiTekst}>
+            <Text style={styles.cmimiVlera}>{CMIMI_TEKST}</Text>
+            <Text style={styles.cmimiNen}>Paguhet vetëm për vizitën e kryer. Anulimi falas derisa ta pranojë një Miku.</Text>
+          </View>
+          <Pressable
+            onPress={() => router.push("/kushtet")}
+            style={styles.kushtetLidhje}
+            accessibilityRole="link"
+            accessibilityLabel="Lexo kushtet e vizitës"
+          >
+            <Text style={styles.kushtetLidhjeTeksti}>Kushtet</Text>
+            <UrezaIcon name="arrow" size={16} color={colors.petrol} strokeWidth={2.6} />
+          </Pressable>
         </View>
-      ) : null}
+
+        <Kutia
+          zgjedhur={pelqimi}
+          onPress={() => setPelqimi((x) => !x)}
+          teksti={
+            lloji === "kujdes"
+              ? "Prindi pajtohet me vizitën dhe me fotot. E di që vizita është jo mjekësore."
+              : "Kam të drejtë ta lejoj hyrjen në këtë pronë dhe fotografimin e saj."
+          }
+        />
+        <Kutia
+          zgjedhur={kushtet}
+          onPress={() => setKushtet((x) => !x)}
+          teksti={`I kam lexuar kushtet dhe pajtohem me çmimin prej ${CMIMI_TEKST}.`}
+        />
+      </View>
 
       {gabim ? <Text style={styles.gabim}>{gabim}</Text> : null}
 
       <Pressable
-        style={[styles.primary, duke && styles.disabled]}
+        style={[styles.primary, (duke || !pelqimi || !kushtet) && styles.disabled]}
         onPress={dergo}
         disabled={duke}
         accessibilityRole="button"
@@ -249,6 +289,24 @@ function Forma() {
         )}
       </Pressable>
     </>
+  );
+}
+
+// A consent checkbox: the whole row is the target, the box shows a check when ticked.
+function Kutia({ zgjedhur, onPress, teksti }: { zgjedhur: boolean; onPress: () => void; teksti: string }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.kutia, zgjedhur && styles.kutiaZgjedhur]}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: zgjedhur }}
+      accessibilityLabel={teksti}
+    >
+      <View style={[styles.kutiaShenja, zgjedhur && styles.kutiaShenjaZgjedhur]}>
+        {zgjedhur ? <UrezaIcon name="check" size={16} color={colors.white} strokeWidth={3} /> : null}
+      </View>
+      <Text style={styles.kutiaTeksti}>{teksti}</Text>
+    </Pressable>
   );
 }
 
@@ -292,6 +350,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   radioZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
+  cmimi: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 14,
+    borderRadius: 18,
+    backgroundColor: "#E8F5F3",
+  },
+  cmimiTekst: { flex: 1, gap: 2 },
+  cmimiVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: "800" },
+  cmimiNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  kushtetLidhje: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    minHeight: 44,
+    paddingHorizontal: 14,
+    borderRadius: 22,
+    backgroundColor: colors.white,
+  },
+  kushtetLidhjeTeksti: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
+  kutia: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: "#D3DEE4",
+    backgroundColor: colors.white,
+  },
+  kutiaZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },
+  kutiaShenja: {
+    width: 24,
+    height: 24,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: colors.inputBorder,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 1,
+  },
+  kutiaShenjaZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
+  kutiaTeksti: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: "600" },
   label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700", marginTop: 4 },
   paralajmerim: {
     flexDirection: "row",
@@ -318,15 +420,6 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
-  shenim: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-    padding: 14,
-    borderRadius: 16,
-    backgroundColor: "#E8F5F3",
-  },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   primary: {
     height: 56,

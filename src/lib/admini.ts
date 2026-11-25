@@ -186,3 +186,28 @@ export function useVerifikimiIm(): { njohur: boolean; verifikuarAt: string | nul
   // an answer for an earlier user is never shown
   return gjendja.uid === uid ? { njohur: gjendja.njohur, verifikuarAt: gjendja.verifikuarAt } : { njohur: false, verifikuarAt: null };
 }
+
+// For the client: is the Miku of one of their own visits verified by the Urëza team?
+// (supabase/besimi.sql, mikut_e_verifikuar_te_mi). null while unknown, e.g. before that file is run.
+export function useMikuIVerifikuar(mikuId: string | null): boolean | null {
+  const [gjendja, setGjendja] = useState<{ mikuId: string | null; verifikuar: boolean | null }>({
+    mikuId: null,
+    verifikuar: null,
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!mikuId) return;
+      let aktiv = true;
+      void lexo<string[]>(supabase.rpc("mikut_e_verifikuar_te_mi")).then((r) => {
+        if (!aktiv || r.tipi !== "ok") return;
+        setGjendja({ mikuId, verifikuar: r.data.includes(mikuId) });
+      });
+      return () => {
+        aktiv = false;
+      };
+    }, [mikuId]),
+  );
+
+  return gjendja.mikuId === mikuId ? gjendja.verifikuar : null;
+}
