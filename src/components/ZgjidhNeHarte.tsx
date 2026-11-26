@@ -4,7 +4,7 @@ import MapView, { type MapType, type Region } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Path } from "react-native-svg";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { koordinataNeTekst, type Koordinata } from "@/lib/gjeo";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
   gjilpera: { position: "absolute", left: "50%", top: "50%", marginLeft: -20, marginTop: -50, pointerEvents: "none" },
   siper: { position: "absolute", left: 12, right: 12, flexDirection: "row", gap: 8, alignItems: "flex-start" },
   udhezim: { flex: 1, padding: 12, borderRadius: 16, backgroundColor: "rgba(23,63,78,0.9)", gap: 2 },
-  titulli: { color: colors.white, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  tekst: { color: colors.onHeroText, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  titulli: { color: colors.white, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  tekst: { color: colors.onHeroText, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   mbyll: {
     width: 48,
     height: 48,
@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: "rgba(23,63,78,0.9)",
   },
-  llojiText: { color: colors.white, fontSize: 14, fontWeight: "700" },
+  llojiText: { color: colors.white, fontSize: 14, fontFamily: font.w700 },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 16, gap: 8 },
-  koordinatat: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700", textAlign: "center" },
-  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600", textAlign: "center" },
+  koordinatat: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w700, textAlign: "center" },
+  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontFamily: font.w600, textAlign: "center" },
   konfirmo: {
     height: 56,
     borderRadius: 16,
@@ -153,6 +153,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  konfirmoText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  konfirmoText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.45 },
 });

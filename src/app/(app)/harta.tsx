@@ -22,7 +22,7 @@ import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
 import { vendiNeHarte, type Prona } from "@/lib/pronat";
@@ -389,8 +389,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(23,63,78,0.88)",
     pointerEvents: "none",
   },
-  titulliText: { color: colors.white, fontSize: 24, lineHeight: 30, fontWeight: "800" },
-  nentitulli: { color: colors.onHeroText, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  titulliText: { color: colors.white, fontSize: 24, lineHeight: 30, fontFamily: font.w800 },
+  nentitulli: { color: colors.onHeroText, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   kerko: {
     position: "absolute",
     right: 12,
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.28)",
   },
-  kerkoText: { color: colors.white, fontSize: 15, fontWeight: "700" },
+  kerkoText: { color: colors.white, fontSize: 15, fontFamily: font.w700 },
   scrim: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: colors.hero },
   faqja: { flexGrow: 1 },
   flete: {
@@ -437,16 +437,16 @@ const styles = StyleSheet.create({
   },
   pronaKartaZgjedhur: { borderColor: colors.petrol },
   pronaFoto: { height: 84, borderRadius: 14, overflow: "hidden" },
-  pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4, minHeight: 40 },
+  pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w800, paddingHorizontal: 4, minHeight: 40 },
   pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
-  pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
+  pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600, flexShrink: 1 },
   zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
-  emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
-  vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "600", flexShrink: 1 },
+  emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontFamily: font.w800 },
+  vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w600, flexShrink: 1 },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
-  titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800", flexShrink: 1 },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+  titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800, flexShrink: 1 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
   lidhjet: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 4 },
   vendiIkona: { width: 34, height: 34, borderRadius: 12, alignItems: "center", justifyContent: "center" },
   butonIkone: {
@@ -460,11 +460,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  butonIkoneText: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
+  butonIkoneText: { color: colors.petrol, fontSize: 15, fontFamily: font.w800 },
   dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   vizitatKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
-  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija },
   rreshtiIkona: {
     width: 40,
@@ -478,10 +478,10 @@ const styles = StyleSheet.create({
   rreshti: { minHeight: 72, flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12 },
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
   rreshtiTekst: { flex: 1, minWidth: 0, gap: 2, alignItems: "flex-start" },
-  rreshtiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700" },
-  rreshtiData: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  rreshtiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w700 },
+  rreshtiData: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
-  lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  lidhjeText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   primary: {
     alignSelf: "stretch",
     marginTop: 4,
@@ -493,5 +493,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
 });

@@ -1,7 +1,7 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { kohezgjatjaNeTekst } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -47,5 +47,5 @@ export function LojtariZanor({ url, kohezgjatja }: { url: string; kohezgjatja: n
 const styles = StyleSheet.create({
   rreshti: { flexDirection: "row", alignItems: "center", gap: 14 },
   buton: { width: 52, height: 52, borderRadius: 26, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  koha: { color: colors.ink, fontSize: 17, fontWeight: "700", fontVariant: ["tabular-nums"] },
+  koha: { color: colors.ink, fontSize: 17, fontFamily: font.w700, fontVariant: ["tabular-nums"] },
 });

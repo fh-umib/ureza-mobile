@@ -18,7 +18,7 @@ import Svg, { Path, Rect } from "react-native-svg";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { UrezaLogo } from "@/components/UrezaLogo";
 import { UrezaScene } from "@/components/UrezaScene";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useKeyboardReveal } from "@/hooks/use-keyboard-reveal";
 import { EMRAT_E_ROLEVE, useProfili } from "@/lib/profili";
 import { hyr, krijoLlogari } from "@/lib/sesioni";
@@ -310,11 +310,11 @@ const styles = StyleSheet.create({
   hero: { height: 440, backgroundColor: colors.hero },
   heroContent: { paddingHorizontal: 24 },
   brand: { flexDirection: "row", alignItems: "center", gap: 14 },
-  brandName: { color: colors.white, fontSize: 30, lineHeight: 36, fontWeight: "800" },
+  brandName: { color: colors.white, fontSize: 30, lineHeight: 36, fontFamily: font.w800 },
   heroText: { marginTop: 46 },
-  kicker: { color: colors.mint, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1.5 },
-  title: { marginTop: 6, color: colors.white, fontSize: 32, lineHeight: 38, fontWeight: "800" },
-  subtitle: { marginTop: 6, color: colors.onHeroText, fontSize: 16, lineHeight: 24, fontWeight: "500" },
+  kicker: { color: colors.mint, fontSize: 12, lineHeight: 16, fontFamily: font.w700, letterSpacing: 1.5 },
+  title: { marginTop: 6, color: colors.white, fontSize: 32, lineHeight: 38, fontFamily: font.w800 },
+  subtitle: { marginTop: 6, color: colors.onHeroText, fontSize: 16, lineHeight: 24, fontFamily: font.w500 },
   sheet: {
     flexGrow: 1,
     marginTop: -24,
@@ -331,9 +331,9 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 8,
   },
-  sheetTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  sheetTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   field: { gap: 6 },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   fieldIcon: { position: "absolute", left: 16, top: 17, zIndex: 1, pointerEvents: "none" },
   input: {
     height: 56,
@@ -344,11 +344,11 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFocused: { borderColor: colors.petrol },
-  message: { fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  message: { fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   messageError: { color: colors.error },
   messageInfo: { color: colors.teal },
   primary: {
@@ -360,11 +360,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   divider: { flexDirection: "row", alignItems: "center", gap: 12 },
   dividerLine: { flex: 1, height: 1, backgroundColor: colors.line },
-  dividerText: { color: colors.textSecondary, fontSize: 14, fontWeight: "600" },
+  dividerText: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w600 },
   secondary: {
     height: 56,
     borderRadius: 16,
@@ -376,12 +376,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  secondaryText: { color: colors.petrol, fontSize: 17, fontWeight: "700" },
+  secondaryText: { color: colors.petrol, fontSize: 17, fontFamily: font.w700 },
   soonPill: { backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 3 },
-  soonText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
+  soonText: { color: "#7A4A06", fontSize: 12, fontFamily: font.w700 },
   switchRow: { minHeight: 44, alignItems: "center", justifyContent: "center" },
-  switchText: { color: colors.textSecondary, fontSize: 16, lineHeight: 24, fontWeight: "500" },
-  switchLink: { color: colors.petrol, fontWeight: "800" },
+  switchText: { color: colors.textSecondary, fontSize: 16, lineHeight: 24, fontFamily: font.w500 },
+  switchLink: { color: colors.petrol, fontFamily: font.w800 },
   roliRresht: {
     flexDirection: "row",
     alignItems: "center",
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: "#E8F5F3",
   },
-  roliTekst: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  roliEmri: { fontWeight: "800" },
+  roliTekst: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  roliEmri: { fontFamily: font.w800 },
   roliNdrysho: { minHeight: 44, paddingHorizontal: 10, alignItems: "center", justifyContent: "center" },
 });

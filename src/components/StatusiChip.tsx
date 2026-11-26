@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { STATUSET, type Statusi } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
+import { font } from "@/constants/ureza";
 
 // The status of a visit as a small coloured chip (icon + word, never colour alone).
 export function StatusiChip({ statusi }: { statusi: Statusi }) {
@@ -25,5 +26,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
-  text: { fontSize: 13, fontWeight: "700" },
+  text: { fontSize: 13, fontFamily: font.w700 },
 });

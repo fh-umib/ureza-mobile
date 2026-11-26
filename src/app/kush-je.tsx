@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { ZgjedhesiIRolit } from "@/components/ZgjedhesiIRolit";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useProfili } from "@/lib/profili";
 
 // "Kush je ti?" (design: Roli): the first step after the welcome screen. The role chosen
@@ -47,5 +47,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
 });

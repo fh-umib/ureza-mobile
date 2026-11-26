@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { LLOJET_E_MIKUT, useProfiliIPunes, type LlojiIMikut, type ProfiliIPunes } from "@/lib/kontrata";
 
 import { useRevealOnFocus } from "./EkraniMeHero";
@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   lloji: {
     width: "47%",
@@ -239,10 +239,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   llojiIkonaZgjedhur: { backgroundColor: colors.petrol },
-  llojiEmri: { color: colors.ink, fontSize: 16, fontWeight: "800" },
-  llojiPershkrimi: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontWeight: "500" },
+  llojiEmri: { color: colors.ink, fontSize: 16, fontFamily: font.w800 },
+  llojiPershkrimi: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontFamily: font.w500 },
   fusha: { gap: 6 },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   input: {
     height: 52,
     paddingHorizontal: 16,
@@ -251,11 +251,11 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
-  mesazh: { color: colors.ok, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  mesazh: { color: colors.ok, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   gabim: { color: colors.error },
   ruaj: {
     height: 52,
@@ -266,6 +266,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  ruajTeksti: { color: colors.white, fontSize: 16, fontWeight: "800" },
+  ruajTeksti: { color: colors.white, fontSize: 16, fontFamily: font.w800 },
   disabled: { opacity: 0.6 },
 });

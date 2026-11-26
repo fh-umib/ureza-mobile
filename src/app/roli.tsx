@@ -5,7 +5,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { ZgjedhesiIRolit, type Zgjedhja } from "@/components/ZgjedhesiIRolit";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { FAQJA_KRYESORE } from "@/lib/faqet";
 import { useProfili } from "@/lib/profili";
 import { dil } from "@/lib/sesioni";
@@ -154,7 +154,7 @@ function Forma({ eParia }: { eParia: boolean }) {
 
 const styles = StyleSheet.create({
   fusha: { gap: 8 },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   input: {
     height: 56,
     paddingHorizontal: 16,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#E8F5F3",
   },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: {
     height: 56,
     borderRadius: 16,
@@ -186,12 +186,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
-  dilText: { color: colors.textSecondary, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
+  dilText: { color: colors.textSecondary, fontSize: 16, fontFamily: font.w700 },
   bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
 });

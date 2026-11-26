@@ -4,7 +4,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useProfiliIPunes } from "@/lib/kontrata";
 import { useDhenat } from "@/lib/dhenat";
@@ -138,12 +138,12 @@ function Rreshti({ vizita, emriProna }: { vizita: Vizita; emriProna?: string }) 
 }
 
 const styles = StyleSheet.create({
-  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   shenim: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#E8F5F3",
   },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   verifikuar: { backgroundColor: "#E4F6EB" },
   paVerifikuar: { backgroundColor: "#FFF2DE" },
   rreshti: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   tekst: { flex: 1, gap: 4 },
   shigjeta: { alignSelf: "center" },
-  titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  udhezime: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
+  udhezime: { color: colors.ink, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
 });

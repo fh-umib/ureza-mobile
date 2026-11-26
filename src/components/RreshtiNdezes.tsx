@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
 
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tekst: { flex: 1, minWidth: 0, gap: 0 },
-  titulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700" },
-  nentitulli: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w700 },
+  nentitulli: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   pill: {
     alignSelf: "flex-start",
     marginTop: 4,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 2,
   },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
+  pillText: { color: "#7A4A06", fontSize: 12, fontFamily: font.w700 },
   shina: { width: 56, height: 32, borderRadius: 16, justifyContent: "center" },
   kapsa: {
     position: "absolute",

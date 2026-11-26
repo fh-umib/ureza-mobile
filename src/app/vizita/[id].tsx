@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -8,9 +9,9 @@ import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { PermbledhjaERaportit, VendimiIRaportit } from "@/components/RaportiVizites";
 import { RaportiNeGjuhen } from "@/components/RaportiNeGjuhen";
 import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
-import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { DeshmiteShkurt, KartaEMikut, StatusiIGjalle } from "@/components/VizitaBesimi";
+import { colors, font } from "@/constants/ureza";
 import { Kutia } from "@/components/Kutia";
 import { useMikuIVerifikuar } from "@/lib/admini";
 import { PJESA_E_DEMIT, useKontrata, useProfiliIPunes } from "@/lib/kontrata";
@@ -102,6 +103,7 @@ export default function DetajetEVizites() {
       setKonfirmo(false);
       return;
     }
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
   }
 
@@ -116,6 +118,7 @@ export default function DetajetEVizites() {
       setGabim(mesazh);
       return;
     }
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push({ pathname: "/deshmia/[id]", params: { id: vizita.id } });
   }
 
@@ -136,7 +139,10 @@ export default function DetajetEVizites() {
           return (
             <Pressable
               key={t.vlera}
-              onPress={() => setTab(t.vlera)}
+              onPress={() => {
+                if (t.vlera !== tab) void Haptics.selectionAsync();
+                setTab(t.vlera);
+              }}
               style={[styles.tab, aktiv && styles.tabAktiv]}
               accessibilityRole="tab"
               accessibilityState={{ selected: aktiv }}
@@ -156,10 +162,9 @@ export default function DetajetEVizites() {
             </View>
           ) : null}
 
-          <View style={styles.karta}>
-            <StatusiChip statusi={vizita.statusi} />
-            <Text style={styles.statusiTeksti}>{tekstiIStatusit}</Text>
-          </View>
+          {/* trust, in order: who comes, what is happening now, then the proof */}
+          {!eMiku ? <KartaEMikut emri={vizita.mikuEmri} verifikuar={mikuVerifikuar} /> : null}
+          <StatusiIGjalle statusi={vizita.statusi} teksti={tekstiIStatusit} />
 
           {/* the Miku's report in the reader's language, once the evidence is sent */}
           {dergoi ? <RaportiNeGjuhen vizita={vizita} /> : null}
@@ -171,13 +176,7 @@ export default function DetajetEVizites() {
             <Text style={styles.udhezime}>{vizita.udhezime}</Text>
             <Rresht etiketa="Lloji" vlera={titulliIVizites(vizita.lloji)} />
             <Rresht etiketa="Data" vlera={dataEPlote(vizita.data)} />
-            <Rresht etiketa="Prona" vlera={prona?.emri ?? "Prona"} />
-            <Rresht
-              etiketa="Miku"
-              vlera={vizita.mikuEmri ?? "Pa caktuar ende"}
-              fundit
-              distinktiv={!eMiku && mikuVerifikuar ? "I verifikuar nga Urëza" : undefined}
-            />
+            <Rresht etiketa="Prona" vlera={prona?.emri ?? "Prona"} fundit />
           </View>
 
           <KartaEKontrates vizitaId={vizita.id} />
@@ -209,26 +208,7 @@ export default function DetajetEVizites() {
 
 
           {/* while the report waits for a decision, "Shiko dëshmitë" is on the report card above */}
-          {!raportiGati ? (
-            <View style={styles.karta}>
-              <Text style={styles.titulli}>Dëshmitë</Text>
-              {dergoi ? (
-                <>
-                  <Text style={styles.tekst}>GPS, foto dhe shënim zanor nga vizita.</Text>
-                  <Pressable style={styles.lidhje} onPress={() => setTab("deshmi")} accessibilityRole="button">
-                    <Text style={styles.lidhjeText}>Shiko dëshmitë</Text>
-                    <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-                  </Pressable>
-                </>
-              ) : (
-                <Text style={styles.tekst}>
-                  {eMiku
-                    ? "Vendndodhja GPS, fotot dhe shënimi zanor i dërgohen klientit kur ta kryesh vizitën."
-                    : "Vendndodhja GPS, fotot dhe shënimi zanor vijnë këtu kur Miku ta kryejë vizitën."}
-                </Text>
-              )}
-            </View>
-          ) : null}
+          {!raportiGati ? <DeshmiteShkurt gati={dergoi} onHap={() => setTab("deshmi")} /> : null}
 
           {!eMiku ? <VendimiIRaportit vizita={vizita} admin={eAdmin} /> : null}
 
@@ -308,8 +288,10 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
     setDuke(false);
     if (mesazh) {
       setGabim(mesazh);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onPranuar();
   }
 
@@ -498,9 +480,9 @@ const styles = StyleSheet.create({
   pala: { flexDirection: "row", alignItems: "center", gap: 6, height: 28, paddingHorizontal: 10, borderRadius: 14 },
   palaPo: { backgroundColor: "#E4F6EB" },
   palaJo: { backgroundColor: "#FFF2DE" },
-  palaTeksti: { fontSize: 13, fontWeight: "700" },
+  palaTeksti: { fontSize: 13, fontFamily: font.w700 },
   kontrataLidhje: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44 },
-  kontrataLidhjeTeksti: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  kontrataLidhjeTeksti: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   paProfil: {
     flexDirection: "row",
     alignItems: "center",
@@ -509,7 +491,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: "#FFF2DE",
   },
-  paProfilTeksti: { flex: 1, color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  paProfilTeksti: { flex: 1, color: "#8A5210", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   vleraKolona: { flexShrink: 1, alignItems: "flex-end", gap: 4 },
   distinktiv: {
     flexDirection: "row",
@@ -520,7 +502,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#E4F6EB",
   },
-  distinktivTeksti: { color: "#1E6B3E", fontSize: 12, fontWeight: "800" },
+  distinktivTeksti: { color: "#1E6B3E", fontSize: 12, fontFamily: font.w800 },
   tabet: { flexDirection: "row", gap: 4, padding: 4, borderRadius: 16, backgroundColor: "#E3EAF0" },
   tab: { flex: 1, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center" },
   tabAktiv: {
@@ -531,19 +513,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-  tabText: { color: colors.textSecondary, fontSize: 15, fontWeight: "700" },
-  tabTextAktiv: { color: colors.petrol, fontWeight: "800" },
+  tabText: { color: colors.textSecondary, fontSize: 15, fontFamily: font.w700 },
+  tabTextAktiv: { color: colors.petrol, fontFamily: font.w800 },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  statusiTeksti: { color: colors.ink, fontSize: 17, lineHeight: 25, fontWeight: "500" },
-  udhezime: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500", marginBottom: 6 },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  udhezime: { color: colors.ink, fontSize: 16, lineHeight: 24, fontFamily: font.w500, marginBottom: 6 },
   rreshti: { minHeight: 52, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
-  etiketa: { color: colors.textSecondary, fontSize: 15, fontWeight: "600" },
-  vlera: { color: colors.ink, fontSize: 16, fontWeight: "700", textAlign: "right" },
+  etiketa: { color: colors.textSecondary, fontSize: 15, fontFamily: font.w600 },
+  vlera: { color: colors.ink, fontSize: 16, fontFamily: font.w700, textAlign: "right" },
   anulim: { gap: 8 },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   anuloButon: {
     height: 56,
     borderRadius: 16,
@@ -553,20 +534,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  anuloText: { color: colors.vizita, fontSize: 17, fontWeight: "700" },
+  anuloText: { color: colors.vizita, fontSize: 17, fontFamily: font.w700 },
   konfirmim: { gap: 10, padding: 16, borderRadius: 16, backgroundColor: "#FDECEA" },
   konfirmimTekst: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  konfirmimLabel: { flex: 1, color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  konfirmimLabel: { flex: 1, color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   anuloPlote: { backgroundColor: colors.vizita },
-  anuloPloteText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  anuloPloteText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   jo: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  joText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  joText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
-  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500", textAlign: "center" },
-  lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
-  lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500, textAlign: "center" },
   primary: { height: 56, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   sukses: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -575,9 +554,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#E4F6EB",
   },
-  suksesText: { flex: 1, color: "#1E6B3E", fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  suksesText: { flex: 1, color: "#1E6B3E", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   deshmi: { flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 4 },
   deshmiIkona: { width: 44, height: 44, borderRadius: 14, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   deshmiTekst: { flex: 1, gap: 1 },
-  deshmiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
+  deshmiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
 });

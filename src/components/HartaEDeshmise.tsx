@@ -2,7 +2,7 @@ import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, { Circle, Marker, type Region } from "react-native-maps";
 import Svg, { Circle as SvgCircle, Path, Rect } from "react-native-svg";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { RREZJA_E_PRONES, krahaso, lidhjaEHartes, type GjendjaEGps, type Koordinata } from "@/lib/gjeo";
 
 // A small satellite map for the GPS evidence of a visit (design: Detajet, "Dëshmi"): the property with
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   pika: { flexDirection: "row", alignItems: "center", gap: 6 },
   shenja: { width: 12, height: 12, borderRadius: 6 },
-  legjendaText: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "600" },
+  legjendaText: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w600 },
   lidhje: { minHeight: 44, marginLeft: "auto", justifyContent: "center" },
-  lidhjeText: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+  lidhjeText: { color: colors.petrol, fontSize: 14, fontFamily: font.w800 },
 });

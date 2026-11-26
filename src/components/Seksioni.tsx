@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 import { Ikona, type EmriIIkones } from "./Ikona";
 
@@ -46,7 +46,7 @@ export function Seksioni({
 
 const styles = StyleSheet.create({
   rreshti: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   numri: {
     minWidth: 24,
     height: 24,
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  numriTeksti: { color: colors.petrol, fontSize: 12, fontWeight: "800" },
+  numriTeksti: { color: colors.petrol, fontSize: 12, fontFamily: font.w800 },
   hapesira: { flex: 1 },
   lidhja: { flexDirection: "row", alignItems: "center", gap: 2, minHeight: 44 },
-  lidhjaTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+  lidhjaTeksti: { color: colors.petrol, fontSize: 14, fontFamily: font.w800 },
 });

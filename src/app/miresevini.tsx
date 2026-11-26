@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { UrezaLogo } from "@/components/UrezaLogo";
 import { UrezaScene } from "@/components/UrezaScene";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 // Welcome screen: one screen, no scrolling. The bridge at dusk fills the middle, the promise
 // sits above it in one line, and the three proofs a Miku brings (GPS, photo, voice) sit
@@ -96,9 +96,9 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.hero },
   koka: { paddingHorizontal: 28, gap: 14 },
   marka: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 18 },
-  markaEmri: { color: colors.white, fontSize: 22, fontWeight: "800", letterSpacing: 0.3 },
-  titulli: { color: colors.white, fontSize: 38, lineHeight: 44, fontWeight: "800", letterSpacing: -0.5 },
-  nentitulli: { color: colors.onHeroText, fontSize: 17, lineHeight: 24, fontWeight: "500" },
+  markaEmri: { color: colors.white, fontSize: 22, fontFamily: font.w800, letterSpacing: 0.3 },
+  titulli: { color: colors.white, fontSize: 38, lineHeight: 44, fontFamily: font.w800, letterSpacing: -0.5 },
+  nentitulli: { color: colors.onHeroText, fontSize: 17, lineHeight: 24, fontFamily: font.w500 },
   // the picture takes the free space and keeps its bottom edge (the bridge) in view
   skena: { flex: 1, overflow: "hidden", justifyContent: "flex-end", marginTop: 8 },
   skenaBrenda: { width: "100%" },
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(140,224,203,0.25)",
   },
-  deshmiaTeksti: { color: colors.mint, fontSize: 14, fontWeight: "700" },
+  deshmiaTeksti: { color: colors.mint, fontSize: 14, fontFamily: font.w700 },
   butoni: {
     height: 58,
     borderRadius: 16,
@@ -126,5 +126,5 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   shtypur: { opacity: 0.9, transform: [{ scale: 0.98 }] },
-  butoniTeksti: { color: colors.hero, fontSize: 18, fontWeight: "800" },
+  butoniTeksti: { color: colors.hero, fontSize: 18, fontFamily: font.w800 },
 });

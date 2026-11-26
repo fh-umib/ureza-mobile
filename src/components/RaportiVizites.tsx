@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDeshmite } from "@/lib/deshmite";
 import { useDhenat } from "@/lib/dhenat";
 import { dataMeOre, kohezgjatjaNeTekst, oraNeTekst, type Vizita } from "@/lib/vizitat";
@@ -210,8 +210,8 @@ export function VendimiIRaportit({ vizita, admin = false }: { vizita: Vizita; ad
 
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 10 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  tekst: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  tekst: { color: colors.ink, fontSize: 16, lineHeight: 24, fontFamily: font.w500 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {
     height: 34,
@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
-  chipText: { color: colors.ink, fontSize: 14, fontWeight: "700" },
+  chipText: { color: colors.ink, fontSize: 14, fontFamily: font.w700 },
   lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
-  lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  lidhjeText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
 
   vendim: { gap: 10, marginTop: 4 },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   miratoButon: {
     height: 56,
     borderRadius: 16,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  miratoText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  miratoText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   kundershtoButon: {
     height: 52,
     borderRadius: 16,
@@ -249,15 +249,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  kundershtoText: { color: KUNDERSHTO, fontSize: 17, fontWeight: "700" },
-  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500", textAlign: "center" },
+  kundershtoText: { color: KUNDERSHTO, fontSize: 17, fontFamily: font.w700 },
+  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500, textAlign: "center" },
   disabled: { opacity: 0.6 },
 
   paneli: { gap: 10, padding: 16, borderRadius: 16 },
   paneliMirato: { backgroundColor: "#E8F5F3" },
   paneliKundershto: { backgroundColor: "#FDECEA" },
-  paneliLabel: { color: colors.ink, fontSize: 16, lineHeight: 23, fontWeight: "700" },
-  paneliNdihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  paneliLabel: { color: colors.ink, fontSize: 16, lineHeight: 23, fontFamily: font.w700 },
+  paneliNdihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   input: {
     minHeight: 110,
     borderRadius: 16,
@@ -268,10 +268,10 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 16,
     lineHeight: 23,
-    fontWeight: "500",
+    fontFamily: font.w500,
   },
   inputFokus: { borderColor: colors.petrol, borderWidth: 2 },
-  numrues: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", textAlign: "right" },
+  numrues: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600, textAlign: "right" },
   kundershtoPlote: {
     height: 56,
     borderRadius: 16,
@@ -279,16 +279,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  kundershtoPloteText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  kundershtoPloteText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   jo: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  joText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  joText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
 
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 10 },
   miratuar: { backgroundColor: "#E4F6EB" },
   miratuarTitulli: { color: "#1E6B3E" },
-  miratuarTekst: { color: "#1E6B3E", fontSize: 16, lineHeight: 24, fontWeight: "600" },
+  miratuarTekst: { color: "#1E6B3E", fontSize: 16, lineHeight: 24, fontFamily: font.w600 },
   kundershtuar: { backgroundColor: "#FBE9E9" },
   kundershtuarTitulli: { color: "#7A1F1B" },
-  kundershtuarTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },
-  arsyeja: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500", fontStyle: "italic" },
+  kundershtuarTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
+  arsyeja: { color: colors.ink, fontSize: 16, lineHeight: 24, fontFamily: font.w500i },
 });

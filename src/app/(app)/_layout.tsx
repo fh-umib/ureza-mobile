@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { faqjaLejohet } from "@/lib/faqet";
 import { useProfili, type Roli } from "@/lib/profili";
 
@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   kapsulaAktive: { backgroundColor: colors.ikonaBg },
-  label: { color: colors.textSecondary, fontSize: 11, fontWeight: "600" },
-  labelActive: { color: colors.petrol, fontWeight: "800" },
+  label: { color: colors.textSecondary, fontSize: 11, fontFamily: font.w600 },
+  labelActive: { color: colors.petrol, fontFamily: font.w800 },
 });

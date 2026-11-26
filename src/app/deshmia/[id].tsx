@@ -16,7 +16,7 @@ import { HartaEDeshmise } from "@/components/HartaEDeshmise";
 import { ListaEKontrollit } from "@/components/ListaEKontrollit";
 import { LojtariZanor } from "@/components/LojtariZanor";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { useDeshmite, type Deshmi, type PerdorimiIDeshmive } from "@/lib/deshmite";
 import { bejFoto, merrVendndodhjen } from "@/lib/kapja";
@@ -508,22 +508,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   hapiRrethiGati: { backgroundColor: "#1E6B3E", borderColor: "#1E6B3E" },
-  hapiText: { color: colors.textSecondary, fontSize: 14, fontWeight: "700" },
+  hapiText: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w700 },
   hapiTextGati: { color: "#1E6B3E" },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
   krye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   chip: { height: 28, paddingHorizontal: 12, borderRadius: 14, alignItems: "center", justifyContent: "center" },
   chipGati: { backgroundColor: "#E4F6EB" },
   chipPritje: { backgroundColor: "#FFF2DE" },
-  chipText: { fontSize: 13, fontWeight: "700" },
-  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
-  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500", textAlign: "center" },
+  chipText: { fontSize: 13, fontFamily: font.w700 },
+  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500, textAlign: "center" },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   dytesorPlote: {
     height: 52,
     borderRadius: 16,
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  dytesorPlotText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorPlotText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   miniatura: { width: "31%", aspectRatio: 1, borderRadius: 14, overflow: "hidden", backgroundColor: "#E3EAF0" },
   foto: { width: "100%", height: "100%" },
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(11,37,48,0.72)",
     color: colors.white,
     fontSize: 12,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
   hiq: {
     position: "absolute",
@@ -574,10 +574,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
   },
-  shtoText: { color: colors.petrol, fontSize: 14, fontWeight: "700" },
+  shtoText: { color: colors.petrol, fontSize: 14, fontFamily: font.w700 },
   regjistron: { flexDirection: "row", alignItems: "center", gap: 12 },
   pika: { width: 14, height: 14, borderRadius: 7, backgroundColor: colors.vizita },
-  regjistronKoha: { color: colors.ink, fontSize: 24, fontWeight: "800", fontVariant: ["tabular-nums"] },
+  regjistronKoha: { color: colors.ink, fontSize: 24, fontFamily: font.w800, fontVariant: ["tabular-nums"] },
   ndalo: {
     height: 52,
     borderRadius: 16,
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  ndaloText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  ndaloText: { color: colors.white, fontSize: 16, fontFamily: font.w700 },
   konfirmim: {
     minHeight: 56,
     flexDirection: "row",
@@ -609,9 +609,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   kutiaBere: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  konfirmimText: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  konfirmimText: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   primary: { height: 56, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.5 },
   shenim: {
     flexDirection: "row",
@@ -621,5 +621,5 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#E8F5F3",
   },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
 });

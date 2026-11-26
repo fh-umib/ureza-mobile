@@ -4,6 +4,7 @@ import { distancaNeTekst, krahaso, RREZJA_E_PRONES, type GjendjaEGps } from "@/l
 import type { Prona } from "@/lib/pronat";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
+import { font } from "@/constants/ureza";
 
 type Gps = { gjeresia: number | null; gjatesia: number | null; saktesia: number | null };
 
@@ -55,5 +56,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
-  text: { fontSize: 13, fontWeight: "700", flexShrink: 1 },
+  text: { fontSize: 13, fontFamily: font.w700, flexShrink: 1 },
 });

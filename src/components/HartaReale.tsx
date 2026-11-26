@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, { Circle, Marker, type MapType, type Region } from "react-native-maps";
 import Svg, { Path, Rect } from "react-native-svg";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { RREZJA_E_PRONES } from "@/lib/gjeo";
 
 import type { PikaNeHarte } from "./HartaKosoves";
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.28)",
   },
-  butonText: { color: colors.white, fontSize: 14, fontWeight: "700" },
+  butonText: { color: colors.white, fontSize: 14, fontFamily: font.w700 },
   zgjedhur: { width: 200, alignItems: "center", gap: 4 },
   emri: {
     maxWidth: 200,
@@ -202,6 +202,6 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
 });

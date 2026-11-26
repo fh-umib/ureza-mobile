@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 import { UrezaIcon } from "./UrezaIcon";
 
@@ -46,5 +46,5 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   kutiaShenjaZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  kutiaTeksti: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: "600" },
+  kutiaTeksti: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 21, fontFamily: font.w600 },
 });
