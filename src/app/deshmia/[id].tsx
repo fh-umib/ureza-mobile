@@ -18,6 +18,7 @@ import { LojtariZanor } from "@/components/LojtariZanor";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
 import { SkeletiIFaqes } from "@/components/ui/Skeleti";
+import { useToast } from "@/components/ui/Toast";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { useDeshmite, type Deshmi, type PerdorimiIDeshmive } from "@/lib/deshmite";
@@ -44,6 +45,7 @@ const MIME_I_ZANIT = Platform.OS === "web" ? "audio/webm" : "audio/mp4";
 
 export default function Deshmia() {
   const router = useRouter();
+  const toast = useToast();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { vizitat, pronat, burimiVizitat, dergoRaportin } = useDhenat();
   const d = useDeshmite(id);
@@ -119,6 +121,7 @@ export default function Deshmia() {
       setGabim(mesazh);
       return;
     }
+    toast.sukses("Raporti u dërgua te klienti.");
     router.back();
   }
 

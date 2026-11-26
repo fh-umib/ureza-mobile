@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 
+import { useToast } from "./ui/Toast";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Koordinata } from "@/lib/gjeo";
@@ -13,6 +14,7 @@ import { VendndodhjaFusha } from "./VendndodhjaFusha";
 // The parent shows it only while it is open, so every opening starts from the saved position.
 export function RedaktoVendin({ prona, mbyll }: { prona: Prona; mbyll: () => void }) {
   const { vendosVendndodhjen } = useDhenat();
+  const toast = useToast();
   const [k, setK] = useState<Koordinata | null>(prona.koordinatat);
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
@@ -36,6 +38,7 @@ export function RedaktoVendin({ prona, mbyll }: { prona: Prona; mbyll: () => voi
       setGabim(mesazh);
       return;
     }
+    toast.sukses("Vendndodhja e saktë u ruajt.");
     mbyll();
   }
 
@@ -49,6 +52,7 @@ export function RedaktoVendin({ prona, mbyll }: { prona: Prona; mbyll: () => voi
       setGabim(mesazh);
       return;
     }
+    toast.info("Vendndodhja e saktë u hoq.");
     mbyll();
   }
 
