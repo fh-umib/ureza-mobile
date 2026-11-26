@@ -290,7 +290,7 @@ function KartaEVendit({ prona, eMiku, onRedakto }: { prona: Prona; eMiku: boolea
   }
 
   return (
-    <View style={[styles.karta, { borderLeftWidth: 5, borderLeftColor: gjendja.fg }]}>
+    <View style={styles.karta}>
       <View style={styles.rreshtIkone}>
         <View style={[styles.vendiIkona, { backgroundColor: gjendja.bg }]}>
           <UrezaIcon name={gjendja.ikona} size={20} color={gjendja.fg} strokeWidth={2.4} />
