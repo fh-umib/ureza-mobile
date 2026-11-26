@@ -85,60 +85,88 @@ export function EkraniMeHero({
   );
 }
 
-// The dusk behind every screen title: a deep sky that warms towards the horizon, the setting sun
-// with its glow, two ranges of mountains, and the lit bridge of Urëza on the right, so the
-// title on the left always reads on the darkest part. The bottom 24 px hide under the sheet.
+// The night sky behind every screen title: a deep gradient, a faint band of the Milky Way,
+// many small stars of different sizes and brightness, and a few bright ones with a soft halo.
+// Nothing is drawn where it could cross the title. The stars come from a fixed seed, so they
+// stay in the same place on every screen and every start.
+
+type Ylli = { x: number; y: number; r: number; o: number };
+
+function yjet(sa: number, fara: number): Ylli[] {
+  let s = fara;
+  const rast = () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+  return Array.from({ length: sa }, () => {
+    const madhesia = rast();
+    return {
+      x: rast() * 390,
+      y: rast() * 126,
+      // most stars are tiny, a few are larger
+      r: madhesia > 0.93 ? 1.3 : madhesia > 0.7 ? 0.85 : 0.5,
+      o: 0.35 + rast() * 0.6,
+    };
+  });
+}
+
+const YJET = yjet(110, 7);
+const YJET_E_NDRITSHME: { x: number; y: number }[] = [
+  { x: 214, y: 22 },
+  { x: 302, y: 58 },
+  { x: 356, y: 18 },
+  { x: 150, y: 96 },
+];
+
 function HeroSkena() {
   return (
     <Svg width="100%" height="100%" viewBox="0 0 390 150" preserveAspectRatio="xMidYMax slice">
       <Defs>
         <LinearGradient id="qielli" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#0E2F3C" />
-          <Stop offset="0.65" stopColor="#173F4E" />
-          <Stop offset="1" stopColor="#24566A" />
+          <Stop offset="0" stopColor="#0A2430" />
+          <Stop offset="0.55" stopColor="#123746" />
+          <Stop offset="1" stopColor="#1C4B5C" />
         </LinearGradient>
-        <RadialGradient id="drita" cx="318" cy="98" r="120" gradientUnits="userSpaceOnUse">
-          <Stop offset="0" stopColor="#F2C46B" stopOpacity="0.42" />
-          <Stop offset="0.45" stopColor="#F2C46B" stopOpacity="0.12" />
+        <LinearGradient id="rruga" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0" />
+          <Stop offset="0.5" stopColor="#CFE8EE" stopOpacity="0.09" />
+          <Stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </LinearGradient>
+        <RadialGradient id="horizonti" cx="300" cy="170" r="190" gradientUnits="userSpaceOnUse">
+          <Stop offset="0" stopColor="#F2C46B" stopOpacity="0.16" />
           <Stop offset="1" stopColor="#F2C46B" stopOpacity="0" />
         </RadialGradient>
-        <LinearGradient id="dielli" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#FBE3A6" />
-          <Stop offset="1" stopColor="#F2C46B" />
-        </LinearGradient>
-        <LinearGradient id="maliLarg" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#2A6175" />
-          <Stop offset="1" stopColor="#1B4A5B" />
-        </LinearGradient>
-        <LinearGradient id="maliAfer" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#163F4E" />
-          <Stop offset="1" stopColor="#10313E" />
-        </LinearGradient>
+        <RadialGradient id="aureola">
+          <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.55" />
+          <Stop offset="0.35" stopColor="#E8F5F3" stopOpacity="0.18" />
+          <Stop offset="1" stopColor="#E8F5F3" stopOpacity="0" />
+        </RadialGradient>
       </Defs>
 
       <Rect width="390" height="150" fill="url(#qielli)" />
-      <Rect width="390" height="150" fill="url(#drita)" />
+      {/* the Milky Way: a soft diagonal haze */}
+      <Path d="M120 -20 L230 -20 L420 150 L300 150 Z" fill="url(#rruga)" />
+      {/* the last warmth of the day, low on the right */}
+      <Rect width="390" height="150" fill="url(#horizonti)" />
 
-      {/* the sun, half behind the far range */}
-      <Circle cx="318" cy="98" r="20" fill="url(#dielli)" />
-
-      <Path d="M0 112 L52 88 L98 100 L150 76 L204 98 L252 84 L300 104 L350 86 L390 98 V150 H0Z" fill="url(#maliLarg)" />
-
-      {/* the bridge: two towers, the main cable lit by the sun, the hangers and the deck */}
-      <G>
-        <Path d="M214 104 Q262 128 310 104 Q342 122 390 112" fill="none" stroke="#F2C46B" strokeWidth="1.6" strokeOpacity="0.9" />
-        <Path
-          d="M226 110V122 M238 115V122 M250 118V122 M274 118V122 M286 115V122 M298 110V122 M326 112V122 M346 116V122 M366 115V122"
-          stroke="#F2C46B"
-          strokeWidth="0.8"
-          strokeOpacity="0.55"
-        />
-        <Rect x="210" y="98" width="5" height="30" rx="1.5" fill="#E8F5F3" fillOpacity="0.9" />
-        <Rect x="308" y="98" width="5" height="30" rx="1.5" fill="#E8F5F3" fillOpacity="0.9" />
-        <Rect x="196" y="121" width="194" height="3" rx="1.5" fill="#E8F5F3" fillOpacity="0.85" />
+      <G fill="#FFFFFF">
+        {YJET.map((y, i) => (
+          <Circle key={i} cx={y.x} cy={y.y} r={y.r} fillOpacity={y.o} />
+        ))}
       </G>
 
-      <Path d="M0 132 L64 112 L128 124 L196 108 L262 128 L330 114 L390 126 V150 H0Z" fill="url(#maliAfer)" />
+      {YJET_E_NDRITSHME.map((y) => (
+        <G key={`${y.x}-${y.y}`}>
+          <Circle cx={y.x} cy={y.y} r={9} fill="url(#aureola)" />
+          <Path
+            d={`M${y.x - 5} ${y.y} H${y.x + 5} M${y.x} ${y.y - 5} V${y.y + 5}`}
+            stroke="#FFFFFF"
+            strokeOpacity={0.5}
+            strokeWidth={0.5}
+          />
+          <Circle cx={y.x} cy={y.y} r={1.5} fill="#FFFFFF" />
+        </G>
+      ))}
     </Svg>
   );
 }
