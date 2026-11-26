@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/ureza";
 import type { Lloji, Prona } from "@/lib/pronat";
-import { STATUSET, type Vizita } from "@/lib/vizitat";
+import { dataNeTekst, dataNgaTekst, STATUSET, type Vizita } from "@/lib/vizitat";
 
 import { PronaIlustrim } from "./PronaIlustrim";
 import { UrezaIcon, type IconName } from "./UrezaIcon";
@@ -17,6 +17,16 @@ export const LLOJET_E_PRONES: Record<Lloji, { emri: string; ikona: IconName }> =
 };
 
 const DITE_FRESKE = 45;
+const DITA_MS = 24 * 60 * 60 * 1000;
+
+// Days since the last visit of a property up to today (null when never visited).
+export function ditePara(pronaId: string, vizitat: Vizita[]): number | null {
+  const sot = dataNgaTekst(dataNeTekst(new Date())).getTime();
+  const data = vizitat
+    .filter((v) => v.pronaId === pronaId && dataNgaTekst(v.data).getTime() <= sot)
+    .map((v) => dataNgaTekst(v.data).getTime());
+  return data.length ? Math.round((sot - Math.max(...data)) / DITA_MS) : null;
+}
 
 export function PronaKarta({
   prona,
@@ -134,7 +144,7 @@ function Shifra({
   );
 }
 
-function ChipiIFreskise({ dite }: { dite: number | null }) {
+export function ChipiIFreskise({ dite }: { dite: number | null }) {
   const mire = dite !== null && dite <= DITE_FRESKE;
   const teksti =
     dite === null ? "Pa vizitë ende" : dite <= 0 ? "Kontrolluar sot" : dite === 1 ? "Kontrolluar dje" : `Kontrolluar para ${dite} ditësh`;

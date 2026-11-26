@@ -17,6 +17,7 @@ import { EkraniMeHero } from "@/components/EkraniMeHero";
 import type { PikaNeHarte } from "@/components/HartaKosoves";
 import { HartaReale } from "@/components/HartaReale";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
+import { ChipiIFreskise, ditePara } from "@/components/PronaKarta";
 import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
@@ -168,13 +169,33 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
                 </ScrollView>
               ) : null}
 
-              <View>
+              <View style={styles.zgjedhur}>
                 <Text style={styles.emriIPrones} accessibilityRole="header">
                   {prona.emri}
                 </Text>
-                <Text style={styles.vendi}>
-                  {prona.vendi} · {shumes(vizitatEPrones.length, "vizitë", "vizita")}
-                </Text>
+                <View style={styles.rreshtIkone}>
+                  <UrezaIcon name="pin" size={15} color={colors.textSecondary} strokeWidth={2.2} />
+                  <Text style={styles.vendi} numberOfLines={1}>
+                    {prona.vendi} · {shumes(vizitatEPrones.length, "vizitë", "vizita")}
+                  </Text>
+                </View>
+                <ChipiIFreskise dite={ditePara(prona.id, vizitat)} />
+                {!eMiku ? (
+                  <Pressable
+                    style={({ pressed }) => [styles.primary, pressed && styles.shtypur]}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/kerko-vizite",
+                        params: { pronaId: prona.id, lloji: prona.lloji === "prindert" ? "kujdes" : "inspektim" },
+                      })
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel={`Kërko vizitë për ${prona.emri}`}
+                  >
+                    <Text style={styles.primaryText}>Kërko vizitë</Text>
+                    <UrezaIcon name="arrow" size={22} color={colors.white} strokeWidth={2.3} />
+                  </Pressable>
+                ) : null}
               </View>
 
               <KartaEVendit prona={prona} eMiku={eMiku} onRedakto={() => setRedakto(true)} />
@@ -197,13 +218,6 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
                 >
                   <Text style={styles.lidhjeText}>Shiko të gjitha</Text>
                   <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-                </Pressable>
-              ) : null}
-
-              {!eMiku ? (
-                <Pressable style={styles.primary} onPress={() => router.navigate("/pronat")} accessibilityRole="button">
-                  <Text style={styles.primaryText}>Shiko ditarin</Text>
-                  <UrezaIcon name="arrow" size={22} color={colors.white} strokeWidth={2.3} />
                 </Pressable>
               ) : null}
             </>
@@ -386,8 +400,9 @@ const styles = StyleSheet.create({
   pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4 },
   pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
   pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
+  zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
   emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
-  vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
+  vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "600", flexShrink: 1 },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8 },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
   titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800", flexShrink: 1 },
@@ -405,6 +420,8 @@ const styles = StyleSheet.create({
   lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
   lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   primary: {
+    alignSelf: "stretch",
+    marginTop: 4,
     height: 56,
     borderRadius: 16,
     backgroundColor: colors.petrol,

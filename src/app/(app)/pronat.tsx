@@ -5,7 +5,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { FletaModale } from "@/components/FletaModale";
-import { PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
+import { ditePara, PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { VendndodhjaFusha } from "@/components/VendndodhjaFusha";
 import { Ditari } from "@/components/Ditari";
@@ -13,7 +13,6 @@ import { colors } from "@/constants/ureza";
 import { useDhenat, type RezultatiShtimit } from "@/lib/dhenat";
 import { gjejQytetin, type Koordinata } from "@/lib/gjeo";
 import type { Lloji, Prona } from "@/lib/pronat";
-import { dataNeTekst, dataNgaTekst, type Vizita } from "@/lib/vizitat";
 
 const LLOJET: { vlera: Lloji; emri: string }[] = [
   { vlera: "shtepi", emri: "Shtëpi" },
@@ -21,17 +20,7 @@ const LLOJET: { vlera: Lloji; emri: string }[] = [
   { vlera: "toke", emri: "Tokë" },
 ];
 
-const DITA_MS = 24 * 60 * 60 * 1000;
 const DITE_PA_KONTROLL = 45;
-
-// Days since the last visit of a property up to today (null when never visited).
-function ditePara(pronaId: string, vizitat: Vizita[]): number | null {
-  const sot = dataNgaTekst(dataNeTekst(new Date())).getTime();
-  const data = vizitat
-    .filter((v) => v.pronaId === pronaId && dataNgaTekst(v.data).getTime() <= sot)
-    .map((v) => dataNgaTekst(v.data).getTime());
-  return data.length ? Math.round((sot - Math.max(...data)) / DITA_MS) : null;
-}
 
 function Hyrje({ i, children }: { i: number; children: ReactNode }) {
   return <Animated.View entering={FadeInDown.delay(80 * Math.min(i, 8)).duration(420)}>{children}</Animated.View>;
