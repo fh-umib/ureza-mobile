@@ -8,9 +8,16 @@ import { UrezaIcon, type IconName } from "./UrezaIcon";
 // the Urëza team gives it in the database. Used before signing in (kush-je.tsx) and from Profili (roli.tsx).
 export type Zgjedhja = "klient" | "miku";
 
-const ROLET: { vlera: Zgjedhja; titulli: string; nen: string; icon: IconName }[] = [
+const ROLET: { vlera: Zgjedhja; titulli: string; nen: string; icon: IconName; kerkon?: string[] }[] = [
   { vlera: "klient", titulli: "Klient", nen: "Krijoj kërkesa dhe shoh raportet", icon: "home" },
-  { vlera: "miku", titulli: "Miku (vizitori lokal)", nen: "Pranoj detyra dhe e kryej vizitën", icon: "pin" },
+  {
+    vlera: "miku",
+    titulli: "Miku (vizitori lokal)",
+    nen: "Pranoj detyra dhe e kryej vizitën",
+    icon: "pin",
+    // what a Miku needs before the first visit, so nobody signs up for a surprise
+    kerkon: ["Profil pune", "Verifikim nga ekipi", "Kontratë për çdo vizitë"],
+  },
 ];
 
 export function ZgjedhesiIRolit({ roli, onZgjidh }: { roli: Zgjedhja; onZgjidh: (roli: Zgjedhja) => void }) {
@@ -25,7 +32,7 @@ export function ZgjedhesiIRolit({ roli, onZgjidh }: { roli: Zgjedhja; onZgjidh: 
             onPress={() => onZgjidh(r.vlera)}
             accessibilityRole="radio"
             accessibilityState={{ selected: zgjedhur }}
-            accessibilityLabel={`${r.titulli}. ${r.nen}`}
+            accessibilityLabel={`${r.titulli}. ${r.nen}${r.kerkon ? `. Të duhet: ${r.kerkon.join(", ")}.` : ""}`}
           >
             <View style={styles.ikona}>
               <UrezaIcon name={r.icon} size={26} color={colors.petrol} />
@@ -33,6 +40,17 @@ export function ZgjedhesiIRolit({ roli, onZgjidh }: { roli: Zgjedhja; onZgjidh: 
             <View style={styles.opsionTekst}>
               <Text style={styles.opsionTitulli}>{r.titulli}</Text>
               <Text style={styles.opsionNen}>{r.nen}</Text>
+              {r.kerkon ? (
+                <View style={styles.kerkon}>
+                  <Text style={styles.kerkonEtiketa}>Të duhet:</Text>
+                  {r.kerkon.map((k) => (
+                    <View key={k} style={styles.kerkonPika}>
+                      <UrezaIcon name="check" size={12} color={colors.teal} strokeWidth={2.8} />
+                      <Text style={styles.kerkonTeksti}>{k}</Text>
+                    </View>
+                  ))}
+                </View>
+              ) : null}
             </View>
             <View style={[styles.radio, zgjedhur && styles.radioZgjedhur]}>
               {zgjedhur ? <UrezaIcon name="check" size={14} color={colors.white} strokeWidth={3} /> : null}
@@ -40,12 +58,15 @@ export function ZgjedhesiIRolit({ roli, onZgjidh }: { roli: Zgjedhja; onZgjidh: 
           </Pressable>
         );
       })}
-
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  kerkon: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 8, rowGap: 4, marginTop: 6 },
+  kerkonEtiketa: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w700 },
+  kerkonPika: { flexDirection: "row", alignItems: "center", gap: 3 },
+  kerkonTeksti: { color: colors.teal, fontSize: 12, fontFamily: font.w700 },
   opsion: {
     minHeight: 84,
     flexDirection: "row",
