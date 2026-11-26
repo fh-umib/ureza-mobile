@@ -251,7 +251,7 @@ function KartaEPrones({ prona, zgjedhur, onPress }: { prona: Prona; zgjedhur: bo
       <View style={styles.pronaFoto}>
         <PronaIlustrim lloji={prona.lloji} />
       </View>
-      <Text style={styles.pronaEmri} numberOfLines={1}>
+      <Text style={styles.pronaEmri} numberOfLines={2}>
         {prona.emri}
       </Text>
       <View style={styles.pronaVendi}>
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
   kartatJashte: { marginHorizontal: -20 },
   kartat: { gap: 12, paddingHorizontal: 20, paddingVertical: 4 },
   pronaKarta: {
-    width: 150,
+    width: 170,
     backgroundColor: colors.white,
     borderRadius: 20,
     padding: 8,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
   },
   pronaKartaZgjedhur: { borderColor: colors.petrol },
   pronaFoto: { height: 84, borderRadius: 14, overflow: "hidden" },
-  pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4 },
+  pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4, minHeight: 40 },
   pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
   pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
   zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
