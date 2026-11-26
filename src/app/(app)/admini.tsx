@@ -7,6 +7,7 @@ import { GrafikuIDiteve, ListaEShiritave, PllakaETreguesit } from "@/components/
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
 import { SkeletiIKartes } from "@/components/ui/Skeleti";
+import { useToast } from "@/components/ui/Toast";
 import { colors } from "@/constants/ureza";
 import { usePaneliIAdminit, type MikuPerAdminin } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
@@ -330,6 +331,7 @@ function RreshtiIMikut({
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
   const [konfirmo, setKonfirmo] = useState(false);
+  const toast = useToast();
   const verifikuar = miku.verifikuarAt !== null;
 
   async function ndrysho(vlera: boolean) {
@@ -340,6 +342,7 @@ function RreshtiIMikut({
     setDuke(false);
     setKonfirmo(false);
     if (mesazh) setGabim(mesazh);
+    else toast.sukses(vlera ? "Miku u verifikua." : "Verifikimi u hoq.");
   }
 
   return (

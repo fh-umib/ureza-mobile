@@ -13,6 +13,7 @@ import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
 import { SkeletiIFaqes } from "@/components/ui/Skeleti";
+import { useToast } from "@/components/ui/Toast";
 import { Kutia } from "@/components/Kutia";
 import { useMikuIVerifikuar } from "@/lib/admini";
 import { PJESA_E_DEMIT, useKontrata, useProfiliIPunes } from "@/lib/kontrata";
@@ -40,6 +41,7 @@ const TABET: { vlera: Tab; emri: string }[] = [
 
 export default function DetajetEVizites() {
   const router = useRouter();
+  const toast = useToast();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { vizitat, pronat, burimiVizitat, anuloVizite, filloVizite } = useDhenat();
   const { profili } = useProfili();
@@ -107,6 +109,7 @@ export default function DetajetEVizites() {
       setKonfirmo(false);
       return;
     }
+    toast.sukses("Vizita u anulua.");
     router.back();
   }
 
@@ -292,6 +295,7 @@ const DESHMITE: { icon: IconName; titulli: string; nen: string }[] = [
 
 function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Prona; onPranuar: () => void }) {
   const router = useRouter();
+  const toast = useToast();
   const { pranoVizite } = useDhenat();
   const puna = useProfiliIPunes();
   const [kontrata, setKontrata] = useState(false);
@@ -318,6 +322,7 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
       setGabim(mesazh);
       return;
     }
+    toast.sukses("E pranove detyrën. Kontrata u krijua.");
     onPranuar();
   }
 

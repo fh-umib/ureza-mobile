@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 import { dil } from "@/lib/sesioni";
+import { useToast } from "./ui/Toast";
 
 export function ButoniDil() {
   const [duke, setDuke] = useState(false);
+  const toast = useToast();
 
   async function dalja() {
     setDuke(true);
@@ -12,7 +14,7 @@ export function ButoniDil() {
       await dil();
     } catch (e) {
       setDuke(false);
-      Alert.alert("Dalja nuk u krye", (e as Error).message);
+      toast.gabim(`Dalja nuk u krye. ${(e as Error).message}`);
     }
   }
 

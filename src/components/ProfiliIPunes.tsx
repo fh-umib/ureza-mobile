@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { useToast } from "./ui/Toast";
 import { colors } from "@/constants/ureza";
 import { LLOJET_E_MIKUT, useProfiliIPunes, type LlojiIMikut, type ProfiliIPunes } from "@/lib/kontrata";
 
@@ -39,6 +40,7 @@ function Forma({
   const [nrb, setNrb] = useState(ruajtur?.nrb ?? "");
   const [duke, setDuke] = useState(false);
   const [mesazh, setMesazh] = useState<{ gabim: boolean; tekst: string } | null>(null);
+  const toast = useToast();
 
   async function ruajeProfilin() {
     if (duke) return;
@@ -60,7 +62,8 @@ function Forma({
       nrb: lloji === "kompani" ? numri : null,
     });
     setDuke(false);
-    setMesazh(gabim ? { gabim: true, tekst: gabim } : { gabim: false, tekst: "U ruajt. Del në çdo kontratë që pranon." });
+    setMesazh(gabim ? { gabim: true, tekst: gabim } : null);
+    if (!gabim) toast.sukses("U ruajt. Del në çdo kontratë që pranon.");
   }
 
   return (
