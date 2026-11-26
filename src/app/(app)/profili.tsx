@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/Toast";
 import { colors, font, hija } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
+import { emriILlojit, LLOJET_E_MIKUT, useProfiliIPunes } from "@/lib/kontrata";
 import { mbledhTeDhenat, ndajTeDhenat } from "@/lib/eksporti";
 import { hapatEProfilit, plotesimi } from "@/lib/plotesimi";
 import { EMRAT_E_ROLEVE, GJUHET, useProfili, type Gjuha, type Ndryshimet } from "@/lib/profili";
@@ -32,6 +33,8 @@ type FushatEProfilit = { emriRef: RefObject<Fusha | null>; telefoniRef: RefObjec
 export default function Profili() {
   const { profili, rifresko } = useProfili();
   const roli = profili?.roli ?? "klient";
+  // one copy of the Miku's work profile for the header and the "Si punon si Miku" form
+  const puna = useProfiliIPunes();
   const emriRef = useRef<Fusha>(null);
   const telefoniRef = useRef<Fusha>(null);
 
@@ -39,11 +42,11 @@ export default function Profili() {
     <EkraniMeHero kicker="LLOGARIA" title="Profili im" subtitle="Të dhënat dhe cilësimet e tua.">
       {profili ? (
         <>
-          <KokaEProfilit />
+          <KokaEProfilit puna={puna} />
           <KartaEPlotesimit emriRef={emriRef} telefoniRef={telefoniRef} />
           <KartaETeDhenave emriRef={emriRef} telefoniRef={telefoniRef} />
           {roli === "klient" ? <KartaENjoftimeve /> : null}
-          {roli === "miku" ? <KartaEProfilitTePunes /> : null}
+          {roli === "miku" ? <KartaEProfilitTePunes puna={puna} /> : null}
           <KartaEPrivatesise />
         </>
       ) : (
@@ -72,14 +75,20 @@ const ROLET: Record<"klient" | "miku" | "admin", { ikona: IconName; bg: string; 
 };
 
 // The top of Profili: a round badge with the initials, the name and email, the role, and for a
-// Miku whom the Urëza team has verified, "I verifikuar".
-function KokaEProfilit() {
+// Miku how they work ("Kompani · Shtëpia e Sigurt") and, once the Urëza team has verified them,
+// "I verifikuar".
+function KokaEProfilit({ puna }: { puna: ReturnType<typeof useProfiliIPunes> }) {
   const { perdoruesi } = useSesioni();
   const { profili } = useProfili();
   const verifikimi = useVerifikimiIm();
   const roli = profili?.roli ?? "klient";
   const r = ROLET[roli];
   const eVerifikuar = roli === "miku" && verifikimi.njohur && verifikimi.verifikuarAt !== null;
+  const lloji = roli === "miku" ? puna.profili?.lloji : null;
+  const llojiTeksti = lloji
+    ? `${emriILlojit(lloji)}${puna.profili?.biznesi ? ` · ${puna.profili.biznesi}` : ""}`
+    : null;
+  const llojiIkona = LLOJET_E_MIKUT.find((l) => l.vlera === lloji)?.ikona ?? "doc";
 
   return (
     <View style={[styles.karta, styles.koka]}>
@@ -98,6 +107,18 @@ function KokaEProfilit() {
             <UrezaIcon name={r.ikona} size={14} color={r.fg} strokeWidth={2.4} />
             <Text style={[styles.distinktivText, { color: r.fg }]}>{EMRAT_E_ROLEVE[roli]}</Text>
           </View>
+          {llojiTeksti ? (
+            <View
+              style={[styles.distinktiv, styles.distinktivPuna, { backgroundColor: colors.ikonaBg }]}
+              accessible
+              accessibilityLabel={`Punon si: ${llojiTeksti}`}
+            >
+              <UrezaIcon name={llojiIkona} size={14} color={colors.petrol} strokeWidth={2.4} />
+              <Text style={[styles.distinktivText, { color: colors.petrol }]} numberOfLines={1}>
+                {llojiTeksti}
+              </Text>
+            </View>
+          ) : null}
           {eVerifikuar ? (
             <View style={[styles.distinktiv, { backgroundColor: colors.okBg }]} accessible accessibilityLabel="I verifikuar nga ekipi i Urëzës">
               <UrezaIcon name="shield" size={14} color={colors.ok} strokeWidth={2.4} />
@@ -839,6 +860,7 @@ const styles = StyleSheet.create({
   emri: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   email: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w500 },
   distinktivet: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
+  distinktivPuna: { maxWidth: "100%", flexShrink: 1 },
   distinktiv: {
     height: 28,
     paddingHorizontal: 10,
