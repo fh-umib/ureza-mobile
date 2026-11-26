@@ -7,7 +7,7 @@ import { Kalendari } from "@/components/Kalendari";
 import { Kutia } from "@/components/Kutia";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
 import {
@@ -303,7 +303,7 @@ function Radio({ zgjedhur }: { zgjedhur: boolean }) {
 
 const styles = StyleSheet.create({
   seksion: { gap: 10 },
-  kicker: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1.5 },
+  kicker: { color: colors.teal, fontSize: 12, lineHeight: 16, fontFamily: font.w700, letterSpacing: 1.5 },
   opsion: {
     minHeight: 84,
     flexDirection: "row",
@@ -321,8 +321,8 @@ const styles = StyleSheet.create({
   foto: { width: 64, height: 64, borderRadius: 14, overflow: "hidden" },
   ikonaPlote: { width: 56, height: 56, borderRadius: 17, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   opsionTekst: { flex: 1, gap: 2 },
-  opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   radio: {
     width: 26,
     height: 26,
@@ -342,8 +342,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8F5F3",
   },
   cmimiTekst: { flex: 1, gap: 2 },
-  cmimiVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: "800" },
-  cmimiNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  cmimiVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontFamily: font.w800 },
+  cmimiNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   kushtetLidhje: {
     flexDirection: "row",
     alignItems: "center",
@@ -353,8 +353,8 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: colors.white,
   },
-  kushtetLidhjeTeksti: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700", marginTop: 4 },
+  kushtetLidhjeTeksti: { color: colors.petrol, fontSize: 15, fontFamily: font.w800 },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700, marginTop: 4 },
   paralajmerim: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -363,8 +363,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: "#FDECEA",
   },
-  paralajmerimText: { flex: 1, color: "#7A1F1B", fontSize: 14, lineHeight: 20, fontWeight: "600" },
-  dataTeksti: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  paralajmerimText: { flex: 1, color: "#7A1F1B", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  dataTeksti: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   input: {
     minHeight: 104,
     paddingHorizontal: 16,
@@ -376,11 +376,11 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     fontSize: 16,
     lineHeight: 23,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: {
     height: 56,
     borderRadius: 16,
@@ -390,15 +390,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   sukses: { backgroundColor: colors.white, borderRadius: 20, padding: 24, gap: 12, borderWidth: 1, borderColor: "#E3EAF0" },
   suksesIkona: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.teal, alignItems: "center", justifyContent: "center" },
-  suksesTitulli: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
-  suksesTeksti: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+  suksesTitulli: { color: colors.ink, fontSize: 22, lineHeight: 28, fontFamily: font.w800 },
+  suksesTeksti: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
 });

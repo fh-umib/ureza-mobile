@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { CMIMI_TEKST, KUSHTET, KUSHTET_VERSIONI } from "@/lib/kushtet";
 import { dataEPlote } from "@/lib/vizitat";
 
@@ -74,11 +74,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
   },
-  cmimiKicker: { color: colors.mint, fontSize: 11, fontWeight: "800", letterSpacing: 1.4 },
-  cmimiVlera: { color: colors.white, fontSize: 40, lineHeight: 46, fontWeight: "800" },
+  cmimiKicker: { color: colors.mint, fontSize: 11, fontFamily: font.w800, letterSpacing: 1.4 },
+  cmimiVlera: { color: colors.white, fontSize: 40, lineHeight: 46, fontFamily: font.w800 },
   cmimiPikat: { gap: 6, flexShrink: 1 },
   cmimiPika: { flexDirection: "row", alignItems: "center", gap: 6 },
-  cmimiPikaTeksti: { color: colors.onHeroText, fontSize: 13, fontWeight: "600", flexShrink: 1 },
+  cmimiPikaTeksti: { color: colors.onHeroText, fontSize: 13, fontFamily: font.w600, flexShrink: 1 },
   karta: {
     backgroundColor: colors.white,
     borderRadius: 20,
@@ -99,9 +99,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  titulli: { flex: 1, color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
+  titulli: { flex: 1, color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
   pika: { flexDirection: "row", gap: 10, paddingLeft: 4 },
   pikaShenja: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.teal, marginTop: 8 },
-  pikaTeksti: { flex: 1, color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  versioni: { color: colors.textSecondary, fontSize: 13, textAlign: "center" },
+  pikaTeksti: { flex: 1, color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  versioni: { color: colors.textSecondary, fontSize: 13, textAlign: "center", fontFamily: font.w400 },
 });

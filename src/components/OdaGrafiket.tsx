@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
 
@@ -164,22 +164,22 @@ const styles = StyleSheet.create({
   legjenda: { gap: 8 },
   legjendaRreshti: { flexDirection: "row", alignItems: "center", gap: 10 },
   legjendaIkona: { width: 22, height: 22, borderRadius: 11, alignItems: "center", justifyContent: "center" },
-  legjendaEmri: { flex: 1, color: colors.ink, fontSize: 15, fontWeight: "600" },
-  legjendaVlera: { color: colors.ink, fontSize: 15, fontWeight: "800" },
-  legjendaPerqind: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
+  legjendaEmri: { flex: 1, color: colors.ink, fontSize: 15, fontFamily: font.w600 },
+  legjendaVlera: { color: colors.ink, fontSize: 15, fontFamily: font.w800 },
+  legjendaPerqind: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600 },
 
   muajt: { gap: 6 },
   legjendaRresht: { flexDirection: "row", gap: 16, flexWrap: "wrap" },
   seria: { flexDirection: "row", alignItems: "center", gap: 6 },
   seriaPika: { width: 10, height: 10, borderRadius: 3 },
-  seriaEmri: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
+  seriaEmri: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600 },
   tooltip: { minHeight: 22, justifyContent: "center" },
-  tooltipTeksti: { color: colors.ink, fontSize: 14, fontWeight: "500" },
-  tooltipMuaji: { fontWeight: "800" },
-  tooltipNdihme: { color: colors.textSecondary, fontSize: 13 },
+  tooltipTeksti: { color: colors.ink, fontSize: 14, fontFamily: font.w500 },
+  tooltipMuaji: { fontFamily: font.w800 },
+  tooltipNdihme: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w400 },
   kolonat: { flexDirection: "row", alignItems: "flex-end", gap: 10 },
   kolona: { flex: 1, height: "100%", alignItems: "center", justifyContent: "flex-end" },
-  kapaku: { color: colors.ink, fontSize: 13, fontWeight: "800", marginBottom: 4 },
+  kapaku: { color: colors.ink, fontSize: 13, fontFamily: font.w800, marginBottom: 4 },
   stiva: { width: "70%", maxWidth: 30 },
   zbehur: { opacity: 0.35 },
   pjesa: { width: "100%" },
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   zero: { height: 2, backgroundColor: GJURMA, borderRadius: 1 },
   baza: { height: 1, backgroundColor: colors.line },
   etiketat: { flexDirection: "row", gap: 10 },
-  etiketa: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
-  etiketaAktive: { color: colors.ink, fontWeight: "800" },
+  etiketa: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, fontFamily: font.w600 },
+  etiketaAktive: { color: colors.ink, fontFamily: font.w800 },
 
 });

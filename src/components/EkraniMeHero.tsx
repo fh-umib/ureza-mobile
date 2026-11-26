@@ -4,7 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View, type ScrollViewInstance 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Defs, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useKeyboardReveal } from "@/hooks/use-keyboard-reveal";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -198,9 +198,9 @@ const styles = StyleSheet.create({
   scrim: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: colors.hero },
   hero: { backgroundColor: colors.hero },
   heroText: { paddingHorizontal: 20 },
-  kicker: { color: colors.mint, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1.5 },
-  title: { marginTop: 2, color: colors.white, fontSize: 28, lineHeight: 34, fontWeight: "800" },
-  subtitle: { marginTop: 2, color: colors.onHeroText, fontSize: 15, lineHeight: 21, fontWeight: "500" },
+  kicker: { color: colors.mint, fontSize: 12, lineHeight: 16, fontFamily: font.w700, letterSpacing: 1.5 },
+  title: { marginTop: 2, color: colors.white, fontSize: 28, lineHeight: 34, fontFamily: font.w800 },
+  subtitle: { marginTop: 2, color: colors.onHeroText, fontSize: 15, lineHeight: 21, fontFamily: font.w500 },
   kthehu: {
     position: "absolute",
     right: 20,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.28)",
   },
-  kthehuText: { color: colors.white, fontSize: 15, fontWeight: "700" },
+  kthehuText: { color: colors.white, fontSize: 15, fontFamily: font.w700 },
   sheet: {
     marginTop: -24,
     flexGrow: 1, // the sheet reaches the tab bar even when the content is short

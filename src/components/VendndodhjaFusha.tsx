@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { gabimiIKoordinatave, koordinataNeTekst, lexoKoordinatat, type Koordinata } from "@/lib/gjeo";
 import { merrVendndodhjen } from "@/lib/kapja";
 
@@ -142,8 +142,8 @@ export function VendndodhjaFusha({
 
 const styles = StyleSheet.create({
   fusha: { gap: 6 },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
-  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
+  ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   input: {
     height: 56,
     paddingHorizontal: 16,
@@ -152,14 +152,14 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
   inputGabim: { borderColor: colors.error },
   rresht: { flexDirection: "row", alignItems: "center", gap: 8 },
-  ok: { color: "#1E6B3E", fontSize: 15, lineHeight: 20, fontWeight: "700" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  ok: { color: "#1E6B3E", fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   telefoni: {
     minHeight: 48,
     borderRadius: 14,
@@ -171,6 +171,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  telefoniText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  telefoniText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
 });

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
 
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   opsionZgjedhur: { borderColor: colors.petrol },
   ikona: { width: 56, height: 56, borderRadius: 17, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   opsionTekst: { flex: 1, gap: 2 },
-  opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   radio: {
     width: 26,
     height: 26,

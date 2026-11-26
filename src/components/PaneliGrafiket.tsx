@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { dataShkurt } from "@/lib/vizitat";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
@@ -161,26 +161,26 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   pllakaKrye: { flexDirection: "row", alignItems: "center", gap: 6 },
-  pllakaEtiketa: { flex: 1, color: colors.textSecondary, fontSize: 13, lineHeight: 17, fontWeight: "700" },
-  pllakaVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: "800" },
-  pllakaKonteksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  pllakaEtiketa: { flex: 1, color: colors.textSecondary, fontSize: 13, lineHeight: 17, fontFamily: font.w700 },
+  pllakaVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontFamily: font.w800 },
+  pllakaKonteksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   matesGjurma: { height: 8, borderRadius: 4, backgroundColor: GJURMA, overflow: "hidden" },
   matesMbushja: { height: 8, borderRadius: 4, backgroundColor: SHENJA },
 
   grafiku: { gap: 6 },
-  grafikuInfo: { color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: "600", minHeight: 21 },
+  grafikuInfo: { color: colors.ink, fontSize: 15, lineHeight: 21, fontFamily: font.w600, minHeight: 21 },
   fusha: { height: LARTESIA, flexDirection: "row", alignItems: "flex-end" },
   kolona: { flex: 1, height: LARTESIA, alignItems: "center", justifyContent: "flex-end" },
   shtylla: { width: "62%", maxWidth: 24, borderTopLeftRadius: 4, borderTopRightRadius: 4 },
-  vleraNeKoke: { color: colors.ink, fontSize: 12, fontWeight: "800", marginBottom: 2 },
+  vleraNeKoke: { color: colors.ink, fontSize: 12, fontFamily: font.w800, marginBottom: 2 },
   vijaBaze: { height: 1, backgroundColor: colors.line },
   etiketat: { flexDirection: "row", justifyContent: "space-between" },
-  etiketa: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
-  bosh: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+  etiketa: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w600 },
+  bosh: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
 
   lista: { gap: 12 },
   rreshti: { gap: 6 },
   rreshtiKrye: { flexDirection: "row", alignItems: "center", gap: 8 },
-  rreshtiEmri: { flex: 1, color: colors.ink, fontSize: 15, fontWeight: "600" },
-  rreshtiNumri: { color: colors.ink, fontSize: 15, fontWeight: "800" },
+  rreshtiEmri: { flex: 1, color: colors.ink, fontSize: 15, fontFamily: font.w600 },
+  rreshtiNumri: { color: colors.ink, fontSize: 15, fontFamily: font.w800 },
 });

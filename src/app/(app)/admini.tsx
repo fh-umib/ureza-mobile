@@ -5,7 +5,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { GrafikuIDiteve, ListaEShiritave, PllakaETreguesit } from "@/components/PaneliGrafiket";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { usePaneliIAdminit, type MikuPerAdminin } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
@@ -397,23 +397,23 @@ function RreshtiIMikut({
 }
 
 const styles = StyleSheet.create({
-  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800", marginTop: 4 },
-  nenSeksioni: { color: colors.textSecondary, fontSize: 16, lineHeight: 22, fontWeight: "800" },
+  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800, marginTop: 4 },
+  nenSeksioni: { color: colors.textSecondary, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
-  kartaTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  tekst: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  kartaTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  tekst: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
 
   kartaRast: { backgroundColor: "#FBE9E9", borderColor: "#F3CFCF" },
-  rastEtiketa: { color: "#7A1F1B", fontSize: 15, fontWeight: "800" },
-  heroNumri: { color: "#7A1F1B", fontSize: 56, lineHeight: 62, fontWeight: "800" },
-  rastTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  rastEtiketa: { color: "#7A1F1B", fontSize: 15, fontFamily: font.w800 },
+  heroNumri: { color: "#7A1F1B", fontSize: 56, lineHeight: 62, fontFamily: font.w800 },
+  rastTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   kartaMire: { backgroundColor: "#E4F6EB", borderColor: "#CBEBD7" },
   mireTitulli: { color: "#1E6B3E" },
-  mireTekst: { color: "#1E6B3E", fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  mireTekst: { color: "#1E6B3E", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
 
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
 
@@ -430,34 +430,34 @@ const styles = StyleSheet.create({
   ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   ikonaRast: { backgroundColor: "#FBE9E9" },
   rreshtiTekst: { flex: 1, gap: 3 },
-  rreshtiTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  arsyeja: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: "500", fontStyle: "italic" },
+  rreshtiTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
+  arsyeja: { color: colors.ink, fontSize: 14, lineHeight: 20, fontFamily: font.w500i },
   shigjeta: { alignSelf: "center" },
 
   filtrat: { flexDirection: "row", gap: 4, padding: 4, borderRadius: 16, backgroundColor: "#E3EAF0" },
   filtri: { flex: 1, minHeight: 44, borderRadius: 12, alignItems: "center", justifyContent: "center", paddingHorizontal: 6 },
   filtriAktiv: { backgroundColor: colors.white },
-  filtriText: { color: colors.textSecondary, fontSize: 14, fontWeight: "700", textAlign: "center" },
-  filtriTextAktiv: { color: colors.petrol, fontWeight: "800" },
+  filtriText: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w700, textAlign: "center" },
+  filtriTextAktiv: { color: colors.petrol, fontFamily: font.w800 },
 
   kartaMiku: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
   mikuKrye: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   chip: { height: 32, paddingHorizontal: 10, borderRadius: 16, flexDirection: "row", alignItems: "center", gap: 6 },
   chipPo: { backgroundColor: "#E4F6EB" },
   chipJo: { backgroundColor: "#FFF2DE" },
-  chipText: { fontSize: 13, fontWeight: "700" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  chipText: { fontSize: 13, fontFamily: font.w700 },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: { height: 52, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  primaryText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 16, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   konfirmim: { gap: 8, padding: 14, borderRadius: 16, backgroundColor: "#FDECEA" },
-  konfirmimText: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  konfirmimText: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   hiqPlote: { height: 52, borderRadius: 16, backgroundColor: colors.error, alignItems: "center", justifyContent: "center" },
 
   fundi: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
-  fundiText: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
+  fundiText: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600 },
   rifresko: { minHeight: 44, paddingHorizontal: 12, alignItems: "center", justifyContent: "center" },
 });

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text } from "react-native";
 
 import { dil } from "@/lib/sesioni";
+import { font } from "@/constants/ureza";
 
 export function ButoniDil() {
   const [duke, setDuke] = useState(false);
@@ -24,5 +25,5 @@ export function ButoniDil() {
 }
 
 const styles = StyleSheet.create({
-  teksti: { color: "#2e6878", fontWeight: "700", fontSize: 16, paddingHorizontal: 8 },
+  teksti: { color: "#2e6878", fontFamily: font.w700, fontSize: 16, paddingHorizontal: 8 },
 });

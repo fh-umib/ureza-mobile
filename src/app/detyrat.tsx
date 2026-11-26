@@ -4,7 +4,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useSesioni } from "@/lib/sesioni";
 import { supabase } from "@/lib/supabase";
 
@@ -218,7 +218,7 @@ function Lista() {
 
 const styles = StyleSheet.create({
   forma: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
-  formaTitulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  formaTitulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   input: {
     height: 56,
     paddingHorizontal: 16,
@@ -227,20 +227,20 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: { height: 56, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  permbledhja: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "700" },
+  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
+  permbledhja: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w700 },
   rreshti: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -263,10 +263,10 @@ const styles = StyleSheet.create({
   },
   kutiaBere: { backgroundColor: colors.petrol, borderColor: colors.petrol },
   tekst: { flex: 1, gap: 4 },
-  titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
+  titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
   titulliBere: { color: colors.textSecondary, textDecorationLine: "line-through" },
   vendiRresht: { flexDirection: "row", alignItems: "center", gap: 4 },
-  vendi: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  vendi: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   chip: {
     alignSelf: "flex-start",
     height: 28,
@@ -279,5 +279,5 @@ const styles = StyleSheet.create({
   },
   chipPritje: { backgroundColor: "#FFF2DE" },
   chipBere: { backgroundColor: "#E4F6EB" },
-  chipText: { fontSize: 12, fontWeight: "700" },
+  chipText: { fontSize: 12, fontFamily: font.w700 },
 });

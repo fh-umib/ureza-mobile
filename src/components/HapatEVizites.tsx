@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { HAPAT, hapiIVizites, type Statusi } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   rrethiArritur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  emri: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "600" },
-  emriAktiv: { color: colors.petrol, fontWeight: "800" },
+  emri: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w600 },
+  emriAktiv: { color: colors.petrol, fontFamily: font.w800 },
 });

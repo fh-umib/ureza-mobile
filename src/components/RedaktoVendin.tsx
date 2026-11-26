@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Koordinata } from "@/lib/gjeo";
 import { vendiNeHarte, type Prona } from "@/lib/pronat";
@@ -81,7 +81,7 @@ export function RedaktoVendin({ prona, mbyll }: { prona: Prona; mbyll: () => voi
 }
 
 const styles = StyleSheet.create({
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   ruaj: {
     height: 56,
     borderRadius: 16,
@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  ruajText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  ruajText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   hiq: { minHeight: 44, alignItems: "center", justifyContent: "center" },
-  hiqText: { color: colors.error, fontSize: 16, fontWeight: "700" },
+  hiqText: { color: colors.error, fontSize: 16, fontFamily: font.w700 },
   anulo: { minHeight: 44, alignItems: "center", justifyContent: "center" },
-  anuloText: { color: colors.textSecondary, fontSize: 16, fontWeight: "700" },
+  anuloText: { color: colors.textSecondary, fontSize: 16, fontFamily: font.w700 },
 });

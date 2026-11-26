@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { HARTA_LEVIZJA, neHarte, type Koordinata } from "@/lib/gjeo";
 
 // The map of Kosovo of the design (Harta): the outline in petrol, a dot for each property, and the
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     color: colors.onHeroText,
     fontSize: 13,
     lineHeight: 20,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
   goditja: { position: "absolute", width: 44, height: 44 },
   shtepia: { position: "absolute", width: 44, height: 52 },
@@ -183,6 +183,6 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
 });

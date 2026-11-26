@@ -5,6 +5,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { font } from "@/constants/ureza";
 
 export type TaskStatus = "pending" | "completed";
 
@@ -118,19 +119,21 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 26,
+    fontFamily: font.w400,
   },
   information: {
     flex: 1,
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontFamily: font.w700,
     color: "#173C48",
   },
   location: {
     fontSize: 13,
     color: "#738493",
     marginTop: 5,
+    fontFamily: font.w400,
   },
   statusBadge: {
     alignSelf: "flex-start",
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
   pendingText: {
     color: "#A96817",
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
   secondaryText: {
     color: "#315966",
     fontSize: 13,
-    fontWeight: "600",
+    fontFamily: font.w600,
   },
   primaryButton: {
     flex: 1,
@@ -189,6 +192,6 @@ const styles = StyleSheet.create({
   primaryText: {
     color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
 });

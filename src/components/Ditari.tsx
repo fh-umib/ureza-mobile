@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { dataNgaTekst, MUAJT, titulliIVizites } from "@/lib/vizitat";
 
@@ -67,17 +67,17 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 2,
   },
-  bosh: { marginVertical: 16, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  bosh: { marginVertical: 16, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   lista: {},
   rresht: { flexDirection: "row", gap: 14, paddingVertical: 16, alignItems: "flex-start" },
   ndarje: { borderBottomWidth: 1, borderBottomColor: colors.background },
   data: { width: 44, alignItems: "center" },
-  dita: { color: colors.petrol, fontSize: 24, lineHeight: 28, fontWeight: "800" },
-  muaji: { color: colors.textSecondary, fontSize: 13, lineHeight: 16, fontWeight: "700", letterSpacing: 1 },
+  dita: { color: colors.petrol, fontSize: 24, lineHeight: 28, fontFamily: font.w800 },
+  muaji: { color: colors.textSecondary, fontSize: 13, lineHeight: 16, fontFamily: font.w700, letterSpacing: 1 },
   thumb: { width: 72, height: 72, borderRadius: 14, overflow: "hidden" },
   tekst: { flex: 1, gap: 4 },
-  rreshtTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  rreshtShenim: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  rreshtTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  rreshtShenim: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   link: { marginTop: 6, minHeight: 48, flexDirection: "row", alignItems: "center", gap: 6 },
-  linkText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  linkText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
 });

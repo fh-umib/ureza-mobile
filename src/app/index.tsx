@@ -17,6 +17,7 @@ import { ButoniDil } from "../components/ButoniDil";
 import { useKeyboardReveal } from "../hooks/use-keyboard-reveal";
 import { useSesioni } from "../lib/sesioni";
 import { supabase } from "../lib/supabase";
+import { font } from "@/constants/ureza";
 
 type Source = "loading" | "supabase" | "local";
 
@@ -363,16 +364,16 @@ const styles = StyleSheet.create({
   logoText: {
     color: "#FFFFFF",
     fontSize: 26,
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
   brandName: {
     fontSize: 21,
-    fontWeight: "800",
+    fontFamily: font.w800,
     color: "#173C48",
   },
   brandSubtitle: {
     fontSize: 9,
-    fontWeight: "700",
+    fontFamily: font.w700,
     color: "#8798A2",
     letterSpacing: 1,
   },
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
   },
   demoText: {
     fontSize: 10,
-    fontWeight: "800",
+    fontFamily: font.w800,
     color: "#27816F",
   },
   hero: {
@@ -396,14 +397,14 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     color: "#8CE0CB",
-    fontWeight: "700",
+    fontFamily: font.w700,
     fontSize: 11,
     letterSpacing: 1.5,
     marginBottom: 13,
   },
   heroTitle: {
     color: "#FFFFFF",
-    fontWeight: "800",
+    fontFamily: font.w800,
     fontSize: 29,
     lineHeight: 36,
   },
@@ -412,6 +413,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     marginTop: 12,
+    fontFamily: font.w400,
   },
   statsRow: {
     flexDirection: "row",
@@ -426,13 +428,14 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     color: "#FFFFFF",
-    fontWeight: "800",
+    fontFamily: font.w800,
     fontSize: 25,
   },
   statLabel: {
     color: "#C9DBE1",
     fontSize: 11,
     marginTop: 4,
+    fontFamily: font.w400,
   },
   sectionHeader: {
     marginBottom: 18,
@@ -440,17 +443,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: "#173C48",
     fontSize: 23,
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
   sectionSubtitle: {
     color: "#8798A2",
     fontSize: 13,
     marginTop: 5,
+    fontFamily: font.w400,
   },
   sourceNote: {
     color: "#738493",
     fontSize: 12,
     marginTop: 6,
+    fontFamily: font.w400,
   },
   sourceNoteWarn: {
     color: "#A96817",
@@ -467,7 +472,7 @@ const styles = StyleSheet.create({
   formTitle: {
     color: "#173C48",
     fontSize: 16,
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
   input: {
     borderWidth: 1,
@@ -478,6 +483,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#173C48",
     backgroundColor: "#F5F8FA",
+    fontFamily: font.w400,
   },
   addButton: {
     backgroundColor: "#175568",
@@ -490,12 +496,13 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: "#FFFFFF",
-    fontWeight: "800",
+    fontFamily: font.w800,
     fontSize: 14,
   },
   formMessage: {
     color: "#647B85",
     fontSize: 12,
+    fontFamily: font.w400,
   },
   footer: {
     alignItems: "center",
@@ -504,16 +511,18 @@ const styles = StyleSheet.create({
   },
   footerTitle: {
     fontSize: 10,
-    fontWeight: "800",
+    fontFamily: font.w800,
     color: "#78929C",
     letterSpacing: 1,
   },
   footerText: {
     fontSize: 12,
     color: "#647B85",
+    fontFamily: font.w400,
   },
   footerNote: {
     fontSize: 11,
     color: "#9BAAB2",
+    fontFamily: font.w400,
   },
 });

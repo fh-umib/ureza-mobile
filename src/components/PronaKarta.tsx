@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import type { Lloji, Prona } from "@/lib/pronat";
 import { dataNeTekst, dataNgaTekst, STATUSET, type Vizita } from "@/lib/vizitat";
 
@@ -207,8 +207,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 6,
   },
-  shifraVlera: { color: colors.ink, fontSize: 24, lineHeight: 28, fontWeight: "800" },
-  shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontWeight: "600" },
+  shifraVlera: { color: colors.ink, fontSize: 24, lineHeight: 28, fontFamily: font.w800 },
+  shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontFamily: font.w600 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.97 }] },
   karta: {
     backgroundColor: colors.white,
@@ -235,11 +235,11 @@ const styles = StyleSheet.create({
   },
   distinktivMajtas: { left: 12 },
   distinktivDjathtas: { right: 12 },
-  distinktivTeksti: { color: colors.white, fontSize: 12, fontWeight: "800", letterSpacing: 0.3 },
+  distinktivTeksti: { color: colors.white, fontSize: 12, fontFamily: font.w800, letterSpacing: 0.3 },
   trupi: { paddingHorizontal: 16, paddingTop: 14, gap: 6, alignItems: "flex-start" },
-  emri: { color: colors.ink, fontSize: 19, lineHeight: 24, fontWeight: "800" },
+  emri: { color: colors.ink, fontSize: 19, lineHeight: 24, fontFamily: font.w800 },
   meta: { flexDirection: "row", alignItems: "center", gap: 4 },
-  metaTeksti: { color: colors.textSecondary, fontSize: 14, fontWeight: "600", flexShrink: 1 },
+  metaTeksti: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w600, flexShrink: 1 },
   chip: {
     flexDirection: "row",
     alignItems: "center",
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     maxWidth: "100%",
   },
-  chipTeksti: { fontSize: 12, fontWeight: "700", flexShrink: 1 },
+  chipTeksti: { fontSize: 12, fontFamily: font.w700, flexShrink: 1 },
   fund: {
     flexDirection: "row",
     alignItems: "center",
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     borderTopColor: colors.background,
   },
   historia: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44 },
-  historiaTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+  historiaTeksti: { color: colors.petrol, fontSize: 14, fontFamily: font.w800 },
   kerko: {
     height: 44,
     paddingHorizontal: 18,
@@ -272,5 +272,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  kerkoTeksti: { color: colors.white, fontSize: 14, fontWeight: "800" },
+  kerkoTeksti: { color: colors.white, fontSize: 14, fontFamily: font.w800 },
 });

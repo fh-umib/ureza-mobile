@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { VENDIMET_E_ADMINIT, dataMeOre, type VendimiAdminit, type Vizita } from "@/lib/vizitat";
 
@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 10 },
   mbyllur: { backgroundColor: "#E8F5F3" },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 10 },
-  titulli: { flex: 1, color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  shenimi: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500", fontStyle: "italic" },
-  koha: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
+  titulli: { flex: 1, color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  shenimi: { color: colors.ink, fontSize: 16, lineHeight: 24, fontFamily: font.w500i },
+  koha: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600 },
   zgjedhjet: { gap: 10 },
   zgjedhja: {
     flexDirection: "row",
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
   rrethiAktiv: { borderColor: colors.petrol },
   pika: { width: 12, height: 12, borderRadius: 6, backgroundColor: colors.petrol },
   zgjedhjaTekst: { flex: 1, gap: 2 },
-  zgjedhjaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
-  etiketa: { color: colors.ink, fontSize: 15, fontWeight: "700", marginTop: 4 },
+  zgjedhjaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
+  etiketa: { color: colors.ink, fontSize: 15, fontFamily: font.w700, marginTop: 4 },
   input: {
     minHeight: 110,
     borderRadius: 16,
@@ -187,12 +187,12 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 16,
     lineHeight: 23,
-    fontWeight: "500",
+    fontFamily: font.w500,
   },
   inputFokus: { borderColor: colors.petrol, borderWidth: 2 },
-  numrues: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", textAlign: "right" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  numrues: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600, textAlign: "right" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: { height: 56, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
 });

@@ -17,6 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { findTaskById, type Task } from "../../data/tasks";
 import { supabase } from "../../lib/supabase";
+import { font } from "@/constants/ureza";
 
 export default function TaskDetailsScreen() {
   const router = useRouter();
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
   },
   backLabel: {
     fontSize: 15,
-    fontWeight: "700",
+    fontFamily: font.w700,
     color: "#175568",
   },
   hero: {
@@ -270,10 +271,11 @@ const styles = StyleSheet.create({
   },
   heroEmoji: {
     fontSize: 32,
+    fontFamily: font.w400,
   },
   eyebrow: {
     fontSize: 11,
-    fontWeight: "800",
+    fontFamily: font.w800,
     letterSpacing: 1.5,
     color: "#8CE0CB",
     marginBottom: 10,
@@ -282,12 +284,13 @@ const styles = StyleSheet.create({
     fontSize: 27,
     lineHeight: 35,
     color: "#FFFFFF",
-    fontWeight: "800",
+    fontFamily: font.w800,
   },
   heroLocation: {
     color: "#D4E5E9",
     marginTop: 14,
     fontSize: 14,
+    fontFamily: font.w400,
   },
   statusCard: {
     backgroundColor: "#FFFFFF",
@@ -298,7 +301,7 @@ const styles = StyleSheet.create({
   cardLabel: {
     color: "#8798A2",
     fontSize: 11,
-    fontWeight: "800",
+    fontFamily: font.w800,
     letterSpacing: 1,
     marginBottom: 12,
   },
@@ -315,7 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E4F6EB",
   },
   badgeText: {
-    fontWeight: "700",
+    fontFamily: font.w700,
     fontSize: 15,
   },
   orangeText: {
@@ -329,6 +332,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 13,
     lineHeight: 18,
+    fontFamily: font.w400,
   },
   infoCard: {
     backgroundColor: "#FFFFFF",
@@ -338,7 +342,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: "800",
+    fontFamily: font.w800,
     color: "#173C48",
     marginBottom: 20,
   },
@@ -351,13 +355,14 @@ const styles = StyleSheet.create({
   infoLabel: {
     color: "#8999A3",
     fontSize: 13,
+    fontFamily: font.w400,
   },
   infoValue: {
     flex: 1,
     textAlign: "right",
     color: "#173C48",
     fontSize: 13,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
   divider: {
     height: 1,
@@ -373,6 +378,7 @@ const styles = StyleSheet.create({
   },
   nextIcon: {
     fontSize: 26,
+    fontFamily: font.w400,
   },
   nextContent: {
     flex: 1,
@@ -380,13 +386,14 @@ const styles = StyleSheet.create({
   nextTitle: {
     color: "#175568",
     fontSize: 15,
-    fontWeight: "800",
+    fontFamily: font.w800,
     marginBottom: 6,
   },
   nextText: {
     color: "#466C74",
     fontSize: 13,
     lineHeight: 20,
+    fontFamily: font.w400,
   },
   empty: {
     flex: 1,
@@ -397,10 +404,11 @@ const styles = StyleSheet.create({
   emptyIcon: {
     fontSize: 48,
     marginBottom: 16,
+    fontFamily: font.w400,
   },
   emptyTitle: {
     fontSize: 24,
-    fontWeight: "800",
+    fontFamily: font.w800,
     color: "#173C48",
   },
   emptyText: {
@@ -416,6 +424,6 @@ const styles = StyleSheet.create({
   },
   backText: {
     color: "#FFFFFF",
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
 });

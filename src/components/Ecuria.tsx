@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { VENDIMET_E_ADMINIT, dataMeOre, hapiIVizites, type Vizita } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -90,7 +90,7 @@ export function Ecuria({ vizita, miku = false }: { vizita: Vizita; miku?: boolea
 
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   lista: { marginTop: 14 },
   rreshti: { flexDirection: "row", gap: 14 },
   shtylla: { alignItems: "center", width: 26 },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   vija: { flex: 1, width: 2, minHeight: 22, backgroundColor: colors.line },
   vijaArritur: { backgroundColor: colors.petrol },
   tekst: { flex: 1, paddingBottom: 18, gap: 2 },
-  hapiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
-  pritje: { color: colors.textSecondary, fontWeight: "700" },
-  hapiNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  hapiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
+  pritje: { color: colors.textSecondary, fontFamily: font.w700 },
+  hapiNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
 });

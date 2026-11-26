@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { DITET_SHKURT, MUAJT, dataEPlote, dataNeTekst, dataNgaTekst } from "@/lib/vizitat";
 
 import { UrezaIcon } from "./UrezaIcon";
@@ -128,19 +128,19 @@ export function Kalendari({
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 18, borderWidth: 1.5, borderColor: colors.inputBorder, padding: 12, gap: 2 },
   krye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 6 },
-  muaji: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800" },
+  muaji: { color: colors.ink, fontSize: 18, lineHeight: 24, fontFamily: font.w800 },
   shigjeta: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#E8F5F3" },
   shigjetaOff: { opacity: 0.35 },
   rreshti: { flexDirection: "row" },
-  diteJave: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, lineHeight: 28, fontWeight: "700", letterSpacing: 0.5 },
+  diteJave: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, lineHeight: 28, fontFamily: font.w700, letterSpacing: 0.5 },
   qeliza: { flex: 1, height: 46, alignItems: "center", justifyContent: "center" },
   rrethi: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
   rrethiZgjedhur: { backgroundColor: colors.petrol },
   rrethiSot: { borderWidth: 1.5, borderColor: colors.inputBorder },
-  numri: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "600" },
+  numri: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w600 },
   numriOff: { color: "#B7C4CB" },
-  numriMeVizite: { color: colors.vizita, fontWeight: "800" },
-  numriZgjedhur: { color: colors.white, fontWeight: "800" },
+  numriMeVizite: { color: colors.vizita, fontFamily: font.w800 },
+  numriZgjedhur: { color: colors.white, fontFamily: font.w800 },
   pika: {
     position: "absolute",
     bottom: 3,
@@ -153,5 +153,5 @@ const styles = StyleSheet.create({
   },
   legjenda: { flexDirection: "row", alignItems: "center", gap: 8, paddingTop: 8, paddingLeft: 4 },
   pika2: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.vizita },
-  legjendaText: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "600" },
+  legjendaText: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w600 },
 });

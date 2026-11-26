@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDeshmite } from "@/lib/deshmite";
 import { useDhenat } from "@/lib/dhenat";
 import { useProfili } from "@/lib/profili";
@@ -134,12 +134,12 @@ export function DeshmiteVizites({ vizita }: { vizita: Vizita }) {
 
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 10 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
   rresht: { flexDirection: "row", alignItems: "center", gap: 10 },
-  vlera: { color: colors.ink, fontSize: 17, fontWeight: "700" },
+  vlera: { color: colors.ink, fontSize: 17, fontFamily: font.w700 },
   dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   miniatura: { width: "48%", aspectRatio: 1, borderRadius: 14, overflow: "hidden", backgroundColor: "#E3EAF0" },
   foto: { width: "100%", height: "100%" },
@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(11,37,48,0.72)",
     color: colors.white,
     fontSize: 13,
-    fontWeight: "700",
+    fontFamily: font.w700,
   },
   pill: { alignSelf: "flex-start", backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 3 },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
+  pillText: { color: "#7A4A06", fontSize: 12, fontFamily: font.w700 },
 });

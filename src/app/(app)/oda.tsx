@@ -10,7 +10,7 @@ import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Prona } from "@/lib/pronat";
 import {
@@ -517,12 +517,12 @@ const styles = StyleSheet.create({
     gap: 8,
     alignSelf: "stretch",
   },
-  primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
 
   bosh: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 8, ...hija },
   boshFoto: { height: 140, borderRadius: 16, overflow: "hidden", marginBottom: 6 },
-  boshTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500", marginBottom: 8 },
+  boshTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w500, marginBottom: 8 },
 
   // waiting for a decision
   vemendja: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija },
@@ -535,8 +535,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  vemendjaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
-  vemendjaTeksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  vemendjaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontFamily: font.w800 },
+  vemendjaTeksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   vemendjaRresht: {
     minHeight: 48,
     flexDirection: "row",
@@ -546,8 +546,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: colors.background,
   },
-  vemendjaRreshtTeksti: { flex: 1, color: colors.ink, fontSize: 14, fontWeight: "700" },
-  vemendjaCta: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+  vemendjaRreshtTeksti: { flex: 1, color: colors.ink, fontSize: 14, fontFamily: font.w700 },
+  vemendjaCta: { color: colors.petrol, fontSize: 14, fontFamily: font.w800 },
 
   // figures
   shifrat: { flexDirection: "row", gap: 10 },
@@ -561,13 +561,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 6,
   },
-  shifraVlera: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
-  shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontWeight: "600" },
+  shifraVlera: { color: colors.ink, fontSize: 22, lineHeight: 28, fontFamily: font.w800 },
+  shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontFamily: font.w600 },
 
   // cards
   karta: { backgroundColor: colors.white, borderRadius: 22, paddingHorizontal: 14, ...hija },
   kartaStat: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
-  kartaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
+  kartaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
   statistikat: { gap: 12 },
 
   // properties
@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  pronaEmri: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800", marginBottom: 6 },
+  pronaEmri: { color: colors.ink, fontSize: 16, lineHeight: 21, fontFamily: font.w800, marginBottom: 6 },
   pronaChip: {
     alignSelf: "flex-start",
     maxWidth: "100%",
@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     borderRadius: 13,
   },
-  pronaChipTeksti: { fontSize: 12, fontWeight: "700", flexShrink: 1 },
+  pronaChipTeksti: { fontSize: 12, fontFamily: font.w700, flexShrink: 1 },
   pronaVeprim: {
     flexDirection: "row",
     alignItems: "center",
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: colors.petrol,
   },
-  pronaVeprimTeksti: { color: colors.white, fontSize: 13, fontWeight: "800" },
+  pronaVeprimTeksti: { color: colors.white, fontSize: 13, fontFamily: font.w800 },
   pronaHap: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
 
   // history
@@ -624,7 +624,7 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
   },
   filtriAktiv: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  filtriTeksti: { color: colors.ink, fontSize: 14, fontWeight: "700" },
+  filtriTeksti: { color: colors.ink, fontSize: 14, fontFamily: font.w700 },
   filtriTekstiAktiv: { color: colors.white },
   filtriNumri: {
     minWidth: 26,
@@ -636,20 +636,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   filtriNumriAktiv: { backgroundColor: "rgba(255,255,255,0.2)" },
-  filtriNumriTeksti: { color: colors.petrol, fontSize: 12, fontWeight: "800" },
+  filtriNumriTeksti: { color: colors.petrol, fontSize: 12, fontFamily: font.w800 },
   filtriNumriTekstiAktiv: { color: colors.white },
-  asnje: { color: colors.textSecondary, fontSize: 15, textAlign: "center", paddingVertical: 16 },
+  asnje: { color: colors.textSecondary, fontSize: 15, textAlign: "center", paddingVertical: 16, fontFamily: font.w400 },
 
   grupi: { gap: 0 },
   muajiRresht: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 12 },
-  muaji: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "800", letterSpacing: 1.5 },
+  muaji: { color: colors.teal, fontSize: 12, lineHeight: 16, fontFamily: font.w800, letterSpacing: 1.5 },
   muajiVija: { flex: 1, height: 1, backgroundColor: colors.line },
-  muajiNumri: { color: colors.textSecondary, fontSize: 12, fontWeight: "800" },
+  muajiNumri: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w800 },
 
   koha: { flexDirection: "row", gap: 10 },
   dita: { width: 38, alignItems: "center", paddingTop: 12 },
-  ditaNumri: { color: colors.ink, fontSize: 22, lineHeight: 26, fontWeight: "800" },
-  ditaEmri: { color: colors.textSecondary, fontSize: 11, fontWeight: "800", letterSpacing: 0.5 },
+  ditaNumri: { color: colors.ink, fontSize: 22, lineHeight: 26, fontFamily: font.w800 },
+  ditaEmri: { color: colors.textSecondary, fontSize: 11, fontFamily: font.w800, letterSpacing: 0.5 },
   boshti: { width: 22, alignItems: "center", paddingTop: 16 },
   nyja: {
     width: 22,
@@ -671,9 +671,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  vizitaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
-  vizitaNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 19, fontWeight: "500" },
+  vizitaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontFamily: font.w800 },
+  vizitaNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 19, fontFamily: font.w500 },
   vizitaFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
   miku: { flexDirection: "row", alignItems: "center", gap: 5, flexShrink: 1 },
-  mikuTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
+  mikuTeksti: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600, flexShrink: 1 },
 });

@@ -28,3 +28,15 @@ export const colors = {
   // days that already have a visit in the calendar
   vizita: "#C9302C",
 };
+
+// Typeface: Figtree (Google Fonts), one family for the whole app. React Native picks a font by
+// its family name, so each weight is its own family; use these instead of `fontWeight`.
+export const font = {
+  w400: "Figtree_400Regular",
+  w500: "Figtree_500Medium",
+  w600: "Figtree_600SemiBold",
+  w700: "Figtree_700Bold",
+  w800: "Figtree_800ExtraBold",
+  // quoted words (a reason, a note), in italics
+  w500i: "Figtree_500Medium_Italic",
+} as const;

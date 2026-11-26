@@ -1,3 +1,12 @@
+import {
+  Figtree_400Regular,
+  Figtree_500Medium,
+  Figtree_500Medium_Italic,
+  Figtree_600SemiBold,
+  Figtree_700Bold,
+  Figtree_800ExtraBold,
+  useFonts,
+} from "@expo-google-fonts/figtree";
 import { Stack, usePathname, useRootNavigationState, useRouter, type Href } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -73,6 +82,17 @@ function Rrugat() {
 }
 
 export default function RootLayout() {
+  // the app's one typeface; the screens wait for it (a few hundred ms) so no text jumps
+  const [fontetGati, gabimIFontit] = useFonts({
+    Figtree_400Regular,
+    Figtree_500Medium,
+    Figtree_500Medium_Italic,
+    Figtree_600SemiBold,
+    Figtree_700Bold,
+    Figtree_800ExtraBold,
+  });
+  if (!fontetGati && !gabimIFontit) return <View style={styles.mbulese} />;
+
   return (
     <SesioniProvider>
       <ProfiliProvider>

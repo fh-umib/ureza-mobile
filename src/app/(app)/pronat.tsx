@@ -10,7 +10,7 @@ import { ditePara, PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
 import { Seksioni } from "@/components/Seksioni";
 import { VendndodhjaFusha } from "@/components/VendndodhjaFusha";
 import { Ditari } from "@/components/Ditari";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat, type RezultatiShtimit } from "@/lib/dhenat";
 import { gjejQytetin, type Koordinata } from "@/lib/gjeo";
 import type { Lloji, Prona } from "@/lib/pronat";
@@ -282,12 +282,12 @@ function ShtoPronen({
 }
 
 const styles = StyleSheet.create({
-  demoNote: { color: "#7A4A06", backgroundColor: "#FCEFD2", borderRadius: 14, padding: 12, fontSize: 13, lineHeight: 18, fontWeight: "600" },
+  demoNote: { color: "#7A4A06", backgroundColor: "#FCEFD2", borderRadius: 14, padding: 12, fontSize: 13, lineHeight: 18, fontFamily: font.w600 },
   bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   riprovo: { marginTop: 10, minHeight: 44, alignItems: "center", justifyContent: "center", borderRadius: 14, borderWidth: 1.5, borderColor: colors.petrol },
-  riprovoText: { color: colors.petrol, fontSize: 15, fontWeight: "700" },
+  riprovoText: { color: colors.petrol, fontSize: 15, fontFamily: font.w700 },
   flex: { flex: 1 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   shtoKarta: {
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  shtoNen: { color: colors.textSecondary, fontSize: 14, fontWeight: "500" },
+  shtoNen: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w500 },
   detyrat: {
     minHeight: 72,
     backgroundColor: colors.white,
@@ -333,11 +333,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   detyratTekst: { flex: 1, gap: 2 },
-  detyratTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  detyratNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  shtoText: { color: colors.petrol, fontSize: 17, fontWeight: "800" },
+  detyratTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
+  detyratNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
+  shtoText: { color: colors.petrol, fontSize: 17, fontFamily: font.w800 },
   fusha: { gap: 6 },
-  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
+  label: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   input: {
     height: 56,
     paddingHorizontal: 16,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
@@ -364,9 +364,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   chipZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  chipText: { color: colors.ink, fontSize: 15, fontWeight: "700" },
+  chipText: { color: colors.ink, fontSize: 15, fontFamily: font.w700 },
   chipTextZgjedhur: { color: colors.white },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   ruaj: {
     height: 56,
     borderRadius: 16,
@@ -374,8 +374,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  ruajText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  ruajText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
   disabled: { opacity: 0.6 },
   anulo: { minHeight: 44, alignItems: "center", justifyContent: "center" },
-  anuloText: { color: colors.textSecondary, fontSize: 16, fontWeight: "700" },
+  anuloText: { color: colors.textSecondary, fontSize: 16, fontFamily: font.w700 },
 });

@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import type { Statusi } from "@/lib/vizitat";
 
 import { HapatEVizites } from "./HapatEVizites";
@@ -161,7 +161,7 @@ const hija = {
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.97 }] },
-  etiketa: { color: colors.teal, fontSize: 11, lineHeight: 15, fontWeight: "800", letterSpacing: 1.4 },
+  etiketa: { color: colors.teal, fontSize: 11, lineHeight: 15, fontFamily: font.w800, letterSpacing: 1.4 },
 
   // the Miku
   karta: {
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarBosh: { backgroundColor: colors.kujdesBg },
-  avatarTeksti: { color: colors.white, fontSize: 24, fontWeight: "800" },
+  avatarTeksti: { color: colors.white, fontSize: 24, fontFamily: font.w800 },
   avatarShenja: {
     position: "absolute",
     right: -2,
@@ -196,8 +196,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.white,
   },
-  emri: { color: colors.ink, fontSize: 19, lineHeight: 25, fontWeight: "800" },
-  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  emri: { color: colors.ink, fontSize: 19, lineHeight: 25, fontFamily: font.w800 },
+  nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
   distinktiv: {
     alignSelf: "flex-start",
     marginTop: 4,
@@ -209,12 +209,12 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     backgroundColor: colors.okBg,
   },
-  distinktivTeksti: { color: colors.ok, fontSize: 12, fontWeight: "800" },
+  distinktivTeksti: { color: colors.ok, fontSize: 12, fontFamily: font.w800 },
 
   // live state
   statusi: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija },
   statusiKrye: { flexDirection: "row", alignItems: "center", gap: 8 },
-  statusiTeksti: { color: colors.ink, fontSize: 17, lineHeight: 25, fontWeight: "600" },
+  statusiTeksti: { color: colors.ink, fontSize: 17, lineHeight: 25, fontFamily: font.w600 },
   hapat: { marginTop: 4 },
   pikaKuti: { width: 14, height: 14, alignItems: "center", justifyContent: "center" },
   pikaHalo: { position: "absolute", width: 14, height: 14, borderRadius: 7, backgroundColor: colors.amber },
@@ -223,9 +223,9 @@ const styles = StyleSheet.create({
   // proofs
   deshmiteKarta: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
   deshmiteKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  deshmiteTitulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800" },
+  deshmiteTitulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontFamily: font.w800 },
   lidhja: { flexDirection: "row", alignItems: "center", gap: 2, minHeight: 44 },
-  lidhjaTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+  lidhjaTeksti: { color: colors.petrol, fontSize: 14, fontFamily: font.w800 },
   pllakat: { flexDirection: "row", gap: 10 },
   pllaka: {
     flex: 1,
@@ -246,6 +246,6 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   pllakaIkonaGati: { backgroundColor: colors.petrol },
-  pllakaEmri: { color: colors.ink, fontSize: 15, fontWeight: "800" },
-  pllakaNen: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
+  pllakaEmri: { color: colors.ink, fontSize: 15, fontFamily: font.w800 },
+  pllakaNen: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w600 },
 });

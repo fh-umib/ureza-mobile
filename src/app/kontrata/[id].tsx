@@ -7,7 +7,7 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, Vi
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { Kutia } from "@/components/Kutia";
 import { UrezaIcon } from "@/components/UrezaIcon";
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { paleMiku, useKontrata, useProfiliIPunes, type DhenatEKontrates } from "@/lib/kontrata";
 import {
@@ -391,19 +391,19 @@ const styles = StyleSheet.create({
   shtypur: { opacity: 0.85 },
   palet: { flexDirection: "row", alignItems: "stretch", gap: 8, backgroundColor: colors.hero, borderRadius: 22, padding: 14 },
   pala: { flex: 1, gap: 4, padding: 6 },
-  palaRoli: { color: colors.mint, fontSize: 11, fontWeight: "800", letterSpacing: 1.2, marginTop: 4 },
-  palaEmri: { color: colors.white, fontSize: 15, lineHeight: 20, fontWeight: "800" },
-  palaPranoi: { color: colors.onHeroText, fontSize: 12, fontWeight: "600" },
+  palaRoli: { color: colors.mint, fontSize: 11, fontFamily: font.w800, letterSpacing: 1.2, marginTop: 4 },
+  palaEmri: { color: colors.white, fontSize: 15, lineHeight: 20, fontFamily: font.w800 },
+  palaPranoi: { color: colors.onHeroText, fontSize: 12, fontFamily: font.w600 },
   lidhja: { justifyContent: "center" },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 16, gap: 10 },
-  kicker: { color: colors.teal, fontSize: 12, fontWeight: "700", letterSpacing: 1.5 },
-  titulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800", flexShrink: 1 },
-  teksti: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
+  kicker: { color: colors.teal, fontSize: 12, fontFamily: font.w700, letterSpacing: 1.5 },
+  titulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontFamily: font.w800, flexShrink: 1 },
+  teksti: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w500 },
   permbledhje: { gap: 6, marginTop: 4, paddingTop: 10, borderTopWidth: 1, borderTopColor: "#EDF2F5" },
   fakt: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
   seksionKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
   numri: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
-  numriTeksti: { color: colors.white, fontSize: 14, fontWeight: "800" },
+  numriTeksti: { color: colors.white, fontSize: 14, fontFamily: font.w800 },
   opsion: {
     flexDirection: "row",
     alignItems: "center",
@@ -414,8 +414,8 @@ const styles = StyleSheet.create({
     borderColor: "#D3DEE4",
   },
   opsionZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },
-  opsionEmri: { color: colors.ink, fontSize: 15, fontWeight: "800" },
-  opsionNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  opsionEmri: { color: colors.ink, fontSize: 15, fontFamily: font.w800 },
+  opsionNen: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   radio: {
     width: 22,
     height: 22,
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   },
   radioZgjedhur: { borderColor: colors.petrol },
   radioPika: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.petrol },
-  etiketa: { color: colors.ink, fontSize: 15, fontWeight: "700", marginTop: 2 },
+  etiketa: { color: colors.ink, fontSize: 15, fontFamily: font.w700, marginTop: 2 },
   chipat: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {
     minHeight: 40,
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   chipZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  chipTeksti: { color: colors.ink, fontSize: 14, fontWeight: "700" },
+  chipTeksti: { color: colors.ink, fontSize: 14, fontFamily: font.w700 },
   chipTekstiZgjedhur: { color: colors.white },
   input: {
     minHeight: 52,
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     borderColor: colors.inputBorder,
     borderRadius: 14,
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: font.w500,
     color: colors.ink,
   },
   inputShume: { minHeight: 90 },
@@ -463,8 +463,8 @@ const styles = StyleSheet.create({
     fontFamily: Platform.select({ ios: "Snell Roundhand", android: "cursive", default: "cursive" }),
   },
   firmaVija: { height: 1, backgroundColor: colors.inputBorder, marginVertical: 4 },
-  imet: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
-  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  imet: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w600 },
+  gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: {
     minHeight: 56,
     borderRadius: 16,
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 16,
   },
-  primaryText: { color: colors.white, fontSize: 16, fontWeight: "800" },
+  primaryText: { color: colors.white, fontSize: 16, fontFamily: font.w800 },
   disabled: { opacity: 0.5 },
   sukses: {
     flexDirection: "row",
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E4F6EB",
   },
   suksesIkona: { width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E6B3E", alignItems: "center", justifyContent: "center" },
-  suksesTitulli: { color: "#1E6B3E", fontSize: 16, fontWeight: "800" },
+  suksesTitulli: { color: "#1E6B3E", fontSize: 16, fontFamily: font.w800 },
   ndaj: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.white, justifyContent: "center" },
-  ndajTeksti: { color: "#1E6B3E", fontSize: 14, fontWeight: "800" },
+  ndajTeksti: { color: "#1E6B3E", fontSize: 14, fontFamily: font.w800 },
 });

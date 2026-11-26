@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
 
 // A sheet that slides up from the bottom over a dimmed screen (the "Shto pronë" sheet of the design).
@@ -55,5 +55,5 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 28,
   },
   permbajtja: { paddingTop: 24, paddingHorizontal: 20, gap: 14 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
 });
