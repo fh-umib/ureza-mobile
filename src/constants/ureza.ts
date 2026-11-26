@@ -14,6 +14,13 @@ export const colors = {
   white: "#FFFFFF",
   onHeroText: "#D6E6EA",
   error: "#9B2C2C",
+  // states shown with colour + icon + words (freshness, map position): good, needs care, unknown
+  okBg: "#E4F6EB",
+  ok: "#1E6B3E",
+  kujdesBg: "#FFF2DE",
+  kujdes: "#8A5210",
+  neutralBg: "#EEF1F3",
+  neutral: "#5F6F77",
   // days that already have a visit in the calendar
   vizita: "#C9302C",
 };

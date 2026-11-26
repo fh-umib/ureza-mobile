@@ -21,7 +21,7 @@ import { ChipiIFreskise, ditePara } from "@/components/PronaKarta";
 import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
-import { UrezaIcon } from "@/components/UrezaIcon";
+import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
@@ -262,51 +262,73 @@ function KartaEVendit({ prona, eMiku, onRedakto }: { prona: Prona; eMiku: boolea
   const v = vendiNeHarte(prona);
   const k = prona.koordinatat;
 
-  let titulli: string;
+  // three states that read apart: colour + icon + words, never colour alone
+  let gjendja: GjendjaEVendit;
   let tekst: string;
   if (k) {
-    titulli = "Vendndodhja e saktë";
+    gjendja = GJENDJET.sakte;
     tekst = eMiku
       ? `${koordinataNeTekst(k)}. GPS-i yt krahasohet me këtë pikë kur mbledh dëshmitë.`
       : `${koordinataNeTekst(k)}. GPS-i i Mikut krahasohet me këtë pikë (rreze 150 m).`;
   } else if (v) {
-    titulli = "Vendndodhje e përafërt";
+    gjendja = GJENDJET.perafert;
     tekst = eMiku
       ? `Prona është shënuar vetëm sipas qytetit (${v.qyteti}). Vendndodhja e saktë shfaqet pasi ta pranosh vizitën.`
       : `Prona është shënuar vetëm sipas qytetit (${v.qyteti}), jo sipas adresës. Shto vendndodhjen e saktë që ta shohësh aty ku është dhe që GPS-i i Mikut të krahasohet me të.`;
   } else {
-    titulli = "Prona nuk është në hartë";
+    gjendja = GJENDJET.mungon;
     tekst = eMiku
       ? "Vendi i kësaj prone nuk njihet në hartë."
       : `Vendi “${prona.vendi}” nuk njihet në hartë. Shto koordinatat e pronës që ta shohësh këtu.`;
   }
 
   return (
-    <View style={styles.karta}>
+    <View style={[styles.karta, { borderLeftWidth: 5, borderLeftColor: gjendja.fg }]}>
       <View style={styles.rreshtIkone}>
-        <UrezaIcon name="pin" size={20} color={colors.petrol} strokeWidth={2.2} />
-        <Text style={styles.titulliKartes}>{titulli}</Text>
+        <View style={[styles.vendiIkona, { backgroundColor: gjendja.bg }]}>
+          <UrezaIcon name={gjendja.ikona} size={20} color={gjendja.fg} strokeWidth={2.4} />
+        </View>
+        <Text style={styles.titulliKartes}>{gjendja.titulli}</Text>
       </View>
       <Text style={styles.tekst}>{tekst}</Text>
-      <View style={styles.lidhjet}>
-        {k ? (
-          <Pressable
-            style={styles.dytesor}
-            onPress={() => void Linking.openURL(lidhjaEHartes(k))}
-            accessibilityRole="link"
-          >
-            <Text style={styles.dytesorText}>Hape në Google Maps</Text>
-          </Pressable>
-        ) : null}
-        {!eMiku ? (
-          <Pressable style={styles.dytesor} onPress={onRedakto} accessibilityRole="button">
-            <Text style={styles.dytesorText}>{k ? "Ndrysho vendndodhjen" : "Shto vendndodhjen e saktë"}</Text>
-          </Pressable>
-        ) : null}
-      </View>
+      {k || !eMiku ? (
+        <View style={styles.lidhjet}>
+          {k ? (
+            <Pressable
+              style={({ pressed }) => [styles.butonIkone, pressed && styles.shtypur]}
+              onPress={() => void Linking.openURL(lidhjaEHartes(k))}
+              accessibilityRole="link"
+              accessibilityLabel="Hape në Google Maps"
+            >
+              <UrezaIcon name="map" size={18} color={colors.petrol} strokeWidth={2.2} />
+              <Text style={styles.butonIkoneText}>Hape në Google Maps</Text>
+            </Pressable>
+          ) : null}
+          {!eMiku ? (
+            <Pressable
+              style={({ pressed }) => [styles.butonIkone, pressed && styles.shtypur]}
+              onPress={onRedakto}
+              accessibilityRole="button"
+              accessibilityLabel={k ? "Ndrysho vendndodhjen" : "Shto vendndodhjen e saktë"}
+            >
+              <UrezaIcon name={k ? "pin" : "plus"} size={18} color={colors.petrol} strokeWidth={2.2} />
+              <Text style={styles.butonIkoneText}>{k ? "Ndrysho vendndodhjen" : "Shto vendndodhjen e saktë"}</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
     </View>
   );
 }
+
+type GjendjaEVendit = { titulli: string; ikona: IconName; bg: string; fg: string };
+
+// the same green and orange as the freshness chip on Pronat, and a neutral grey (constants/ureza.ts)
+const GJENDJET: Record<"sakte" | "perafert" | "mungon", GjendjaEVendit> = {
+  sakte: { titulli: "Vendndodhja e saktë", ikona: "check", bg: colors.okBg, fg: colors.ok },
+  perafert: { titulli: "Vendndodhje e përafërt", ikona: "warning", bg: colors.kujdesBg, fg: colors.kujdes },
+  mungon: { titulli: "Prona nuk është në hartë", ikona: "close", bg: colors.neutralBg, fg: colors.neutral },
+};
 
 function RreshtiIVizites({ vizita, fundit }: { vizita: Vizita; fundit: boolean }) {
   const router = useRouter();
@@ -403,11 +425,24 @@ const styles = StyleSheet.create({
   zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
   emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
   vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "600", flexShrink: 1 },
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8 },
+  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
   titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800", flexShrink: 1 },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  lidhjet: { flexDirection: "row", flexWrap: "wrap", columnGap: 24 },
+  lidhjet: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 4 },
+  vendiIkona: { width: 34, height: 34, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  butonIkone: {
+    minHeight: 44,
+    paddingHorizontal: 14,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: colors.line,
+    backgroundColor: colors.white,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  butonIkoneText: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
   dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
   dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16 },
