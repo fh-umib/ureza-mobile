@@ -4,24 +4,16 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
-import {
-  GrafikuIMuajve,
-  MbulimiIPronave,
-  NGJYRA_INSPEKTIM,
-  NGJYRA_KUJDES,
-  ShiritiIStatuseve,
-  type MbulimiIPrones,
-  type MuajiIGrafikut,
-} from "@/components/OdaGrafiket";
+import { Ikona, type EmriIIkones } from "@/components/Ikona";
+import { GrafikuIMuajve, ShiritiIStatuseve, type MuajiIGrafikut } from "@/components/OdaGrafiket";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { StatusiChip } from "@/components/StatusiChip";
-import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
+import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Prona } from "@/lib/pronat";
 import {
   DITET_SHKURT,
-  LLOJET_E_VIZITES,
   MUAJT,
   STATUSET,
   dataNeTekst,
@@ -31,8 +23,9 @@ import {
   type Vizita,
 } from "@/lib/vizitat";
 
-// "Oda" (the family's archive): a summary of every visit in figures and charts, then the full
-// history as a timeline, grouped by month, newest first, with filters.
+// "Oda" (the family's archive), in the order a client needs it: first what waits for their
+// decision, then three figures, then each property and where it stands, then the full history
+// (a timeline by month, with filters), and the charts last.
 
 const DITA_MS = 24 * 60 * 60 * 1000;
 const TE_MBYLLURA: Statusi[] = ["miratuar", "kundershtuar"];
@@ -90,20 +83,44 @@ function gjashteMuajt(vizitat: Vizita[]): MuajiIGrafikut[] {
   });
 }
 
-// How many visits each property had and how many days ago the last one (up to today) was.
-function mbulimi(pronat: Prona[], vizitat: Vizita[]): MbulimiIPrones[] {
+// Where a property stands, in one line. A visit counts as "checked" only once the Miku has been
+// there (not while it is only requested or accepted); a visit still to come is shown as such.
+const TE_KRYERA: Statusi[] = ["vizita", "raporti_gati", "miratuar", "kundershtuar"];
+const DITE_PA_KONTROLL = 45;
+
+type GjendjaEProns = { lloji: "kontrolluar" | "ne_rruge" | "harruar"; teksti: string; vizitaId: string | null };
+
+function gjendjaEPrones(p: Prona, vizitat: Vizita[]): GjendjaEProns {
   const sot = dataNgaTekst(dataNeTekst(new Date())).getTime();
-  return pronat.map((p) => {
-    const tePrones = vizitat.filter((v) => v.pronaId === p.id);
-    const deriSot = tePrones.filter((v) => dataNgaTekst(v.data).getTime() <= sot);
-    const eFundit = deriSot.sort((a, b) => b.data.localeCompare(a.data))[0];
+  const tePrones = vizitat.filter((v) => v.pronaId === p.id);
+  const eArdhshme = tePrones
+    .filter((v) => !TE_KRYERA.includes(v.statusi))
+    .sort((a, b) => a.data.localeCompare(b.data))[0];
+  const eKryera = tePrones
+    .filter((v) => TE_KRYERA.includes(v.statusi) && dataNgaTekst(v.data).getTime() <= sot)
+    .sort((a, b) => b.data.localeCompare(a.data))[0];
+  const dite = eKryera ? Math.round((sot - dataNgaTekst(eKryera.data).getTime()) / DITA_MS) : null;
+
+  if (eArdhshme) {
+    const d = dataNgaTekst(eArdhshme.data);
     return {
-      id: p.id,
-      emri: p.emri,
-      vizita: tePrones.length,
-      ditePara: eFundit ? Math.round((sot - dataNgaTekst(eFundit.data).getTime()) / DITA_MS) : null,
+      lloji: "ne_rruge",
+      teksti: `Vizita më ${d.getDate()} ${MUAJT[d.getMonth()]} · ${STATUSET[eArdhshme.statusi].emri.toLowerCase()}`,
+      vizitaId: eArdhshme.id,
     };
-  });
+  }
+  if (dite !== null && dite <= DITE_PA_KONTROLL) {
+    return {
+      lloji: "kontrolluar",
+      teksti: dite === 0 ? "Kontrolluar sot" : dite === 1 ? "Kontrolluar dje" : `Kontrolluar para ${dite} ditësh`,
+      vizitaId: eKryera?.id ?? null,
+    };
+  }
+  return {
+    lloji: "harruar",
+    teksti: dite === null ? "Ende pa u kontrolluar" : `Pa kontroll prej ${dite} ditësh`,
+    vizitaId: null,
+  };
 }
 
 // Average time from request to a Miku accepting it, in words ("5 orë", "2 ditë").
@@ -130,7 +147,8 @@ export default function Oda() {
 
   const miratuar = vizitat.filter((v) => v.statusi === "miratuar").length;
   const kundershtuar = vizitat.filter((v) => v.statusi === "kundershtuar").length;
-  const perVendim = vizitat.filter((v) => v.statusi === "raporti_gati").length;
+  const perVendimLista = vizitat.filter((v) => v.statusi === "raporti_gati");
+  const perVendim = perVendimLista.length;
   const neProces = vizitat.length - miratuar - kundershtuar - perVendim;
   const teVendosura = miratuar + kundershtuar;
   const besimi = teVendosura > 0 ? `${Math.round((miratuar / teVendosura) * 100)}%` : "—";
@@ -139,6 +157,8 @@ export default function Oda() {
   const grupet = sipasMuajit(teFiltruara);
   const kaVizita = vizitat.length > 0;
 
+  const emriIProns = (v: Vizita) => pronat.find((p) => p.id === v.pronaId)?.emri ?? "Prona";
+  const hap = (id: string) => router.push({ pathname: "/vizita/[id]", params: { id } });
   const kerko = (pronaId?: string) => {
     const prona = pronat.find((p) => p.id === pronaId);
     router.push({
@@ -162,10 +182,7 @@ export default function Oda() {
               <PronaIlustrim lloji="ceti" />
             </View>
             <Text style={styles.boshTitle}>Oda është ende bosh</Text>
-            <Text style={styles.boshText}>
-              Çdo vizitë që kërkon shfaqet këtu: me foto, vendndodhje, zë dhe raport. Këtu do të shohësh edhe grafikët e
-              familjes.
-            </Text>
+            <Text style={styles.boshText}>Çdo vizitë që kërkon shfaqet këtu: me foto, vendndodhje, zë dhe raport.</Text>
             <Pressable style={styles.primary} onPress={() => kerko()} accessibilityRole="button">
               <Text style={styles.primaryText}>Kërko vizitën e parë</Text>
               <UrezaIcon name="arrow" size={20} color={colors.white} strokeWidth={2.4} />
@@ -176,43 +193,73 @@ export default function Oda() {
 
       {kaVizita ? (
         <>
-          <Hyrje i={0}>
-            <View style={styles.shifrat}>
-              <Shifra icon="book" vlera={String(vizitat.length)} etiketa="Vizita gjithsej" />
-              <Shifra icon="check" vlera={besimi} etiketa="Raporte të miratuara" />
-              <Shifra icon="clock" vlera={kohaEPranimit(vizitat)} etiketa="Deri te pranimi" />
-            </View>
-          </Hyrje>
-
-          <Hyrje i={1}>
-            <Karta titulli="Gjendja e vizitave" ikona="shield">
-              <ShiritiIStatuseve
-                pjeset={[
-                  { emri: "Miratuar", numri: miratuar, ngjyra: "#1E6B3E", ikona: "check" },
-                  { emri: "Për vendimin tënd", numri: perVendim, ngjyra: "#8A5210", ikona: "sparkle" },
-                  { emri: "Në proces", numri: neProces, ngjyra: colors.petrol, ikona: "clock" },
-                  { emri: "Kundërshtuar", numri: kundershtuar, ngjyra: colors.error, ikona: "warning" },
-                ]}
-              />
-            </Karta>
-          </Hyrje>
-
-          <Hyrje i={2}>
-            <Karta titulli="Aktiviteti, 6 muajt e fundit" ikona="clock">
-              <GrafikuIMuajve muajt={gjashteMuajt(vizitat)} />
-            </Karta>
-          </Hyrje>
-
-          {pronat.length > 0 ? (
-            <Hyrje i={3}>
-              <Karta titulli="Mbulimi i pronave" ikona="houses">
-                <MbulimiIPronave pronat={mbulimi(pronat, vizitat)} onKerko={kerko} />
-              </Karta>
+          {/* 1 · what needs the client now: reports waiting for a decision */}
+          {perVendimLista.length > 0 ? (
+            <Hyrje i={0}>
+              <View style={styles.vemendja}>
+                <View style={styles.vemendjaKrye}>
+                  <View style={styles.vemendjaIkona}>
+                    <Ikona emri="vendim" madhesia={20} ngjyra={colors.kujdes} />
+                  </View>
+                  <View style={styles.flex}>
+                    <Text style={styles.vemendjaTitulli}>
+                      {perVendimLista.length === 1
+                        ? "Një raport pret vendimin tënd"
+                        : `${perVendimLista.length} raporte presin vendimin tënd`}
+                    </Text>
+                    <Text style={styles.vemendjaTeksti}>Lexoje dhe miratoje, ose kundërshtoje.</Text>
+                  </View>
+                </View>
+                {perVendimLista.map((v) => (
+                  <Pressable
+                    key={v.id}
+                    style={({ pressed }) => [styles.vemendjaRresht, pressed && styles.shtypur]}
+                    onPress={() => hap(v.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Shiko raportin: ${titulliIVizites(v.lloji)}, ${emriIProns(v)}`}
+                  >
+                    <Text style={styles.vemendjaRreshtTeksti} numberOfLines={1}>
+                      {titulliIVizites(v.lloji)} · {emriIProns(v)}
+                    </Text>
+                    <Text style={styles.vemendjaCta}>Shiko raportin</Text>
+                    <Ikona emri="shigjeta" madhesia={16} ngjyra={colors.petrol} />
+                  </Pressable>
+                ))}
+              </View>
             </Hyrje>
           ) : null}
 
-          <Hyrje i={4}>
-            <Text style={styles.seksioni}>Historia</Text>
+          {/* 2 · the three figures */}
+          <Hyrje i={1}>
+            <View style={styles.shifrat}>
+              <Shifra ikona="vizitat" vlera={String(vizitat.length)} etiketa="Vizita gjithsej" />
+              <Shifra ikona="miratuar" vlera={besimi} etiketa="Raporte të miratuara" />
+              <Shifra ikona="koha" vlera={kohaEPranimit(vizitat)} etiketa="Deri te pranimi" />
+            </View>
+          </Hyrje>
+
+          {/* 3 · every property: when it was last checked, or when the next visit is */}
+          {pronat.length > 0 ? (
+            <Hyrje i={2}>
+              <Seksioni ikona="pronat" titulli="Pronat e tua" />
+              <View style={styles.karta}>
+                {pronat.map((p, i) => (
+                  <RreshtiIPrones
+                    key={p.id}
+                    prona={p}
+                    gjendja={gjendjaEPrones(p, vizitat)}
+                    ndarje={i > 0}
+                    onKerko={() => kerko(p.id)}
+                    onHap={hap}
+                  />
+                ))}
+              </View>
+            </Hyrje>
+          ) : null}
+
+          {/* 4 · the history, filtered */}
+          <Hyrje i={3}>
+            <Seksioni ikona="historia" titulli="Historia" />
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -229,6 +276,7 @@ export default function Oda() {
                     style={[styles.filtri, aktiv && styles.filtriAktiv]}
                     accessibilityRole="button"
                     accessibilityState={{ selected: aktiv }}
+                    accessibilityLabel={`${f.emri}: ${sa}`}
                   >
                     <Text style={[styles.filtriTeksti, aktiv && styles.filtriTekstiAktiv]}>{f.emri}</Text>
                     <View style={[styles.filtriNumri, aktiv && styles.filtriNumriAktiv]}>
@@ -251,12 +299,12 @@ export default function Oda() {
                   <Text style={styles.muajiNumri}>{grupi.vizitat.length}</Text>
                 </View>
                 {grupi.vizitat.map((v, i) => (
-                  <Hyrje key={v.id} i={5 + gi + i}>
+                  <Hyrje key={v.id} i={4 + gi + i}>
                     <RreshtiIKohes
                       vizita={v}
                       prona={pronat.find((p) => p.id === v.pronaId)}
                       iFundit={i === grupi.vizitat.length - 1}
-                      onPress={() => router.push({ pathname: "/vizita/[id]", params: { id: v.id } })}
+                      onPress={() => hap(v.id)}
                     />
                   </Hyrje>
                 ))}
@@ -269,20 +317,53 @@ export default function Oda() {
             onPress={() => kerko()}
             accessibilityRole="button"
           >
-            <UrezaIcon name="plus" size={22} color={colors.white} strokeWidth={2.4} />
+            <Ikona emri="shto" madhesia={20} ngjyra={colors.white} />
             <Text style={styles.primaryText}>Kërko një vizitë</Text>
           </Pressable>
+
+          {/* 5 · the figures behind it, last: useful, but not what the client opens Oda for */}
+          <Hyrje i={6}>
+            <Seksioni ikona="statistika" titulli="Statistikat" />
+            <View style={styles.statistikat}>
+              <View style={styles.kartaStat}>
+                <Text style={styles.kartaTitulli}>Gjendja e vizitave</Text>
+                <ShiritiIStatuseve
+                  pjeset={[
+                    { emri: "Miratuar", numri: miratuar, ngjyra: colors.ok, ikona: "check" },
+                    { emri: "Për vendimin tënd", numri: perVendim, ngjyra: colors.kujdes, ikona: "sparkle" },
+                    { emri: "Në proces", numri: neProces, ngjyra: colors.petrol, ikona: "clock" },
+                    { emri: "Kundërshtuar", numri: kundershtuar, ngjyra: colors.error, ikona: "warning" },
+                  ]}
+                />
+              </View>
+              <View style={styles.kartaStat}>
+                <Text style={styles.kartaTitulli}>Aktiviteti, 6 muajt e fundit</Text>
+                <GrafikuIMuajve muajt={gjashteMuajt(vizitat)} />
+              </View>
+            </View>
+          </Hyrje>
         </>
       ) : null}
     </EkraniMeHero>
   );
 }
 
-function Shifra({ icon, vlera, etiketa }: { icon: IconName; vlera: string; etiketa: string }) {
+function Seksioni({ ikona, titulli }: { ikona: EmriIIkones; titulli: string }) {
+  return (
+    <View style={styles.seksioni}>
+      <Ikona emri={ikona} madhesia={20} ngjyra={colors.teal} />
+      <Text style={styles.seksioniTitulli} accessibilityRole="header">
+        {titulli}
+      </Text>
+    </View>
+  );
+}
+
+function Shifra({ ikona, vlera, etiketa }: { ikona: EmriIIkones; vlera: string; etiketa: string }) {
   return (
     <View style={styles.shifra} accessible accessibilityLabel={`${etiketa}: ${vlera}`}>
       <View style={styles.shifraIkona}>
-        <UrezaIcon name={icon} size={18} color={colors.petrol} strokeWidth={2.2} />
+        <Ikona emri={ikona} madhesia={18} ngjyra={colors.petrol} />
       </View>
       <Text style={styles.shifraVlera} numberOfLines={1} adjustsFontSizeToFit>
         {vlera}
@@ -292,22 +373,76 @@ function Shifra({ icon, vlera, etiketa }: { icon: IconName; vlera: string; etike
   );
 }
 
-function Karta({ titulli, ikona, children }: { titulli: string; ikona: IconName; children: ReactNode }) {
+const IKONA_E_PRONES: Record<Prona["lloji"], EmriIIkones> = { shtepi: "shtepi", prindert: "prindert", toke: "toke" };
+
+// One property: its picture, name, and one line that says where it stands, as colour + icon +
+// words: checked recently (green), a visit on the way (petrol), or nothing for too long (orange,
+// with a shortcut to a new request).
+function RreshtiIPrones({
+  prona,
+  gjendja: g,
+  ndarje,
+  onKerko,
+  onHap,
+}: {
+  prona: Prona;
+  gjendja: GjendjaEProns;
+  ndarje: boolean;
+  onKerko: () => void;
+  onHap: (id: string) => void;
+}) {
+  const pamja =
+    g.lloji === "ne_rruge"
+      ? { ikona: "kalendar" as const, fg: colors.petrol, bg: colors.ikonaBg }
+      : g.lloji === "kontrolluar"
+        ? { ikona: "miratuar" as const, fg: colors.ok, bg: colors.okBg }
+        : { ikona: "kujdes" as const, fg: colors.kujdes, bg: colors.kujdesBg };
+  const vizitaId = g.vizitaId;
   return (
-    <View style={styles.karta}>
-      <View style={styles.kartaKrye}>
-        <View style={styles.kartaIkona}>
-          <UrezaIcon name={ikona} size={18} color={colors.teal} strokeWidth={2.2} />
+    <View style={[styles.pronaRresht, ndarje && styles.ndarje]}>
+      <View style={styles.pronaFoto}>
+        <PronaIlustrim lloji={prona.lloji} />
+        <View style={styles.pronaLloji}>
+          <Ikona emri={IKONA_E_PRONES[prona.lloji]} madhesia={12} ngjyra={colors.white} />
         </View>
-        <Text style={styles.kartaTitulli}>{titulli}</Text>
       </View>
-      {children}
+      <View style={styles.flex}>
+        <Text style={styles.pronaEmri} numberOfLines={1}>
+          {prona.emri}
+        </Text>
+        <View style={[styles.pronaChip, { backgroundColor: pamja.bg }]}>
+          <Ikona emri={pamja.ikona} madhesia={13} ngjyra={pamja.fg} />
+          <Text style={[styles.pronaChipTeksti, { color: pamja.fg }]} numberOfLines={1}>
+            {g.teksti}
+          </Text>
+        </View>
+      </View>
+      {g.lloji === "harruar" ? (
+        <Pressable
+          onPress={onKerko}
+          style={({ pressed }) => [styles.pronaVeprim, pressed && styles.shtypur]}
+          accessibilityRole="button"
+          accessibilityLabel={`Kërko vizitë për ${prona.emri}`}
+        >
+          <Text style={styles.pronaVeprimTeksti}>Kërko</Text>
+          <Ikona emri="shigjeta" madhesia={14} ngjyra={colors.white} />
+        </Pressable>
+      ) : vizitaId ? (
+        <Pressable
+          onPress={() => onHap(vizitaId)}
+          style={styles.pronaHap}
+          accessibilityRole="button"
+          accessibilityLabel={`Hap vizitën e ${prona.emri}`}
+        >
+          <Ikona emri="shigjeta" madhesia={18} ngjyra={colors.petrol} />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
 
-// One visit on the timeline: the day on the left, a dot on the line in the colour of its state,
-// and a card with the kind, the property, the Miku and a clear "open" arrow.
+// One visit on the timeline: the day on the left, a dot in the colour of its state on the line,
+// and a white card with the kind, the property, the state, the Miku and an arrow.
 function RreshtiIKohes({
   vizita: v,
   prona,
@@ -321,8 +456,6 @@ function RreshtiIKohes({
 }) {
   const d = dataNgaTekst(v.data);
   const statusi = STATUSET[v.statusi];
-  const ikona = LLOJET_E_VIZITES.find((l) => l.vlera === v.lloji)?.icon ?? "home";
-  const ngjyraLlojit = v.lloji === "inspektim" ? NGJYRA_INSPEKTIM : NGJYRA_KUJDES;
   return (
     <View style={styles.koha}>
       <View style={styles.dita}>
@@ -341,10 +474,9 @@ function RreshtiIKohes({
         accessibilityRole="button"
         accessibilityLabel={`${titulliIVizites(v.lloji)}, ${prona?.emri ?? "Prona"}, ${statusi.emri}. Hap vizitën.`}
       >
-        <View style={[styles.vizitaShirit, { backgroundColor: ngjyraLlojit }]} />
         <View style={styles.vizitaKrye}>
-          <View style={[styles.vizitaIkona, { backgroundColor: `${ngjyraLlojit}1A` }]}>
-            <UrezaIcon name={ikona} size={20} color={ngjyraLlojit} strokeWidth={2.2} />
+          <View style={styles.vizitaIkona}>
+            <Ikona emri={v.lloji === "kujdes" ? "prindert" : "shtepi"} madhesia={20} ngjyra={colors.petrol} />
           </View>
           <View style={styles.flex}>
             <Text style={styles.vizitaTitulli} numberOfLines={1}>
@@ -354,23 +486,18 @@ function RreshtiIKohes({
               {prona?.emri ?? "Prona"}
             </Text>
           </View>
+          <Ikona emri="shigjeta" madhesia={18} ngjyra={colors.textSecondary} />
         </View>
-        {v.mikuEmri ? (
-          <View style={styles.miku}>
-            <UrezaIcon name="user" size={15} color={colors.textSecondary} strokeWidth={2.2} />
-            <Text style={styles.mikuTeksti} numberOfLines={1}>
-              Miku: {v.mikuEmri}
-            </Text>
-          </View>
-        ) : null}
         <View style={styles.vizitaFund}>
           <StatusiChip statusi={v.statusi} />
-          <View style={styles.hap}>
-            <Text style={styles.hapTeksti}>Hap</Text>
-            <View style={styles.hapRrethi}>
-              <UrezaIcon name="arrow" size={15} color={colors.white} strokeWidth={2.6} />
+          {v.mikuEmri ? (
+            <View style={styles.miku}>
+              <Ikona emri="miku" madhesia={15} ngjyra={colors.textSecondary} />
+              <Text style={styles.mikuTeksti} numberOfLines={1}>
+                {v.mikuEmri}
+              </Text>
             </View>
-          </View>
+          ) : null}
         </View>
       </Pressable>
     </View>
@@ -379,15 +506,16 @@ function RreshtiIKohes({
 
 const hija = {
   shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 6 },
-  shadowOpacity: 0.08,
-  shadowRadius: 14,
-  elevation: 3,
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.07,
+  shadowRadius: 12,
+  elevation: 2,
 };
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
+  flex: { flex: 1, minWidth: 0 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+  ndarje: { borderTopWidth: 1, borderTopColor: colors.background },
 
   primary: {
     height: 56,
@@ -406,13 +534,39 @@ const styles = StyleSheet.create({
   boshTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   boshText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500", marginBottom: 8 },
 
+  // waiting for a decision
+  vemendja: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija },
+  vemendjaKrye: { flexDirection: "row", alignItems: "center", gap: 12 },
+  vemendjaIkona: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.kujdesBg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  vemendjaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
+  vemendjaTeksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  vemendjaRresht: {
+    minHeight: 48,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 12,
+    borderRadius: 14,
+    backgroundColor: colors.background,
+  },
+  vemendjaRreshtTeksti: { flex: 1, color: colors.ink, fontSize: 14, fontWeight: "700" },
+  vemendjaCta: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
+
+  // figures
   shifrat: { flexDirection: "row", gap: 10 },
   shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija },
   shifraIkona: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    width: 34,
+    height: 34,
+    borderRadius: 11,
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,
@@ -420,19 +574,53 @@ const styles = StyleSheet.create({
   shifraVlera: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
   shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontWeight: "600" },
 
-  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 14, ...hija },
-  kartaKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
-  kartaIkona: {
-    width: 32,
-    height: 32,
+  // section titles and cards
+  seksioni: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 12 },
+  seksioniTitulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  karta: { backgroundColor: colors.white, borderRadius: 22, paddingHorizontal: 14, ...hija },
+  kartaStat: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
+  kartaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
+  statistikat: { gap: 12 },
+
+  // properties
+  pronaRresht: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12 },
+  pronaFoto: { width: 56, height: 56, borderRadius: 14, overflow: "hidden" },
+  pronaLloji: {
+    position: "absolute",
+    right: 3,
+    bottom: 3,
+    width: 20,
+    height: 20,
     borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: "rgba(23,63,78,0.85)",
     alignItems: "center",
     justifyContent: "center",
   },
-  kartaTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
+  pronaEmri: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800", marginBottom: 6 },
+  pronaChip: {
+    alignSelf: "flex-start",
+    maxWidth: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    height: 26,
+    paddingHorizontal: 9,
+    borderRadius: 13,
+  },
+  pronaChipTeksti: { fontSize: 12, fontWeight: "700", flexShrink: 1 },
+  pronaVeprim: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    height: 36,
+    paddingHorizontal: 12,
+    borderRadius: 18,
+    backgroundColor: colors.petrol,
+  },
+  pronaVeprimTeksti: { color: colors.white, fontSize: 13, fontWeight: "800" },
+  pronaHap: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
 
-  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800", marginBottom: 10 },
+  // history
   filtrat: { marginHorizontal: -20 },
   filtratBrenda: { paddingHorizontal: 20, gap: 8 },
   filtri: {
@@ -445,7 +633,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: "#D3DEE4",
+    borderColor: colors.line,
   },
   filtriAktiv: { backgroundColor: colors.petrol, borderColor: colors.petrol },
   filtriTeksti: { color: colors.ink, fontSize: 14, fontWeight: "700" },
@@ -455,7 +643,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: 13,
     paddingHorizontal: 6,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -471,10 +659,10 @@ const styles = StyleSheet.create({
   muajiNumri: { color: colors.textSecondary, fontSize: 12, fontWeight: "800" },
 
   koha: { flexDirection: "row", gap: 10 },
-  dita: { width: 38, alignItems: "center", paddingTop: 10 },
+  dita: { width: 38, alignItems: "center", paddingTop: 12 },
   ditaNumri: { color: colors.ink, fontSize: 22, lineHeight: 26, fontWeight: "800" },
   ditaEmri: { color: colors.textSecondary, fontSize: 11, fontWeight: "800", letterSpacing: 0.5 },
-  boshti: { width: 22, alignItems: "center", paddingTop: 14 },
+  boshti: { width: 22, alignItems: "center", paddingTop: 16 },
   nyja: {
     width: 22,
     height: 22,
@@ -485,33 +673,19 @@ const styles = StyleSheet.create({
     borderColor: colors.background,
   },
   boshtiVija: { flex: 1, width: 2, backgroundColor: colors.line, marginTop: 2 },
-  vizita: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: 18,
-    padding: 14,
-    paddingLeft: 18,
-    gap: 10,
-    marginBottom: 12,
-    overflow: "hidden",
-    ...hija,
-  },
-  vizitaShirit: { position: "absolute", left: 0, top: 0, bottom: 0, width: 5 },
-  vizitaKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
-  vizitaIkona: { width: 38, height: 38, borderRadius: 12, alignItems: "center", justifyContent: "center" },
-  vizitaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
-  vizitaNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 19, fontWeight: "500" },
-  miku: { flexDirection: "row", alignItems: "center", gap: 6 },
-  mikuTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
-  vizitaFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
-  hap: { flexDirection: "row", alignItems: "center", gap: 6 },
-  hapTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
-  hapRrethi: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.petrol,
+  vizita: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 14, gap: 12, marginBottom: 12, ...hija },
+  vizitaKrye: { flexDirection: "row", alignItems: "center", gap: 12 },
+  vizitaIkona: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },
+  vizitaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
+  vizitaNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 19, fontWeight: "500" },
+  vizitaFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+  miku: { flexDirection: "row", alignItems: "center", gap: 5, flexShrink: 1 },
+  mikuTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
 });

@@ -157,75 +157,6 @@ function Seria({ ngjyra, emri }: { ngjyra: string; emri: string }) {
   );
 }
 
-// ---------------------------------------------------------------------------------------------
-// Coverage: one row per property with its number of visits (one hue) and how long ago the last
-// one was. A property left too long gets a warning (icon + words) and a shortcut to a new request.
-
-export type MbulimiIPrones = {
-  id: string;
-  emri: string;
-  vizita: number;
-  ditePara: number | null; // days since the last visit; null when never visited
-};
-
-export const DITE_PA_VIZITE = 45;
-
-export function MbulimiIPronave({ pronat, onKerko }: { pronat: MbulimiIPrones[]; onKerko: (id: string) => void }) {
-  const max = Math.max(1, ...pronat.map((p) => p.vizita));
-  return (
-    <View style={styles.mbulimi}>
-      {pronat.map((p) => {
-        const harruar = p.ditePara === null || p.ditePara > DITE_PA_VIZITE;
-        return (
-          <View key={p.id} style={styles.pronaRresht}>
-            <View style={styles.pronaKrye}>
-              <Text style={styles.pronaEmri} numberOfLines={1}>
-                {p.emri}
-              </Text>
-              <Text style={styles.pronaNumri}>
-                {p.vizita} {p.vizita === 1 ? "vizitë" : "vizita"}
-              </Text>
-            </View>
-            <View style={styles.pronaGjurma}>
-              {p.vizita > 0 ? <View style={[styles.pronaMbushja, { width: `${(p.vizita / max) * 100}%` }]} /> : null}
-            </View>
-            <View style={styles.pronaFund}>
-              <View style={styles.pronaKur}>
-                <UrezaIcon
-                  name={harruar ? "warning" : "check"}
-                  size={15}
-                  color={harruar ? "#8A5210" : "#1E6B3E"}
-                  strokeWidth={2.4}
-                />
-                <Text style={[styles.pronaKurTeksti, harruar && styles.pronaKurHarruar]}>{kurTeksti(p.ditePara)}</Text>
-              </View>
-              {harruar ? (
-                <Pressable
-                  onPress={() => onKerko(p.id)}
-                  style={styles.pronaKerko}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Kërko vizitë për ${p.emri}`}
-                >
-                  <Text style={styles.pronaKerkoTeksti}>Kërko vizitë</Text>
-                  <UrezaIcon name="arrow" size={15} color={colors.petrol} strokeWidth={2.6} />
-                </Pressable>
-              ) : null}
-            </View>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-
-function kurTeksti(dite: number | null): string {
-  if (dite === null) return "Asnjë vizitë ende";
-  if (dite === 0) return "Vizituar sot";
-  if (dite === 1) return "Vizituar dje";
-  if (dite < 0) return `Vizita pas ${-dite} ${-dite === 1 ? "dite" : "ditësh"}`;
-  return `Vizituar para ${dite} ditësh`;
-}
-
 const styles = StyleSheet.create({
   statusi: { gap: 14 },
   shiriti: { flexDirection: "row", height: 14 },
@@ -259,17 +190,4 @@ const styles = StyleSheet.create({
   etiketa: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
   etiketaAktive: { color: colors.ink, fontWeight: "800" },
 
-  mbulimi: { gap: 16 },
-  pronaRresht: { gap: 6 },
-  pronaKrye: { flexDirection: "row", alignItems: "baseline", gap: 8 },
-  pronaEmri: { flex: 1, color: colors.ink, fontSize: 15, fontWeight: "800" },
-  pronaNumri: { color: colors.textSecondary, fontSize: 13, fontWeight: "700" },
-  pronaGjurma: { height: 10, borderRadius: 5, backgroundColor: GJURMA, overflow: "hidden" },
-  pronaMbushja: { height: 10, borderRadius: 5, backgroundColor: colors.petrol },
-  pronaFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 28 },
-  pronaKur: { flexDirection: "row", alignItems: "center", gap: 6, flexShrink: 1 },
-  pronaKurTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
-  pronaKurHarruar: { color: "#8A5210" },
-  pronaKerko: { flexDirection: "row", alignItems: "center", gap: 4, minHeight: 36, paddingLeft: 8 },
-  pronaKerkoTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
 });
