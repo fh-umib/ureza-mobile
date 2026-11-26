@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { createContext, useContext, useRef, type ReactNode } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View, type ScrollViewInstance } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, { Circle, G, Path, Rect } from "react-native-svg";
+import Svg, { Circle, Defs, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { colors } from "@/constants/ureza";
 import { useKeyboardReveal } from "@/hooks/use-keyboard-reveal";
@@ -56,21 +56,7 @@ export function EkraniMeHero({
       >
         <View style={[styles.hero, { height: heroHeight }]}>
           <View style={StyleSheet.absoluteFill}>
-            <Svg width="100%" height="100%" viewBox="0 0 390 150" preserveAspectRatio="xMidYMax slice">
-              <Rect width="390" height="150" fill="#173F4E" />
-              <Rect y="80" width="390" height="70" fill="#1A4757" />
-              <G fill="#FFFFFF" fillOpacity="0.65">
-                <Circle cx="46" cy="22" r="1.3" />
-                <Circle cx="130" cy="14" r="1.2" />
-                <Circle cx="210" cy="34" r="1.3" />
-                <Circle cx="270" cy="18" r="1.2" />
-                <Circle cx="372" cy="30" r="1.3" />
-              </G>
-              <Circle cx="334" cy="80" r="30" fill="#F2C46B" fillOpacity="0.1" />
-              <Circle cx="334" cy="80" r="15" fill="#F6D58A" />
-              <Path d="M0 120 L45 94 L90 108 L140 80 L190 104 L240 88 L290 110 L340 92 L390 106 V150 H0Z" fill="#1D5062" />
-              <Path d="M0 140 L60 116 L120 130 L190 110 L260 134 L330 116 L390 132 V150 H0Z" fill="#174657" />
-            </Svg>
+            <HeroSkena />
           </View>
           <View style={[styles.heroText, { paddingTop: insets.top + 18 }]}>
             <Text style={styles.kicker}>{kicker}</Text>
@@ -96,6 +82,64 @@ export function EkraniMeHero({
         </RevealContext.Provider>
       </ScrollView>
     </View>
+  );
+}
+
+// The dusk behind every screen title: a deep sky that warms towards the horizon, the setting sun
+// with its glow, two ranges of mountains, and the lit bridge of Urëza on the right, so the
+// title on the left always reads on the darkest part. The bottom 24 px hide under the sheet.
+function HeroSkena() {
+  return (
+    <Svg width="100%" height="100%" viewBox="0 0 390 150" preserveAspectRatio="xMidYMax slice">
+      <Defs>
+        <LinearGradient id="qielli" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#0E2F3C" />
+          <Stop offset="0.65" stopColor="#173F4E" />
+          <Stop offset="1" stopColor="#24566A" />
+        </LinearGradient>
+        <RadialGradient id="drita" cx="318" cy="98" r="120" gradientUnits="userSpaceOnUse">
+          <Stop offset="0" stopColor="#F2C46B" stopOpacity="0.42" />
+          <Stop offset="0.45" stopColor="#F2C46B" stopOpacity="0.12" />
+          <Stop offset="1" stopColor="#F2C46B" stopOpacity="0" />
+        </RadialGradient>
+        <LinearGradient id="dielli" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#FBE3A6" />
+          <Stop offset="1" stopColor="#F2C46B" />
+        </LinearGradient>
+        <LinearGradient id="maliLarg" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#2A6175" />
+          <Stop offset="1" stopColor="#1B4A5B" />
+        </LinearGradient>
+        <LinearGradient id="maliAfer" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#163F4E" />
+          <Stop offset="1" stopColor="#10313E" />
+        </LinearGradient>
+      </Defs>
+
+      <Rect width="390" height="150" fill="url(#qielli)" />
+      <Rect width="390" height="150" fill="url(#drita)" />
+
+      {/* the sun, half behind the far range */}
+      <Circle cx="318" cy="98" r="20" fill="url(#dielli)" />
+
+      <Path d="M0 112 L52 88 L98 100 L150 76 L204 98 L252 84 L300 104 L350 86 L390 98 V150 H0Z" fill="url(#maliLarg)" />
+
+      {/* the bridge: two towers, the main cable lit by the sun, the hangers and the deck */}
+      <G>
+        <Path d="M214 104 Q262 128 310 104 Q342 122 390 112" fill="none" stroke="#F2C46B" strokeWidth="1.6" strokeOpacity="0.9" />
+        <Path
+          d="M226 110V122 M238 115V122 M250 118V122 M274 118V122 M286 115V122 M298 110V122 M326 112V122 M346 116V122 M366 115V122"
+          stroke="#F2C46B"
+          strokeWidth="0.8"
+          strokeOpacity="0.55"
+        />
+        <Rect x="210" y="98" width="5" height="30" rx="1.5" fill="#E8F5F3" fillOpacity="0.9" />
+        <Rect x="308" y="98" width="5" height="30" rx="1.5" fill="#E8F5F3" fillOpacity="0.9" />
+        <Rect x="196" y="121" width="194" height="3" rx="1.5" fill="#E8F5F3" fillOpacity="0.85" />
+      </G>
+
+      <Path d="M0 132 L64 112 L128 124 L196 108 L262 128 L330 114 L390 126 V150 H0Z" fill="url(#maliAfer)" />
+    </Svg>
   );
 }
 
