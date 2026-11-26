@@ -117,6 +117,21 @@ function HapiTeDhenat({ onVazhdo }: { onVazhdo: () => void }) {
   const [gabim, setGabim] = useState<string | null>(null);
   const [duke, setDuke] = useState(false);
 
+  // right after sign-up the profile often arrives after the first render: the fields follow
+  // the saved values, unless the Miku has already typed something else
+  const emriIRuajtur = profili?.emri ?? "";
+  const [burimiEmrit, setBurimiEmrit] = useState(emriIRuajtur);
+  if (burimiEmrit !== emriIRuajtur) {
+    setBurimiEmrit(emriIRuajtur);
+    if (emri === burimiEmrit) setEmri(emriIRuajtur);
+  }
+  const telefoniIRuajtur = cilesimet.telefoni ?? "";
+  const [burimiTelefonit, setBurimiTelefonit] = useState(telefoniIRuajtur);
+  if (burimiTelefonit !== telefoniIRuajtur) {
+    setBurimiTelefonit(telefoniIRuajtur);
+    if (telefoni === burimiTelefonit) setTelefoni(telefoniIRuajtur);
+  }
+
   async function vazhdo() {
     if (duke) return;
     const e = emri.trim();
