@@ -234,8 +234,72 @@ the status shown with both a colour and an icon are now in the app
 uses the petrol-blue palette in `src/constants/ureza.ts`; the terracotta
 direction above has not been adopted.
 
+### Redesign of Harta and Profili (November 2026)
+
+Ballina, Oda and Pronat were redesigned first; Harta and Profili still had
+the older look (plain text chips, text-only links, a flat progress bar).
+They now follow the same rules: white cards with radius 20–22 and a light
+shadow, colours only from `src/constants/ureza.ts`, icons only from
+`src/components/UrezaIcon.tsx`, an arrow on everything that opens
+something, and status shown with colour + icon + word.
+
+**Harta** (`src/app/(app)/harta.tsx`)
+- *Properties as cards.* The text chips became small cards that slide
+  sideways, each with the property picture (`PronaIlustrim`), name and
+  town; the selected one has a petrol frame. *Why:* a picture is faster to
+  recognise than a name, especially for older family members, and the
+  cards match the property cards on Ballina.
+- *The selected property.* Name, town, the freshness chip ("Kontrolluar
+  para X ditësh", shared with Pronat) and a full-width **Kërko vizitë →**
+  button that opens the request for this property and kind. *Why:* the map
+  answers "when was it last checked?" and the next action is one tap away,
+  instead of the old "Shiko ditarin" link to another tab.
+- *Location card with three states.* Exact (green, check), approximate
+  (orange, warning) and not on the map (grey). The colour also shows as a
+  stripe on the card's left edge. "Hape në Google Maps" and "Shto/Ndrysho
+  vendndodhjen" are real 44 px buttons with icons. *Why:* the three states
+  mean different things for the GPS check, so they must not look alike,
+  and a button with a frame reads as tappable where plain text did not.
+- *Visit list.* Each row has the icon of the visit kind, the title and
+  date, the `StatusiChip` and an arrow. "Shiko të gjitha" sits next to the
+  "Vizitat" title and goes to Oda (to Kërkesat for a Miku, who has no
+  Oda). *Why:* the same row anatomy as Oda, so the user does not learn two
+  lists.
+
+**Profili** (`src/app/(app)/profili.tsx`)
+- *Header.* A round badge with the initials, the name and email, a role
+  badge (Klient / Miku / Admin, each with its own icon) and, for a Miku
+  verified by the team, a "I verifikuar" badge with the shield icon.
+  *Why:* trust is the core of Urëza, so the verification is shown where
+  the person sees themselves first. The non-working "Ndrysho foton" link
+  was removed.
+- *Completeness ring.* The percentage is a ring (`react-native-svg`) and
+  each missing step is a row; steps done on another screen (property,
+  exact location) have an arrow and open that screen. *Why:* a ring with a
+  number is read at a glance, and a list of what is missing is easier to
+  act on than one hint at a time.
+- *Three groups.* **Të dhënat**, **Njoftimet** and **Privatësia dhe
+  pëlqimi**, each with a title and an icon. Every row has the same shape:
+  icon on the left, text, arrow on the right when it opens something.
+  "Kushtet e vizitës dhe pëlqimi", "Shkarko të dhënat e mia" and "Ndrysho
+  rolin" are rows with arrows. *Why:* one row shape across the screen
+  makes it predictable and keeps touch targets large.
+- *Sign out.* "Dil" is at the bottom, set apart with a soft red tint and
+  the logout icon, but not a strong red button. *Why:* it should be easy
+  to find and clearly different, without looking like a dangerous action;
+  strong red stays for deleting the account.
+- *"Si punon si Miku".* Only the look changed (title with icon, shadow,
+  radius 22, save button with a check). The logic is the same.
+
+**Small additions**: the `bell` icon in `UrezaIcon.tsx`; named colours for
+the states (`ok`, `kujdes`, `neutral`, `ikonaBg`, `errorBg`) in
+`ureza.ts`, so no screen hard-codes them.
+
 ### AI Usage
 
+- AI: po — Claude (Anthropic) helped write the code of the Harta and
+  Profili redesign and phrase the notes above; the design decisions and
+  the review on the phone were made by Tringa.
 - AI: po — AI was used to help phrase these notes in English; the design
   decisions (card layout, bottom tab bar, color + icon status indicators,
   warm color direction) were made by Tringa.
