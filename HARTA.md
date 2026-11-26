@@ -305,6 +305,43 @@ width; the Miku also sees "Kushtet dhe kontrata" under Privatësia; the
 missing "Emri" and "Telefoni" steps jump to their field; "Not on the map"
 uses a grey map icon (neutral) instead of an X.
 
+### The Miku's first steps (onboarding)
+
+Before this change a new Miku signed up and landed on Kërkesat with two
+separate notes ("not verified yet", "fill your work profile") and had to
+find "Si punon si Miku" on Profili alone. Now there is one guided path.
+
+- **Role choice** (`kush-je.tsx`, `ZgjedhesiIRolit`): the Miku option
+  lists what is needed — a work profile, verification by the team, and a
+  contract for every visit. *Why:* nobody should sign up and only then
+  learn that they must be verified before they can work.
+- **First steps** (`miku-fillimi.tsx`), opened once per session from
+  Kërkesat while the work profile is missing:
+  1. *Ti* — name and phone. The phone is required for a Miku (optional
+     for a client), because the team calls before verifying.
+  2. *Puna* — company (name and business number), individual, student or
+     craftsman (trade). It goes into every contract.
+  3. *Më pas* — verification by the team, the contract and the 3% damage
+     rule, the evidence every visit needs, and a link to the terms.
+
+  A step indicator sits at the top, with "Mbrapa" (and "Më vonë" on the
+  first step). *Why three steps:* each one is a different kind of
+  question (who, how, what next), and short screens are easier for
+  people who are not used to forms. The progress is not stored
+  separately: name and phone live in the profile and the work type in
+  the work profile, so a Miku who leaves and comes back starts at the
+  first step that is still missing. No change to `src/lib/` or
+  `supabase/` was needed.
+- **"Gati për punë"** on Kërkesat replaces the two notes: three rows
+  (profile, work type, verification), each with an icon, a word (Gati /
+  Mungon / Në pritje) and an arrow to where it is done. When all three
+  are done it shrinks to one "I verifikuar · gati për punë" badge.
+  *Why:* one checklist shows how far the Miku is; three separate warnings
+  only said what was wrong.
+- **Profili**: the header shows how the Miku works next to the role,
+  e.g. "Kompani · Shtëpia e Sigurt". The "Si punon si Miku" form stays
+  for later edits, and the header updates as soon as it is saved.
+
 ### AI Usage
 
 - AI: po — Claude (Anthropic) helped write the code of the Harta and
