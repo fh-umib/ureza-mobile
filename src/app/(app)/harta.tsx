@@ -86,151 +86,155 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
   return (
     <View style={styles.root} onLayout={(e) => setLartesiaEEkranit(e.nativeEvent.layout.height)}>
       <StatusBar style="light" />
-      <View style={{ height: lartesiaEHartes }}>
-        <HartaReale
-          pikat={pikat}
-          zgjedhurId={prona?.id ?? null}
-          onZgjidh={setZgjedhurId}
-          gjeresia={width}
-          lartesia={lartesiaEHartes}
-          siper={insets.top + 64}
-        />
-        <View style={[styles.titulli, { top: insets.top + 8 }]}>
-          <Text style={styles.titulliText} accessibilityRole="header">
-            Harta
-          </Text>
-          <Text style={styles.nentitulli}>{nenTitulli}</Text>
+      {/* keeps the status bar area dark once the map has scrolled away */}
+      <View style={[styles.scrim, { height: insets.top }]} />
+      {/* the map scrolls with the page: it is the top of the page, not a fixed window */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.faqja}
+      >
+        <View style={{ height: lartesiaEHartes }}>
+          <HartaReale
+            pikat={pikat}
+            zgjedhurId={prona?.id ?? null}
+            onZgjidh={setZgjedhurId}
+            gjeresia={width}
+            lartesia={lartesiaEHartes}
+            siper={insets.top + 64}
+          />
+          <View style={[styles.titulli, { top: insets.top + 8 }]}>
+            <Text style={styles.titulliText} accessibilityRole="header">
+              Harta
+            </Text>
+            <Text style={styles.nentitulli}>{nenTitulli}</Text>
+          </View>
+          {!eMiku ? (
+            <Pressable
+              onPress={() => router.push("/kerko-vizite")}
+              style={[styles.kerko, { top: insets.top + 8 }]}
+              accessibilityRole="button"
+              accessibilityLabel="Kërko një vizitë"
+            >
+              <UrezaIcon name="plus" size={18} color={colors.white} strokeWidth={2.2} />
+              <Text style={styles.kerkoText}>Kërko</Text>
+            </Pressable>
+          ) : null}
         </View>
-        {!eMiku ? (
-          <Pressable
-            onPress={() => router.push("/kerko-vizite")}
-            style={[styles.kerko, { top: insets.top + 8 }]}
-            accessibilityRole="button"
-            accessibilityLabel="Kërko një vizitë"
-          >
-            <UrezaIcon name="plus" size={18} color={colors.white} strokeWidth={2.2} />
-            <Text style={styles.kerkoText}>Kërko</Text>
-          </Pressable>
-        ) : null}
-      </View>
 
-      <View style={styles.flete}>
-        <View style={styles.doreza} />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={styles.fleteBrenda}
-        >
-          {burimiPronat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+        <View style={styles.flete}>
+          <View style={styles.fleteBrenda}>
+            {burimiPronat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
 
-          {burimiPronat === "pa_lidhje" ? (
-            <View style={styles.karta}>
-              <Text style={styles.titulliKartes}>Nuk u lidh me serverin</Text>
-              <Text style={styles.tekst}>Kontrollo internetin, pastaj provo përsëri.</Text>
-              <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
-                <Text style={styles.dytesorText}>Provo përsëri</Text>
-              </Pressable>
-            </View>
-          ) : null}
-
-          {(burimiPronat === "supabase" || burimiPronat === "demo") && !prona ? (
-            <View style={styles.karta}>
-              <Text style={styles.titulliKartes}>{eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}</Text>
-              <Text style={styles.tekst}>
-                {eMiku
-                  ? "Pronat shfaqen këtu kur ka kërkesa të hapura, ose vizita që ke pranuar."
-                  : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."}
-              </Text>
-              {!eMiku ? (
-                <Pressable style={styles.dytesor} onPress={() => router.navigate("/pronat")} accessibilityRole="button">
-                  <Text style={styles.dytesorText}>Shko te Pronat</Text>
+            {burimiPronat === "pa_lidhje" ? (
+              <View style={styles.karta}>
+                <Text style={styles.titulliKartes}>Nuk u lidh me serverin</Text>
+                <Text style={styles.tekst}>Kontrollo internetin, pastaj provo përsëri.</Text>
+                <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
+                  <Text style={styles.dytesorText}>Provo përsëri</Text>
                 </Pressable>
-              ) : null}
-            </View>
-          ) : null}
+              </View>
+            ) : null}
 
-          {prona ? (
-            <>
-              {pronat.length > 1 ? (
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.kartat}
-                  style={styles.kartatJashte}
-                >
-                  {pronat.map((p) => (
-                    <KartaEPrones
-                      key={p.id}
-                      prona={p}
-                      zgjedhur={p.id === prona.id}
-                      onPress={() => setZgjedhurId(p.id)}
-                    />
-                  ))}
-                </ScrollView>
-              ) : null}
-
-              <View style={styles.zgjedhur}>
-                <Text style={styles.emriIPrones} accessibilityRole="header">
-                  {prona.emri}
+            {(burimiPronat === "supabase" || burimiPronat === "demo") && !prona ? (
+              <View style={styles.karta}>
+                <Text style={styles.titulliKartes}>{eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}</Text>
+                <Text style={styles.tekst}>
+                  {eMiku
+                    ? "Pronat shfaqen këtu kur ka kërkesa të hapura, ose vizita që ke pranuar."
+                    : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."}
                 </Text>
-                <View style={styles.rreshtIkone}>
-                  <UrezaIcon name="pin" size={15} color={colors.textSecondary} strokeWidth={2.2} />
-                  <Text style={styles.vendi} numberOfLines={1}>
-                    {prona.vendi} · {shumes(vizitatEPrones.length, "vizitë", "vizita")}
-                  </Text>
-                </View>
-                <ChipiIFreskise dite={ditePara(prona.id, vizitat)} />
                 {!eMiku ? (
-                  <Pressable
-                    style={({ pressed }) => [styles.primary, pressed && styles.shtypur]}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/kerko-vizite",
-                        params: { pronaId: prona.id, lloji: prona.lloji === "prindert" ? "kujdes" : "inspektim" },
-                      })
-                    }
-                    accessibilityRole="button"
-                    accessibilityLabel={`Kërko vizitë për ${prona.emri}`}
-                  >
-                    <Text style={styles.primaryText}>Kërko vizitë</Text>
-                    <UrezaIcon name="arrow" size={22} color={colors.white} strokeWidth={2.3} />
+                  <Pressable style={styles.dytesor} onPress={() => router.navigate("/pronat")} accessibilityRole="button">
+                    <Text style={styles.dytesorText}>Shko te Pronat</Text>
                   </Pressable>
                 ) : null}
               </View>
+            ) : null}
 
-              <KartaEVendit prona={prona} eMiku={eMiku} onRedakto={() => setRedakto(true)} />
-
-              <View style={styles.vizitatKrye}>
-                <Text style={styles.seksioni} accessibilityRole="header">
-                  Vizitat
-                </Text>
-                {vizitatEPrones.length > 0 ? (
-                  <Pressable
-                    style={styles.lidhje}
-                    // the Miku has no Oda; their visits are on Kërkesat
-                    onPress={() => router.navigate(eMiku ? "/miku" : "/oda")}
-                    accessibilityRole="link"
-                    accessibilityLabel={eMiku ? "Shiko të gjitha te Kërkesat" : "Shiko të gjitha te Oda"}
+            {prona ? (
+              <>
+                {pronat.length > 1 ? (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.kartat}
+                    style={styles.kartatJashte}
                   >
-                    <Text style={styles.lidhjeText}>Shiko të gjitha</Text>
-                    <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-                  </Pressable>
+                    {pronat.map((p) => (
+                      <KartaEPrones
+                        key={p.id}
+                        prona={p}
+                        zgjedhur={p.id === prona.id}
+                        onPress={() => setZgjedhurId(p.id)}
+                      />
+                    ))}
+                  </ScrollView>
                 ) : null}
-              </View>
 
-              <View style={styles.vizitat}>
-                {vizitatEPrones.length === 0 ? (
-                  <Text style={[styles.tekst, styles.pavizita]}>Ende nuk ka vizita për këtë pronë.</Text>
-                ) : (
-                  vizitatEPrones
-                    .slice(0, SA_VIZITA_NE_FLETE)
-                    .map((v, i, lista) => <RreshtiIVizites key={v.id} vizita={v} fundit={i === lista.length - 1} />)
-                )}
-              </View>
-            </>
-          ) : null}
-        </ScrollView>
-      </View>
+                <View style={styles.zgjedhur}>
+                  <Text style={styles.emriIPrones} accessibilityRole="header">
+                    {prona.emri}
+                  </Text>
+                  <View style={styles.rreshtIkone}>
+                    <UrezaIcon name="pin" size={15} color={colors.textSecondary} strokeWidth={2.2} />
+                    <Text style={styles.vendi} numberOfLines={1}>
+                      {prona.vendi} · {shumes(vizitatEPrones.length, "vizitë", "vizita")}
+                    </Text>
+                  </View>
+                  <ChipiIFreskise dite={ditePara(prona.id, vizitat)} />
+                  {!eMiku ? (
+                    <Pressable
+                      style={({ pressed }) => [styles.primary, pressed && styles.shtypur]}
+                      onPress={() =>
+                        router.push({
+                          pathname: "/kerko-vizite",
+                          params: { pronaId: prona.id, lloji: prona.lloji === "prindert" ? "kujdes" : "inspektim" },
+                        })
+                      }
+                      accessibilityRole="button"
+                      accessibilityLabel={`Kërko vizitë për ${prona.emri}`}
+                    >
+                      <Text style={styles.primaryText}>Kërko vizitë</Text>
+                      <UrezaIcon name="arrow" size={22} color={colors.white} strokeWidth={2.3} />
+                    </Pressable>
+                  ) : null}
+                </View>
+
+                <KartaEVendit prona={prona} eMiku={eMiku} onRedakto={() => setRedakto(true)} />
+
+                <View style={styles.vizitatKrye}>
+                  <Text style={styles.seksioni} accessibilityRole="header">
+                    Vizitat
+                  </Text>
+                  {vizitatEPrones.length > 0 ? (
+                    <Pressable
+                      style={styles.lidhje}
+                      // the Miku has no Oda; their visits are on Kërkesat
+                      onPress={() => router.navigate(eMiku ? "/miku" : "/oda")}
+                      accessibilityRole="link"
+                      accessibilityLabel={eMiku ? "Shiko të gjitha te Kërkesat" : "Shiko të gjitha te Oda"}
+                    >
+                      <Text style={styles.lidhjeText}>Shiko të gjitha</Text>
+                      <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
+                    </Pressable>
+                  ) : null}
+                </View>
+
+                <View style={styles.vizitat}>
+                  {vizitatEPrones.length === 0 ? (
+                    <Text style={[styles.tekst, styles.pavizita]}>Ende nuk ka vizita për këtë pronë.</Text>
+                  ) : (
+                    vizitatEPrones
+                      .slice(0, SA_VIZITA_NE_FLETE)
+                      .map((v, i, lista) => <RreshtiIVizites key={v.id} vizita={v} fundit={i === lista.length - 1} />)
+                  )}
+                </View>
+              </>
+            ) : null}
+          </View>
+        </View>
+      </ScrollView>
 
       {redakto && prona ? <RedaktoVendin prona={prona} mbyll={() => setRedakto(false)} /> : null}
     </View>
@@ -401,8 +405,10 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.28)",
   },
   kerkoText: { color: colors.white, fontSize: 15, fontWeight: "700" },
+  scrim: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: colors.hero },
+  faqja: { flexGrow: 1 },
   flete: {
-    flex: 1,
+    flexGrow: 1,
     marginTop: -24,
     backgroundColor: colors.background,
     borderTopLeftRadius: 28,
@@ -414,8 +420,7 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 8,
   },
-  fleteBrenda: { paddingTop: 12, paddingHorizontal: 20, paddingBottom: 32, gap: 14 },
-  doreza: { alignSelf: "center", width: 44, height: 5, borderRadius: 3, backgroundColor: "#C3D0D7" },
+  fleteBrenda: { paddingTop: 8, paddingHorizontal: 20, paddingBottom: 32, gap: 14 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   // the row bleeds to the screen edges, so the cards slide out under them
   kartatJashte: { marginHorizontal: -20 },
