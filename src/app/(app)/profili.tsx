@@ -8,6 +8,7 @@ import { KartaEProfilitTePunes } from "@/components/ProfiliIPunes";
 import { RreshtiNdezes } from "@/components/RreshtiNdezes";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { mbledhTeDhenat, ndajTeDhenat } from "@/lib/eksporti";
 import { hapatEProfilit, plotesimi } from "@/lib/plotesimi";
@@ -30,6 +31,7 @@ export default function Profili() {
     <EkraniMeHero kicker="LLOGARIA" title="Profili im" subtitle="Të dhënat dhe cilësimet e tua.">
       {profili ? (
         <>
+          <KokaEProfilit />
           <KartaEPlotesimit />
           <KartaETeDhenave />
           {roli === "klient" ? <KartaENjoftimeve /> : null}
@@ -60,13 +62,58 @@ export default function Profili() {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Completeness
+// Header and completeness
 
 function inicialet(emri: string | null | undefined, email: string | null | undefined): string {
   const fjalet = (emri ?? "").trim().split(/\s+/).filter(Boolean);
   if (fjalet.length >= 2) return (fjalet[0].charAt(0) + fjalet[1].charAt(0)).toUpperCase();
   if (fjalet.length === 1) return fjalet[0].charAt(0).toUpperCase();
   return (email ?? "?").charAt(0).toUpperCase();
+}
+
+const ROLET: Record<"klient" | "miku" | "admin", { ikona: IconName; bg: string; fg: string }> = {
+  klient: { ikona: "user", bg: colors.ikonaBg, fg: colors.petrol },
+  miku: { ikona: "compass", bg: colors.ikonaBg, fg: colors.teal },
+  admin: { ikona: "key", bg: colors.kujdesBg, fg: colors.kujdes },
+};
+
+// The top of Profili: a round badge with the initials, the name and email, the role, and for a
+// Miku whom the Urëza team has verified, "I verifikuar".
+function KokaEProfilit() {
+  const { perdoruesi } = useSesioni();
+  const { profili } = useProfili();
+  const verifikimi = useVerifikimiIm();
+  const roli = profili?.roli ?? "klient";
+  const r = ROLET[roli];
+  const eVerifikuar = roli === "miku" && verifikimi.njohur && verifikimi.verifikuarAt !== null;
+
+  return (
+    <View style={[styles.karta, styles.koka]}>
+      <View style={styles.avatar} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <Text style={styles.avatarText}>{inicialet(profili?.emri, perdoruesi?.email)}</Text>
+      </View>
+      <View style={styles.kryeTekst}>
+        <Text style={styles.emri} numberOfLines={1} accessibilityRole="header">
+          {profili?.emri ?? perdoruesi?.email}
+        </Text>
+        <Text style={styles.email} numberOfLines={1}>
+          {perdoruesi?.email}
+        </Text>
+        <View style={styles.distinktivet}>
+          <View style={[styles.distinktiv, { backgroundColor: r.bg }]} accessible accessibilityLabel={`Roli: ${EMRAT_E_ROLEVE[roli]}`}>
+            <UrezaIcon name={r.ikona} size={14} color={r.fg} strokeWidth={2.4} />
+            <Text style={[styles.distinktivText, { color: r.fg }]}>{EMRAT_E_ROLEVE[roli]}</Text>
+          </View>
+          {eVerifikuar ? (
+            <View style={[styles.distinktiv, { backgroundColor: colors.okBg }]} accessible accessibilityLabel="I verifikuar nga ekipi i Urëzës">
+              <UrezaIcon name="shield" size={14} color={colors.ok} strokeWidth={2.4} />
+              <Text style={[styles.distinktivText, { color: colors.ok }]}>I verifikuar</Text>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    </View>
+  );
 }
 
 function KartaEPlotesimit() {
@@ -87,27 +134,6 @@ function KartaEPlotesimit() {
 
   return (
     <View style={styles.karta}>
-      <View style={styles.krye}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{inicialet(profili?.emri, perdoruesi?.email)}</Text>
-        </View>
-        <View style={styles.kryeTekst}>
-          <Text style={styles.emri} numberOfLines={1}>
-            {profili?.emri ?? perdoruesi?.email}
-          </Text>
-          <Text style={styles.email} numberOfLines={1}>
-            {perdoruesi?.email}
-          </Text>
-          <Text style={styles.roli}>{EMRAT_E_ROLEVE[roli].toUpperCase()}</Text>
-          <View style={styles.foto}>
-            <Text style={styles.fotoText}>Ndrysho foton</Text>
-            <View style={styles.pill}>
-              <Text style={styles.pillText}>Së shpejti</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
       <View style={styles.progresi}>
         <View style={styles.progresiRresht}>
           <Text style={styles.progresiTitulli}>Profili është {p.perqindja}% i plotë</Text>
@@ -694,12 +720,21 @@ function DilButon() {
   );
 }
 
+// the light shadow the cards on Ballina, Oda and Pronat use
+const hija = {
+  shadowColor: "#0B2530",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.07,
+  shadowRadius: 12,
+  elevation: 2,
+};
+
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
 
-  // completeness
-  krye: { flexDirection: "row", alignItems: "center", gap: 16 },
+  // header
+  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija },
   avatar: {
     width: 72,
     height: 72,
@@ -712,11 +747,18 @@ const styles = StyleSheet.create({
   kryeTekst: { flex: 1, minWidth: 0 },
   emri: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   email: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
-  roli: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1, marginTop: 2 },
-  foto: { minHeight: 40, flexDirection: "row", alignItems: "center", gap: 8 },
-  fotoText: { color: colors.textSecondary, fontSize: 15, fontWeight: "800" },
-  pill: { backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 2 },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
+  distinktivet: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
+  distinktiv: {
+    height: 28,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  distinktivText: { fontSize: 13, fontWeight: "800" },
+
+  // completeness
   progresi: { gap: 8 },
   progresiRresht: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
   progresiTitulli: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: "700", flexShrink: 1 },
