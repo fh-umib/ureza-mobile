@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import type { PikaNeHarte } from "@/components/HartaKosoves";
 import { HartaReale } from "@/components/HartaReale";
+import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
@@ -150,23 +151,20 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
           {prona ? (
             <>
               {pronat.length > 1 ? (
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-                  {pronat.map((p) => {
-                    const zgjedhur = p.id === prona.id;
-                    return (
-                      <Pressable
-                        key={p.id}
-                        onPress={() => setZgjedhurId(p.id)}
-                        style={[styles.chip, zgjedhur && styles.chipZgjedhur]}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: zgjedhur }}
-                      >
-                        <Text style={[styles.chipText, zgjedhur && styles.chipTextZgjedhur]} numberOfLines={1}>
-                          {p.emri}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.kartat}
+                  style={styles.kartatJashte}
+                >
+                  {pronat.map((p) => (
+                    <KartaEPrones
+                      key={p.id}
+                      prona={p}
+                      zgjedhur={p.id === prona.id}
+                      onPress={() => setZgjedhurId(p.id)}
+                    />
+                  ))}
                 </ScrollView>
               ) : null}
 
@@ -215,6 +213,33 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
 
       {redakto && prona ? <RedaktoVendin prona={prona} mbyll={() => setRedakto(false)} /> : null}
     </View>
+  );
+}
+
+// A small property card that slides sideways under the map (like KartaEPrones on Ballina):
+// the picture, the name and the town. The selected one has a petrol frame.
+function KartaEPrones({ prona, zgjedhur, onPress }: { prona: Prona; zgjedhur: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.pronaKarta, zgjedhur && styles.pronaKartaZgjedhur, pressed && styles.shtypur]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${prona.emri}, ${prona.vendi}. Shfaqe në hartë.`}
+      accessibilityState={{ selected: zgjedhur }}
+    >
+      <View style={styles.pronaFoto}>
+        <PronaIlustrim lloji={prona.lloji} />
+      </View>
+      <Text style={styles.pronaEmri} numberOfLines={1}>
+        {prona.emri}
+      </Text>
+      <View style={styles.pronaVendi}>
+        <UrezaIcon name="pin" size={13} color={colors.textSecondary} strokeWidth={2.4} />
+        <Text style={styles.pronaVendiTeksti} numberOfLines={1}>
+          {prona.vendi}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -289,6 +314,15 @@ function RreshtiIVizites({ vizita, fundit }: { vizita: Vizita; fundit: boolean }
   );
 }
 
+// the light shadow the cards on Ballina, Oda and Pronat use
+const hija = {
+  shadowColor: "#0B2530",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.07,
+  shadowRadius: 12,
+  elevation: 2,
+};
+
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.hero },
   // the title sits on the map in a dark card, so it reads over the satellite picture
@@ -333,21 +367,25 @@ const styles = StyleSheet.create({
   },
   fleteBrenda: { paddingTop: 12, paddingHorizontal: 20, paddingBottom: 32, gap: 14 },
   doreza: { alignSelf: "center", width: 44, height: 5, borderRadius: 3, backgroundColor: "#C3D0D7" },
-  chips: { gap: 8 },
-  chip: {
-    minHeight: 44,
-    maxWidth: 220,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    borderWidth: 1.5,
-    borderColor: colors.inputBorder,
+  shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+  // the row bleeds to the screen edges, so the cards slide out under them
+  kartatJashte: { marginHorizontal: -20 },
+  kartat: { gap: 12, paddingHorizontal: 20, paddingVertical: 4 },
+  pronaKarta: {
+    width: 150,
     backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 20,
+    padding: 8,
+    gap: 6,
+    borderWidth: 2,
+    borderColor: "transparent",
+    ...hija,
   },
-  chipZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  chipText: { color: colors.ink, fontSize: 15, fontWeight: "700" },
-  chipTextZgjedhur: { color: colors.white },
+  pronaKartaZgjedhur: { borderColor: colors.petrol },
+  pronaFoto: { height: 84, borderRadius: 14, overflow: "hidden" },
+  pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4 },
+  pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
+  pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
   emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
   vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8 },
