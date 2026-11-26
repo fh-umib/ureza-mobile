@@ -13,6 +13,7 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { GpsKrahasimi, krahasimiIGps } from "@/components/GpsKrahasimi";
 import { HartaEDeshmise } from "@/components/HartaEDeshmise";
+import { ListaEKontrollit } from "@/components/ListaEKontrollit";
 import { LojtariZanor } from "@/components/LojtariZanor";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
@@ -20,6 +21,14 @@ import { useDhenat } from "@/lib/dhenat";
 import { useDeshmite, type Deshmi, type PerdorimiIDeshmive } from "@/lib/deshmite";
 import { bejFoto, merrVendndodhjen } from "@/lib/kapja";
 import type { Prona } from "@/lib/pronat";
+import {
+  draftIBosh,
+  draftNgaRaporti,
+  kontrolloDraftin,
+  MUNGON_RAPORTET,
+  useRaporti,
+  type DraftIRaportit,
+} from "@/lib/raporti";
 import { kohezgjatjaNeTekst, oraNeTekst, titulliIVizites } from "@/lib/vizitat";
 
 // "Dëshmia e vizitës" (design: Dëshmia): the Miku, on site, collects a GPS position, live
@@ -36,6 +45,8 @@ export default function Deshmia() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { vizitat, pronat, burimiVizitat, dergoRaportin } = useDhenat();
   const d = useDeshmite(id);
+  const raporti = useRaporti(id);
+  const [draft, setDraft] = useState<DraftIRaportit | null>(null);
   const [konfirmuar, setKonfirmuar] = useState(false);
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
@@ -43,6 +54,12 @@ export default function Deshmia() {
   const vizita = vizitat.find((v) => v.id === id);
   const prona = vizita ? pronat.find((p) => p.id === vizita.pronaId) : undefined;
   const mbrapa = { etiketa: "Kthehu", onPress: () => router.back() };
+
+  // the checklist starts from the saved report (when the Miku comes back) or empty; set while
+  // rendering, once the visit and the report are known
+  if (vizita && draft === null && raporti.burimi !== "duke_ngarkuar") {
+    setDraft(raporti.raporti ? draftNgaRaporti(raporti.raporti, vizita.lloji) : draftIBosh(vizita.lloji));
+  }
 
   if (!vizita) {
     return (
@@ -61,11 +78,36 @@ export default function Deshmia() {
 
   const gatshme = d.gps !== null && d.fotot.length > 0 && d.zeri !== null;
   const mundetTeDergoje = gatshme && konfirmuar && !duke;
+  // the report is required where it can be saved; before supabase/raportet.sql it is skipped
+  const meRaport = raporti.burimi === "supabase" || raporti.burimi === "lokal";
+  const kontrolli = meRaport && draft ? kontrolloDraftin(draft, vizita.lloji) : null;
+  const raportiPlote = kontrolli !== null && "raporti" in kontrolli;
 
   async function dergo() {
     if (!vizita || !mundetTeDergoje) return;
-    setDuke(true);
     setGabim(null);
+    if (kontrolli && "gabim" in kontrolli) {
+      setGabim(kontrolli.gabim);
+      return;
+    }
+    if (raporti.burimi === "pa_lidhje") {
+      setGabim("Raporti nuk u ngarkua. Kontrollo internetin dhe provo përsëri.");
+      void raporti.rifresko();
+      return;
+    }
+    if (meRaport && !kontrolli) {
+      setGabim("Raporti po ngarkohet. Provo pas një çasti.");
+      return;
+    }
+    setDuke(true);
+    if (kontrolli) {
+      const ruajtur = await raporti.ruaj(kontrolli.raporti);
+      if (ruajtur) {
+        setDuke(false);
+        setGabim(ruajtur);
+        return;
+      }
+    }
     const mesazh = await dergoRaportin(vizita.id);
     setDuke(false);
     if (mesazh) {
@@ -97,7 +139,15 @@ export default function Deshmia() {
             <Hapi emri="GPS" gati={d.gps !== null} />
             <Hapi emri="Foto" gati={d.fotot.length > 0} />
             <Hapi emri="Zë" gati={d.zeri !== null} />
+            {meRaport ? <Hapi emri="Raporti" gati={raportiPlote} /> : null}
           </View>
+
+          {raporti.burimi === "mungon" ? (
+            <View style={styles.shenim}>
+              <UrezaIcon name="warning" size={20} color={colors.petrol} />
+              <Text style={styles.shenimText}>{MUNGON_RAPORTET} Deri atëherë dërgohen vetëm dëshmitë.</Text>
+            </View>
+          ) : null}
 
           {d.burimi === "mungon" ? (
             <View style={styles.shenim}>
@@ -123,6 +173,7 @@ export default function Deshmia() {
               <KartaGps d={d} prona={prona} />
               <KartaFoto d={d} />
               <KartaZeri d={d} />
+              {meRaport && draft ? <ListaEKontrollit lloji={vizita.lloji} draft={draft} onNdrysho={setDraft} /> : null}
 
               <Pressable
                 style={styles.konfirmim}
@@ -148,7 +199,13 @@ export default function Deshmia() {
                 {duke ? <ActivityIndicator color={colors.white} /> : <Text style={styles.primaryText}>Dërgo dëshmitë</Text>}
               </Pressable>
               {!gatshme ? (
-                <Text style={styles.ndihme}>Duhen GPS, të paktën një foto dhe shënimi zanor para dërgimit.</Text>
+                <Text style={styles.ndihme}>
+                  {meRaport
+                    ? "Duhen GPS, të paktën një foto, shënimi zanor dhe raporti para dërgimit."
+                    : "Duhen GPS, të paktën një foto dhe shënimi zanor para dërgimit."}
+                </Text>
+              ) : meRaport && !raportiPlote ? (
+                <Text style={styles.ndihme}>Plotëso raportin për klientin: gjendjen e çdo pike dhe përfundimin.</Text>
               ) : null}
             </>
           ) : null}

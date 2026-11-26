@@ -37,7 +37,9 @@ export type IconName =
   | "heart"
   | "sparkle"
   | "doc"
-  | "bell";
+  | "bell"
+  | "drop"
+  | "bolt";
 
 export function UrezaIcon({
   name,
@@ -217,6 +219,8 @@ export function UrezaIcon({
           <Path d="M14 3v4h4M9 12h6M9 16h4" />
         </>
       )}
+      {name === "drop" && <Path d="M12 3.5s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11z" />}
+      {name === "bolt" && <Path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12z" />}
       {name === "bell" && (
         <>
           <Path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" />

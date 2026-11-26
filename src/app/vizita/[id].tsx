@@ -6,7 +6,7 @@ import { DeshmiteVizites } from "@/components/DeshmiteVizites";
 import { Ecuria } from "@/components/Ecuria";
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { PermbledhjaERaportit, VendimiIRaportit } from "@/components/RaportiVizites";
-import { SeShpejti } from "@/components/SeShpejti";
+import { RaportiNeGjuhen } from "@/components/RaportiNeGjuhen";
 import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
@@ -161,6 +161,9 @@ export default function DetajetEVizites() {
             <Text style={styles.statusiTeksti}>{tekstiIStatusit}</Text>
           </View>
 
+          {/* the Miku's report in the reader's language, once the evidence is sent */}
+          {dergoi ? <RaportiNeGjuhen vizita={vizita} /> : null}
+
           {raportiGati ? <PermbledhjaERaportit vizita={vizita} onShikoDeshmite={() => setTab("deshmi")} /> : null}
 
           <View style={styles.karta}>
@@ -204,12 +207,6 @@ export default function DetajetEVizites() {
             </Pressable>
           ) : null}
 
-          {raportiGati ? (
-            <SeShpejti
-              titulli="Përmbledhja në gjuhën tënde"
-              teksti="Shënimi zanor do të përkthehet dhe përmblidhet këtu, në gjuhën që zgjedh."
-            />
-          ) : null}
 
           {/* while the report waits for a decision, "Shiko dëshmitë" is on the report card above */}
           {!raportiGati ? (
