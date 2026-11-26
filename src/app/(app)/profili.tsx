@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
@@ -219,7 +219,7 @@ function Rreshti({
   titulli,
   nentitulli,
   ngjyra = colors.ink,
-  djathtas,
+  shenja,
   duke = false,
   onPress,
 }: {
@@ -227,10 +227,11 @@ function Rreshti({
   titulli: string;
   nentitulli?: string;
   ngjyra?: string;
-  djathtas?: ReactNode; // shown instead of the arrow, e.g. a small chip
+  shenja?: string; // a small "✓ …" chip under the text, e.g. "Gjithmonë"; the row keeps its full width
   duke?: boolean;
   onPress?: () => void;
 }) {
+  const etiketa = [titulli, nentitulli, shenja].filter(Boolean).join(". ");
   const brenda = (
     <>
       <View style={styles.rreshtiIkona}>
@@ -239,17 +240,23 @@ function Rreshti({
       <View style={styles.lidhjaTekst}>
         <Text style={[styles.rreshtiTitulli, { color: ngjyra }]}>{titulli}</Text>
         {nentitulli ? <Text style={styles.ndihme}>{nentitulli}</Text> : null}
+        {shenja ? (
+          <View style={styles.aktive}>
+            <UrezaIcon name="check" size={14} color={colors.ok} strokeWidth={2.8} />
+            <Text style={styles.aktiveText}>{shenja}</Text>
+          </View>
+        ) : null}
       </View>
       {duke ? (
         <ActivityIndicator color={colors.petrol} />
-      ) : (
-        djathtas ?? (onPress ? <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} /> : null)
-      )}
+      ) : onPress ? (
+        <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+      ) : null}
     </>
   );
   if (!onPress) {
     return (
-      <View style={styles.rreshti} accessible accessibilityLabel={nentitulli ? `${titulli}. ${nentitulli}` : titulli}>
+      <View style={styles.rreshti} accessible accessibilityLabel={etiketa}>
         {brenda}
       </View>
     );
@@ -646,12 +653,7 @@ function KartaEPrivatesise() {
                 ? "Përveç teje, i sheh Miku që i bëri dhe, vetëm kur kundërshton, admini."
                 : "Dhe ti, që i bëre. Admini vetëm kur klienti kundërshton."
             }
-            djathtas={
-              <View style={styles.aktive}>
-                <UrezaIcon name="check" size={14} color={colors.ok} strokeWidth={2.8} />
-                <Text style={styles.aktiveText}>Gjithmonë</Text>
-              </View>
-            }
+            shenja="Gjithmonë"
           />
         ) : null}
 
@@ -929,6 +931,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   aktive: {
+    alignSelf: "flex-start",
+    marginTop: 6,
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
