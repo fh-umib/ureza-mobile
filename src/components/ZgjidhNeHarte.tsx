@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   llojiText: { color: colors.white, fontSize: 14, fontWeight: "700" },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 16, gap: 8 },
   koordinatat: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700", textAlign: "center" },
-  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontWeight: "600", textAlign: "center" },
+  paralajmerim: { color: colors.kujdes, fontSize: 14, lineHeight: 20, fontWeight: "600", textAlign: "center" },
   konfirmo: {
     height: 56,
     borderRadius: 16,

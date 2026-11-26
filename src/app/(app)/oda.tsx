@@ -189,8 +189,8 @@ export default function Oda() {
             <Karta titulli="Gjendja e vizitave" ikona="shield">
               <ShiritiIStatuseve
                 pjeset={[
-                  { emri: "Miratuar", numri: miratuar, ngjyra: "#1E6B3E", ikona: "check" },
-                  { emri: "Për vendimin tënd", numri: perVendim, ngjyra: "#8A5210", ikona: "sparkle" },
+                  { emri: "Miratuar", numri: miratuar, ngjyra: colors.ok, ikona: "check" },
+                  { emri: "Për vendimin tënd", numri: perVendim, ngjyra: colors.kujdes, ikona: "sparkle" },
                   { emri: "Në proces", numri: neProces, ngjyra: colors.petrol, ikona: "clock" },
                   { emri: "Kundërshtuar", numri: kundershtuar, ngjyra: colors.error, ikona: "warning" },
                 ]}
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: "#D3DEE4",
+    borderColor: colors.line,
   },
   filtriAktiv: { backgroundColor: colors.petrol, borderColor: colors.petrol },
   filtriTeksti: { color: colors.ink, fontSize: 14, fontWeight: "700" },
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: 13,
     paddingHorizontal: 6,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },

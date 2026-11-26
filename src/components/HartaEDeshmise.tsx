@@ -11,7 +11,7 @@ import { RREZJA_E_PRONES, krahaso, lidhjaEHartes, type GjendjaEGps, type Koordin
 // It only shows the picture (no panning), so it never fights with the scrolling of the page.
 // The web version (nothing) is in HartaEDeshmise.web.tsx.
 
-const NGJYRAT: Record<GjendjaEGps, string> = { brenda: "#1E6B3E", afer: "#C98A1B", larg: "#B3261E" };
+const NGJYRAT: Record<GjendjaEGps, string> = { brenda: colors.ok, afer: "#C98A1B", larg: "#B3261E" };
 const METRA_NE_GRADE = 111320; // metres in one degree of latitude
 
 // A region that shows both circles with some air around them.

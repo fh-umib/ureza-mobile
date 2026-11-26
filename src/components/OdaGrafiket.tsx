@@ -194,7 +194,7 @@ export function MbulimiIPronave({ pronat, onKerko }: { pronat: MbulimiIPrones[];
                 <UrezaIcon
                   name={harruar ? "warning" : "check"}
                   size={15}
-                  color={harruar ? "#8A5210" : "#1E6B3E"}
+                  color={harruar ? colors.kujdes : colors.ok}
                   strokeWidth={2.4}
                 />
                 <Text style={[styles.pronaKurTeksti, harruar && styles.pronaKurHarruar]}>{kurTeksti(p.ditePara)}</Text>
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   pronaFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 28 },
   pronaKur: { flexDirection: "row", alignItems: "center", gap: 6, flexShrink: 1 },
   pronaKurTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600" },
-  pronaKurHarruar: { color: "#8A5210" },
+  pronaKurHarruar: { color: colors.kujdes },
   pronaKerko: { flexDirection: "row", alignItems: "center", gap: 4, minHeight: 36, paddingLeft: 8 },
   pronaKerkoTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
 });

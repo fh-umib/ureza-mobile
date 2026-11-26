@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: "#D3DEE4",
+    borderColor: colors.line,
     backgroundColor: colors.white,
   },
   kutiaZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },

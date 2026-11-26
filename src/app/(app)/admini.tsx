@@ -144,7 +144,7 @@ export default function Paneli() {
       ) : (
         <View style={[styles.karta, styles.kartaMire]}>
           <View style={styles.rreshtIkone}>
-            <UrezaIcon name="check" size={22} color="#1E6B3E" strokeWidth={2.6} />
+            <UrezaIcon name="check" size={22} color={colors.ok} strokeWidth={2.6} />
             <Text style={[styles.kartaTitulli, styles.mireTitulli]}>Asnjë rast në pritje</Text>
           </View>
           <Text style={styles.mireTekst}>
@@ -359,10 +359,10 @@ function RreshtiIMikut({
           <UrezaIcon
             name={verifikuar ? "shield" : "clock"}
             size={16}
-            color={verifikuar ? "#1E6B3E" : "#8A5210"}
+            color={verifikuar ? colors.ok : colors.kujdes}
             strokeWidth={2.4}
           />
-          <Text style={[styles.chipText, { color: verifikuar ? "#1E6B3E" : "#8A5210" }]}>
+          <Text style={[styles.chipText, { color: verifikuar ? colors.ok : colors.kujdes }]}>
             {verifikuar ? "I verifikuar" : "Pa verifikuar"}
           </Text>
         </View>
@@ -411,18 +411,18 @@ const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
   kartaTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
   tekst: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
+  shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: colors.ikonaBg },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
-  shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
+  shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: colors.ikonaBg },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
 
   kartaRast: { backgroundColor: "#FBE9E9", borderColor: "#F3CFCF" },
   rastEtiketa: { color: "#7A1F1B", fontSize: 15, fontWeight: "800" },
   heroNumri: { color: "#7A1F1B", fontSize: 56, lineHeight: 62, fontWeight: "800" },
   rastTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },
-  kartaMire: { backgroundColor: "#E4F6EB", borderColor: "#CBEBD7" },
-  mireTitulli: { color: "#1E6B3E" },
-  mireTekst: { color: "#1E6B3E", fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  kartaMire: { backgroundColor: colors.okBg, borderColor: "#CBEBD7" },
+  mireTitulli: { color: colors.ok },
+  mireTekst: { color: colors.ok, fontSize: 14, lineHeight: 20, fontWeight: "600" },
 
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
 
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
     borderColor: "#E3EAF0",
     padding: 14,
   },
-  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   ikonaRast: { backgroundColor: "#FBE9E9" },
   rreshtiTekst: { flex: 1, gap: 3 },
   rreshtiTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
@@ -453,8 +453,8 @@ const styles = StyleSheet.create({
   kartaMiku: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
   mikuKrye: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   chip: { height: 32, paddingHorizontal: 10, borderRadius: 16, flexDirection: "row", alignItems: "center", gap: 6 },
-  chipPo: { backgroundColor: "#E4F6EB" },
-  chipJo: { backgroundColor: "#FFF2DE" },
+  chipPo: { backgroundColor: colors.okBg },
+  chipJo: { backgroundColor: colors.kujdesBg },
   chipText: { fontSize: 13, fontWeight: "700" },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   primary: { height: 52, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },

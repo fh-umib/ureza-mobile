@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },

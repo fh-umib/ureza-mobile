@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 18, borderWidth: 1.5, borderColor: colors.inputBorder, padding: 12, gap: 2 },
   krye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 6 },
   muaji: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800" },
-  shigjeta: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#E8F5F3" },
+  shigjeta: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: colors.ikonaBg },
   shigjetaOff: { opacity: 0.35 },
   rreshti: { flexDirection: "row" },
   diteJave: { flex: 1, textAlign: "center", color: colors.textSecondary, fontSize: 12, lineHeight: 28, fontWeight: "700", letterSpacing: 0.5 },

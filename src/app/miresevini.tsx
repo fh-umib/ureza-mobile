@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 15,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },

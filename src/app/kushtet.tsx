@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 12,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },

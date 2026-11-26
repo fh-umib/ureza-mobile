@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     paddingRight: 6,
     borderRadius: 14,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   roliTekst: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 22, fontWeight: "500" },
   roliEmri: { fontWeight: "800" },

@@ -10,7 +10,7 @@ import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { SkeletiIKartes } from "@/components/ui/Skeleti";
-import { colors } from "@/constants/ureza";
+import { colors, hija } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
 import { useProfili } from "@/lib/profili";
@@ -96,7 +96,7 @@ export default function Ballina() {
             accessibilityLabel="Raporti është gati. Hap vizitën për ta miratuar ose kundërshtuar."
           >
             <View style={styles.njoftimIkona}>
-              <UrezaIcon name="sparkle" size={22} color="#8A5210" strokeWidth={2.2} />
+              <UrezaIcon name="sparkle" size={22} color={colors.kujdes} strokeWidth={2.2} />
             </View>
             <View style={styles.flex}>
               <Text style={styles.njoftimTitulli}>
@@ -104,7 +104,7 @@ export default function Ballina() {
               </Text>
               <Text style={styles.njoftimTeksti}>Shiko dëshmitë, pastaj mirato ose kundërshto.</Text>
             </View>
-            <ShigjetaRrethi ngjyra="#8A5210" sfondi="#FFE3B3" />
+            <ShigjetaRrethi ngjyra={colors.kujdes} sfondi="#FFE3B3" />
           </Pressable>
         </Hyrje>
       ) : null}
@@ -367,26 +367,18 @@ function KartaEPrones({ prona, onPress }: { prona: Prona; onPress: () => void })
   );
 }
 
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 6 },
-  shadowOpacity: 0.08,
-  shadowRadius: 14,
-  elevation: 3,
-};
-
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   shtypur: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   pa: { backgroundColor: "transparent" },
 
   shifrat: { flexDirection: "row", gap: 10 },
-  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija },
+  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija.karta },
   shifraIkona: {
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,
@@ -398,7 +390,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: "#FFF2DE",
+    backgroundColor: colors.kujdesBg,
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
@@ -413,9 +405,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   njoftimTitulli: { color: "#6B3F0A", fontSize: 16, lineHeight: 21, fontWeight: "800" },
-  njoftimTeksti: { color: "#8A5210", fontSize: 14, lineHeight: 19, fontWeight: "500" },
+  njoftimTeksti: { color: colors.kujdes, fontSize: 14, lineHeight: 19, fontWeight: "500" },
 
-  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 18, gap: 10, ...hija },
+  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 18, gap: 10, ...hija.karta },
   kartaKrye: { flexDirection: "row", alignItems: "center", gap: 14 },
   miniatura: { width: 64, height: 64, borderRadius: 16, overflow: "hidden" },
   kicker: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1.5 },
@@ -452,7 +444,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  siKarta: { backgroundColor: "#E8F5F3", borderRadius: 22, padding: 16, gap: 14 },
+  siKarta: { backgroundColor: colors.ikonaBg, borderRadius: 22, padding: 16, gap: 14 },
   siRreshti: { flexDirection: "row" },
   siHapi: { flex: 1, alignItems: "center", gap: 4 },
   siIkonaRreshti: { flexDirection: "row", alignItems: "center", width: "100%", marginBottom: 4 },
@@ -476,7 +468,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#E8F5F3",
+    borderColor: colors.ikonaBg,
   },
   siNumriTeksti: { color: colors.ink, fontSize: 11, fontWeight: "800" },
   siTitulli: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", textAlign: "center" },
@@ -487,7 +479,7 @@ const styles = StyleSheet.create({
   linkText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   rrjedha: { marginHorizontal: -20 },
   rrjedhaBrenda: { paddingHorizontal: 20, paddingBottom: 12, gap: 12 },
-  prona: { width: 170, backgroundColor: colors.white, borderRadius: 20, padding: 8, gap: 8, ...hija },
+  prona: { width: 170, backgroundColor: colors.white, borderRadius: 20, padding: 8, gap: 8, ...hija.karta },
   pronaFoto: { height: 110, borderRadius: 14, overflow: "hidden" },
   pronaVendi: {
     position: "absolute",
@@ -521,7 +513,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },

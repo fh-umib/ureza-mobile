@@ -75,7 +75,7 @@ export function VendimiIRaportit({ vizita, admin = false }: { vizita: Vizita; ad
     return (
       <View style={[styles.karta, styles.miratuar]}>
         <View style={styles.rreshtIkone}>
-          <UrezaIcon name="check" size={22} color="#1E6B3E" strokeWidth={2.6} />
+          <UrezaIcon name="check" size={22} color={colors.ok} strokeWidth={2.6} />
           <Text style={[styles.titulli, styles.miratuarTitulli]}>Raporti u miratua</Text>
         </View>
         <Text style={styles.miratuarTekst}>
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.6 },
 
   paneli: { gap: 10, padding: 16, borderRadius: 16 },
-  paneliMirato: { backgroundColor: "#E8F5F3" },
+  paneliMirato: { backgroundColor: colors.ikonaBg },
   paneliKundershto: { backgroundColor: "#FDECEA" },
   paneliLabel: { color: colors.ink, fontSize: 16, lineHeight: 23, fontWeight: "700" },
   paneliNdihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
@@ -284,9 +284,9 @@ const styles = StyleSheet.create({
   joText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
 
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 10 },
-  miratuar: { backgroundColor: "#E4F6EB" },
-  miratuarTitulli: { color: "#1E6B3E" },
-  miratuarTekst: { color: "#1E6B3E", fontSize: 16, lineHeight: 24, fontWeight: "600" },
+  miratuar: { backgroundColor: colors.okBg },
+  miratuarTitulli: { color: colors.ok },
+  miratuarTekst: { color: colors.ok, fontSize: 16, lineHeight: 24, fontWeight: "600" },
   kundershtuar: { backgroundColor: "#FBE9E9" },
   kundershtuarTitulli: { color: "#7A1F1B" },
   kundershtuarTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontWeight: "600" },

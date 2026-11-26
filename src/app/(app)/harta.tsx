@@ -23,7 +23,7 @@ import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
 import { SkeletiIFaqes } from "@/components/ui/Skeleti";
-import { colors } from "@/constants/ureza";
+import { colors, hija } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
 import { vendiNeHarte, type Prona } from "@/lib/pronat";
@@ -360,15 +360,6 @@ function RreshtiIVizites({ vizita, fundit }: { vizita: Vizita; fundit: boolean }
   );
 }
 
-// the light shadow the cards on Ballina, Oda and Pronat use
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
-
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.hero },
   // the title sits on the map in a dark card, so it reads over the satellite picture
@@ -425,17 +416,17 @@ const styles = StyleSheet.create({
     gap: 6,
     borderWidth: 2,
     borderColor: "transparent",
-    ...hija,
+    ...hija.karta,
   },
   pronaKartaZgjedhur: { borderColor: colors.petrol },
   pronaFoto: { height: 84, borderRadius: 14, overflow: "hidden" },
   pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", paddingHorizontal: 4 },
   pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
   pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontWeight: "600", flexShrink: 1 },
-  zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
+  zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija.karta },
   emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
   vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "600", flexShrink: 1 },
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija },
+  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija.karta },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
   titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800", flexShrink: 1 },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
@@ -455,7 +446,7 @@ const styles = StyleSheet.create({
   butonIkoneText: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
   vizitatKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
   seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija },
+  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija.karta },
   rreshtiIkona: {
     width: 40,
     height: 40,

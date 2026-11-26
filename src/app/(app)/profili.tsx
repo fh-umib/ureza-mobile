@@ -9,7 +9,7 @@ import { KartaEProfilitTePunes } from "@/components/ProfiliIPunes";
 import { RreshtiNdezes } from "@/components/RreshtiNdezes";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { useToast } from "@/components/ui/Toast";
-import { colors } from "@/constants/ureza";
+import { colors, hija } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { mbledhTeDhenat, ndajTeDhenat } from "@/lib/eksporti";
@@ -792,23 +792,14 @@ function DilButon() {
   );
 }
 
-// the light shadow the cards on Ballina, Oda and Pronat use
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
-
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 12 },
-  hije: hija,
+  hije: hija.karta,
   shtypur: { opacity: 0.85 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
 
   // header
-  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija },
+  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija.karta },
   avatar: {
     width: 72,
     height: 72,
@@ -911,7 +902,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
 
