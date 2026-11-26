@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
@@ -14,6 +15,10 @@ import { useProfili } from "@/lib/profili";
 import { useSesioni } from "@/lib/sesioni";
 import { LLOJET_E_VIZITES, dataMeOre, dataShkurt, titulliIVizites, type Vizita } from "@/lib/vizitat";
 
+// A new Miku (no work profile yet) is taken to the first steps once per app session; after that
+// the "Gati për punë" card leads there, so the Miku is never sent back again and again.
+let fillimiUShfaq = false;
+
 // The Miku's home (design: Miku pranon detyrën): the requests that wait for a Miku, and
 // the visits this Miku has accepted. Opening a request shows its details and the button to accept.
 export default function KerkesatPerMiken() {
@@ -27,6 +32,13 @@ export default function KerkesatPerMiken() {
   const router = useRouter();
   const verifikimi = useVerifikimiIm();
   const puna = useProfiliIPunes();
+  const paProfilPune = puna.gati && !puna.profili?.lloji;
+
+  useEffect(() => {
+    if (!paProfilPune || fillimiUShfaq) return;
+    fillimiUShfaq = true;
+    router.push("/miku-fillimi");
+  }, [paProfilPune, router]);
 
   return (
     <EkraniMeHero
