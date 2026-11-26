@@ -50,7 +50,8 @@ export default function Miresevini() {
           Shtëpia jote,{"\n"}më afër se kurrë.
         </Animated.Text>
         <Animated.Text entering={FadeInDown.delay(240).duration(600)} style={styles.nentitulli}>
-          Një Miku i besuar e viziton dhe të sjell dëshmi.
+          Jeton jashtë vendit? Një vizitor i besuar në Kosovë e kontrollon shtëpinë tënde dhe i viziton prindërit për
+          ty.
         </Animated.Text>
       </View>
 
