@@ -4,8 +4,8 @@ import { colors } from "@/constants/ureza";
 
 import { UrezaIcon, type IconName } from "./UrezaIcon";
 
-// The role cards of the design (Roli): Klient and Miku can be chosen, Admin is given by the
-// Urëza team in the database. Used before signing in (kush-je.tsx) and from Profili (roli.tsx).
+// The role cards of the design (Roli): Klient or Miku. The Admin role is not shown to users;
+// the Urëza team gives it in the database. Used before signing in (kush-je.tsx) and from Profili (roli.tsx).
 export type Zgjedhja = "klient" | "miku";
 
 const ROLET: { vlera: Zgjedhja; titulli: string; nen: string; icon: IconName }[] = [
@@ -41,18 +41,6 @@ export function ZgjedhesiIRolit({ roli, onZgjidh }: { roli: Zgjedhja; onZgjidh: 
         );
       })}
 
-      <View style={[styles.opsion, styles.opsionPaAkses]} accessibilityState={{ disabled: true }}>
-        <View style={styles.ikona}>
-          <UrezaIcon name="shield" size={26} color={colors.textSecondary} />
-        </View>
-        <View style={styles.opsionTekst}>
-          <Text style={styles.opsionTitulli}>Admin</Text>
-          <Text style={styles.opsionNen}>Shoh panelin, hartën dhe kundërshtimet</Text>
-          <View style={styles.pill}>
-            <Text style={styles.pillText}>Jepet nga ekipi</Text>
-          </View>
-        </View>
-      </View>
     </>
   );
 }
@@ -72,7 +60,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   opsionZgjedhur: { borderColor: colors.petrol },
-  opsionPaAkses: { backgroundColor: "#EEF3F6", borderStyle: "dashed" },
   ikona: { width: 56, height: 56, borderRadius: 17, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
   opsionTekst: { flex: 1, gap: 2 },
   opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
@@ -87,6 +74,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   radioZgjedhur: { backgroundColor: colors.petrol, borderColor: colors.petrol },
-  pill: { alignSelf: "flex-start", marginTop: 4, backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 3 },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
 });
