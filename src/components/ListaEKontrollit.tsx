@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import {
   GJENDJET,
   KOMENTI_MAX,
@@ -186,9 +186,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   kryeTekst: { flex: 1, minWidth: 0 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  progresi: { color: colors.textSecondary, fontSize: 14, fontWeight: "600" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  progresi: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w600 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
   pika: { gap: 8, paddingTop: 12, borderTopWidth: 1, borderTopColor: "#EDF1F4" },
   pikaKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
   pikaIkona: {
@@ -199,8 +199,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  pikaEmri: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },
-  ndihme: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  pikaEmri: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
+  ndihme: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   opsionet: { flexDirection: "row", gap: 6 },
   // icon above the word, so "Nuk u kontrollua" fits on a narrow phone
   opsion: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 2,
   },
-  opsionText: { color: colors.textSecondary, fontSize: 13, lineHeight: 16, fontWeight: "700", textAlign: "center" },
+  opsionText: { color: colors.textSecondary, fontSize: 13, lineHeight: 16, fontFamily: font.w700, textAlign: "center" },
   input: {
     minHeight: 64,
     borderRadius: 14,
@@ -228,11 +228,11 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 15,
     lineHeight: 21,
-    fontWeight: "500",
+    fontFamily: font.w500,
   },
   inputMadh: { minHeight: 88 },
   inputFokus: { borderColor: colors.petrol, borderWidth: 2 },
-  seksioni: { color: colors.ink, fontSize: 16, fontWeight: "800", marginTop: 6 },
+  seksioni: { color: colors.ink, fontSize: 16, fontFamily: font.w800, marginTop: 6 },
   perfundimet: { gap: 8 },
   perfundim: {
     minHeight: 48,
@@ -244,5 +244,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  perfundimText: { color: colors.ink, fontSize: 15, fontWeight: "700" },
+  perfundimText: { color: colors.ink, fontSize: 15, fontFamily: font.w700 },
 });

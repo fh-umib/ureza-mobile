@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/ureza";
+import { colors, font } from "@/constants/ureza";
 import { useDeshmite } from "@/lib/deshmite";
 import { useDhenat } from "@/lib/dhenat";
 import { GJUHET, useProfili, type Gjuha } from "@/lib/profili";
@@ -208,10 +208,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   kryeTekst: { flex: 1, minWidth: 0 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  lloji: { color: colors.textSecondary, fontSize: 14, fontWeight: "600" },
-  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  hyrja: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500" },
+  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
+  lloji: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w600 },
+  tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
+  hyrja: { color: colors.ink, fontSize: 16, lineHeight: 24, fontFamily: font.w500 },
   gjuhet: {
     flexDirection: "row",
     alignItems: "center",
@@ -224,11 +224,11 @@ const styles = StyleSheet.create({
   },
   gjuha: { flex: 1, minHeight: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   gjuhaAktive: { backgroundColor: colors.ikonaBg },
-  gjuhaText: { color: colors.textSecondary, fontSize: 14, fontWeight: "700" },
-  gjuhaTextAktive: { color: colors.petrol, fontWeight: "800" },
+  gjuhaText: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w700 },
+  gjuhaTextAktive: { color: colors.petrol, fontFamily: font.w800 },
   perfundimi: { flexDirection: "row", alignItems: "center", gap: 12, padding: 14, borderRadius: 16 },
-  perfundimiEmri: { fontSize: 17, lineHeight: 23, fontWeight: "800" },
-  perfundimiTekst: { fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  perfundimiEmri: { fontSize: 17, lineHeight: 23, fontFamily: font.w800 },
+  perfundimiTekst: { fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   pikat: { borderRadius: 16, borderWidth: 1, borderColor: "#EDF1F4", paddingHorizontal: 12 },
   pika: { paddingVertical: 10, gap: 6 },
   ndarje: { borderTopWidth: 1, borderTopColor: "#EDF1F4" },
@@ -241,18 +241,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  pikaEmri: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: "700" },
+  pikaEmri: { flex: 1, color: colors.ink, fontSize: 15, lineHeight: 21, fontFamily: font.w700 },
   chip: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 10, height: 28, borderRadius: 14 },
-  chipText: { fontSize: 13, fontWeight: "800" },
+  chipText: { fontSize: 13, fontFamily: font.w800 },
   koment: { backgroundColor: "#F4F7F9", borderRadius: 12, padding: 10, gap: 2 },
-  komentEtiketa: { color: colors.textSecondary, fontSize: 12, fontWeight: "800", letterSpacing: 0.3 },
-  komentTekst: { color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: "500", fontStyle: "italic" },
+  komentEtiketa: { color: colors.textSecondary, fontSize: 12, fontFamily: font.w800, letterSpacing: 0.3 },
+  komentTekst: { color: colors.ink, fontSize: 15, lineHeight: 21, fontFamily: font.w500i },
   deshmite: { flexDirection: "row", gap: 8, alignItems: "flex-start" },
-  deshmiteTekst: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  deshmiteEtiketa: { fontWeight: "800" },
-  fundi: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontWeight: "500" },
+  deshmiteTekst: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
+  deshmiteEtiketa: { fontFamily: font.w800 },
+  fundi: { color: colors.textSecondary, fontSize: 13, lineHeight: 18, fontFamily: font.w500 },
   lidhje: { minHeight: 44, justifyContent: "center" },
-  lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
+  lidhjeText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   shenim: {
     flexDirection: "row",
     gap: 10,
@@ -261,5 +261,5 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: colors.ikonaBg,
   },
-  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
+  shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
 });
