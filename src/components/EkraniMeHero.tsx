@@ -167,6 +167,27 @@ function HeroSkena() {
           <Circle cx={y.x} cy={y.y} r={1.5} fill="#FFFFFF" />
         </G>
       ))}
+
+      {/* the small lit bridge of Urëza, low on the right, under the stars and clear of the title */}
+      <G opacity={0.9}>
+        <Path d="M262 112 Q295 124 328 112 Q350 120 380 116" fill="none" stroke="#F2C46B" strokeWidth="1.2" />
+        <Path
+          d="M270 114.5V121 M279 117V121 M288 118.6V121 M302 118.6V121 M311 117V121 M320 114.5V121 M342 116.4V121 M360 117.6V121"
+          stroke="#F2C46B"
+          strokeWidth="0.6"
+          strokeOpacity="0.6"
+        />
+        <Rect x="259.5" y="106" width="4" height="18" rx="1" fill="#E8F5F3" />
+        <Rect x="326.5" y="106" width="4" height="18" rx="1" fill="#E8F5F3" />
+        <Rect x="248" y="121" width="142" height="2.4" rx="1.2" fill="#E8F5F3" fillOpacity="0.9" />
+        <G fill="#F6D58A">
+          <Circle cx="272" cy="119.6" r="0.9" />
+          <Circle cx="294" cy="119.6" r="0.9" />
+          <Circle cx="316" cy="119.6" r="0.9" />
+          <Circle cx="350" cy="119.6" r="0.9" />
+          <Circle cx="372" cy="119.6" r="0.9" />
+        </G>
+      </G>
     </Svg>
   );
 }
