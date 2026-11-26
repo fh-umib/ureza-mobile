@@ -2,16 +2,20 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/ureza";
 
+import { UrezaIcon, type IconName } from "./UrezaIcon";
+
 // A row with a switch (design: Profili, "Njoftimet" and "Privatësia"): a title, a line under it and
 // a 56 x 32 switch. The whole row is the button, so the target is large. A row that is not built yet
 // is shown switched off and marked "Së shpejti".
 export function RreshtiNdezes({
+  ikona,
   titulli,
   nentitulli,
   vlera,
   onNdrysho,
   seShpejti = false,
 }: {
+  ikona?: IconName;
   titulli: string;
   nentitulli: string;
   vlera: boolean;
@@ -28,6 +32,11 @@ export function RreshtiNdezes({
       accessibilityState={{ checked: vlera, disabled: seShpejti }}
       aria-checked={vlera}
     >
+      {ikona ? (
+        <View style={styles.ikona}>
+          <UrezaIcon name={ikona} size={20} color={colors.petrol} strokeWidth={2.2} />
+        </View>
+      ) : null}
       <View style={styles.tekst}>
         <Text style={styles.titulli}>{titulli}</Text>
         <Text style={styles.nentitulli}>{nentitulli}</Text>
@@ -47,6 +56,14 @@ export function RreshtiNdezes({
 const styles = StyleSheet.create({
   rreshti: { minHeight: 72, flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 8 },
   seShpejti: { opacity: 0.6 },
+  ikona: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   tekst: { flex: 1, minWidth: 0, gap: 0 },
   titulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700" },
   nentitulli: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },

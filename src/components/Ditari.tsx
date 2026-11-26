@@ -8,7 +8,8 @@ import { PronaIlustrim } from "./PronaIlustrim";
 import { StatusiChip } from "./StatusiChip";
 import { UrezaIcon } from "./UrezaIcon";
 
-// "Ditari i kujdesit": the latest visits, newest first (from the user's visits).
+// "Ditari i kujdesit": the latest visits, newest first (from the user's visits). The section
+// title above it is drawn by the screen.
 const MUAJT_SHKURT = MUAJT.map((m) => m.slice(0, 3).toUpperCase());
 
 export function Ditari({ onShikoTeGjitha }: { onShikoTeGjitha?: () => void }) {
@@ -17,9 +18,6 @@ export function Ditari({ onShikoTeGjitha }: { onShikoTeGjitha?: () => void }) {
 
   return (
     <View style={styles.karta}>
-      <Text style={styles.titulli}>Ditari i kujdesit</Text>
-      <Text style={styles.nentitulli}>Vizitat e fundit, sipas datës</Text>
-
       {burimiVizitat !== "duke_ngarkuar" && rreshtat.length === 0 ? (
         <Text style={styles.bosh}>Ende nuk ka vizita në ditar. Kërko të parën nga Ballina.</Text>
       ) : null}
@@ -58,13 +56,21 @@ export function Ditari({ onShikoTeGjitha }: { onShikoTeGjitha?: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20 },
-  titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  nentitulli: { marginTop: 2, color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  bosh: { marginTop: 12, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  lista: { marginTop: 6 },
+  karta: {
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    shadowColor: "#0B2530",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 2,
+  },
+  bosh: { marginVertical: 16, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  lista: {},
   rresht: { flexDirection: "row", gap: 14, paddingVertical: 16, alignItems: "flex-start" },
-  ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
+  ndarje: { borderBottomWidth: 1, borderBottomColor: colors.background },
   data: { width: 44, alignItems: "center" },
   dita: { color: colors.petrol, fontSize: 24, lineHeight: 28, fontWeight: "800" },
   muaji: { color: colors.textSecondary, fontSize: 13, lineHeight: 16, fontWeight: "700", letterSpacing: 1 },

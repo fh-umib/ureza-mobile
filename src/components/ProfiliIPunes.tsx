@@ -15,7 +15,7 @@ export function KartaEProfilitTePunes() {
   if (!gati) {
     return (
       <View style={styles.karta}>
-        <Text style={styles.titulli}>Si punon si Miku</Text>
+        <TitulliIKartes />
         <Text style={styles.ndihme}>
           Kjo pjesë kërkon supabase/besimi.sql në Supabase. Pastaj zgjedh nëse je kompani, individ, student ose mjeshtër.
         </Text>
@@ -65,9 +65,7 @@ function Forma({
 
   return (
     <View style={styles.karta}>
-      <Text style={styles.titulli} accessibilityRole="header">
-        Si punon si Miku
-      </Text>
+      <TitulliIKartes />
       <Text style={styles.ndihme}>Del në kontratën me klientin. Pa këtë nuk mund të pranosh vizita.</Text>
 
       <View style={styles.rrjeta}>
@@ -132,8 +130,28 @@ function Forma({
         disabled={duke}
         accessibilityRole="button"
       >
-        {duke ? <ActivityIndicator color={colors.white} /> : <Text style={styles.ruajTeksti}>Ruaj</Text>}
+        {duke ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <>
+            <Text style={styles.ruajTeksti}>Ruaj</Text>
+            <UrezaIcon name="check" size={20} color={colors.white} strokeWidth={2.4} />
+          </>
+        )}
       </Pressable>
+    </View>
+  );
+}
+
+function TitulliIKartes() {
+  return (
+    <View style={styles.krye}>
+      <View style={styles.kryeIkona}>
+        <UrezaIcon name="doc" size={20} color={colors.petrol} strokeWidth={2.2} />
+      </View>
+      <Text style={styles.titulli} accessibilityRole="header">
+        Si punon si Miku
+      </Text>
     </View>
   );
 }
@@ -177,7 +195,26 @@ function Fusha({
 }
 
 const styles = StyleSheet.create({
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
+  karta: {
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    padding: 20,
+    gap: 12,
+    shadowColor: "#0B2530",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 2,
+  },
+  krye: { flexDirection: "row", alignItems: "center", gap: 10 },
+  kryeIkona: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
@@ -188,7 +225,7 @@ const styles = StyleSheet.create({
     gap: 4,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: "#D3DEE4",
+    borderColor: colors.line,
     backgroundColor: colors.white,
   },
   llojiZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },
@@ -196,7 +233,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 12,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 4,
@@ -218,9 +255,17 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   inputFokus: { borderColor: colors.petrol },
-  mesazh: { color: "#1E6B3E", fontSize: 14, lineHeight: 20, fontWeight: "600" },
+  mesazh: { color: colors.ok, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   gabim: { color: colors.error },
-  ruaj: { height: 52, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
+  ruaj: {
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: colors.petrol,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
   ruajTeksti: { color: colors.white, fontSize: 16, fontWeight: "800" },
   disabled: { opacity: 0.6 },
 });

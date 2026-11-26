@@ -20,12 +20,20 @@ function tab(label: string, icon: IconName, faqja: string, roli: Roli) {
     title: label,
     // `href: null` hides the tab button for the other roles
     href: faqjaLejohet(roli, faqja) ? undefined : null,
-    tabBarLabel: ({ focused }: { focused: boolean }) => (
-      <Text style={[styles.label, focused && styles.labelActive]}>{label}</Text>
-    ),
+    tabBarAccessibilityLabel: label,
+    // the icon and its word sit together in one capsule; the active tab tints both, so the
+    // word is never left behind under the icon
     tabBarIcon: ({ focused }: { focused: boolean }) => (
-      <View style={[styles.pill, focused && styles.pillActive]}>
-        <UrezaIcon name={icon} size={23} color={focused ? colors.white : colors.textSecondary} strokeWidth={focused ? 2.3 : 2} />
+      <View style={[styles.kapsula, focused && styles.kapsulaAktive]}>
+        <UrezaIcon
+          name={icon}
+          size={22}
+          color={focused ? colors.petrol : colors.textSecondary}
+          strokeWidth={focused ? 2.4 : 2}
+        />
+        <Text style={[styles.label, focused && styles.labelActive]} numberOfLines={1}>
+          {label}
+        </Text>
       </View>
     ),
   };
@@ -47,8 +55,8 @@ export default function AppTabs() {
           borderTopWidth: 0,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          height: 68 + insets.bottom,
-          paddingTop: 10,
+          height: 72 + insets.bottom,
+          paddingTop: 8,
           paddingBottom: insets.bottom,
           shadowColor: "#0B2530",
           shadowOffset: { width: 0, height: -4 },
@@ -56,7 +64,9 @@ export default function AppTabs() {
           shadowRadius: 16,
           elevation: 12,
         },
-        tabBarItemStyle: { minHeight: 52 },
+        tabBarShowLabel: false,
+        tabBarItemStyle: { minHeight: 56 },
+        tabBarIconStyle: { width: "100%", height: 56 },
       }}
     >
       <Tabs.Screen name="ballina" options={tab("Ballina", "home", "/ballina", roli)} />
@@ -71,15 +81,16 @@ export default function AppTabs() {
 }
 
 const styles = StyleSheet.create({
-  label: { color: colors.textSecondary, fontSize: 12, fontWeight: "600" },
-  labelActive: { color: colors.petrol, fontWeight: "800" },
-  pill: { width: 52, height: 34, borderRadius: 17, alignItems: "center", justifyContent: "center" },
-  pillActive: {
-    backgroundColor: colors.petrol,
-    shadowColor: colors.petrol,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+  kapsula: {
+    minWidth: 64,
+    height: 54,
+    paddingHorizontal: 8,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 3,
   },
+  kapsulaAktive: { backgroundColor: colors.ikonaBg },
+  label: { color: colors.textSecondary, fontSize: 11, fontWeight: "600" },
+  labelActive: { color: colors.petrol, fontWeight: "800" },
 });

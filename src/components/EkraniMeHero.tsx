@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { createContext, useContext, useRef, type ReactNode } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View, type ScrollViewInstance } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, { Circle, G, Path, Rect } from "react-native-svg";
+import Svg, { Circle, Defs, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
 
 import { colors } from "@/constants/ureza";
 import { useKeyboardReveal } from "@/hooks/use-keyboard-reveal";
@@ -56,21 +56,7 @@ export function EkraniMeHero({
       >
         <View style={[styles.hero, { height: heroHeight }]}>
           <View style={StyleSheet.absoluteFill}>
-            <Svg width="100%" height="100%" viewBox="0 0 390 150" preserveAspectRatio="xMidYMax slice">
-              <Rect width="390" height="150" fill="#173F4E" />
-              <Rect y="80" width="390" height="70" fill="#1A4757" />
-              <G fill="#FFFFFF" fillOpacity="0.65">
-                <Circle cx="46" cy="22" r="1.3" />
-                <Circle cx="130" cy="14" r="1.2" />
-                <Circle cx="210" cy="34" r="1.3" />
-                <Circle cx="270" cy="18" r="1.2" />
-                <Circle cx="372" cy="30" r="1.3" />
-              </G>
-              <Circle cx="334" cy="80" r="30" fill="#F2C46B" fillOpacity="0.1" />
-              <Circle cx="334" cy="80" r="15" fill="#F6D58A" />
-              <Path d="M0 120 L45 94 L90 108 L140 80 L190 104 L240 88 L290 110 L340 92 L390 106 V150 H0Z" fill="#1D5062" />
-              <Path d="M0 140 L60 116 L120 130 L190 110 L260 134 L330 116 L390 132 V150 H0Z" fill="#174657" />
-            </Svg>
+            <HeroSkena />
           </View>
           <View style={[styles.heroText, { paddingTop: insets.top + 18 }]}>
             <Text style={styles.kicker}>{kicker}</Text>
@@ -96,6 +82,113 @@ export function EkraniMeHero({
         </RevealContext.Provider>
       </ScrollView>
     </View>
+  );
+}
+
+// The night sky behind every screen title: a deep gradient, a faint band of the Milky Way,
+// many small stars of different sizes and brightness, and a few bright ones with a soft halo.
+// Nothing is drawn where it could cross the title. The stars come from a fixed seed, so they
+// stay in the same place on every screen and every start.
+
+type Ylli = { x: number; y: number; r: number; o: number };
+
+function yjet(sa: number, fara: number): Ylli[] {
+  let s = fara;
+  const rast = () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+  return Array.from({ length: sa }, () => {
+    const madhesia = rast();
+    return {
+      x: rast() * 390,
+      y: rast() * 126,
+      // most stars are tiny, a few are larger
+      r: madhesia > 0.93 ? 1.3 : madhesia > 0.7 ? 0.85 : 0.5,
+      o: 0.35 + rast() * 0.6,
+    };
+  });
+}
+
+const YJET = yjet(110, 7);
+const YJET_E_NDRITSHME: { x: number; y: number }[] = [
+  { x: 214, y: 22 },
+  { x: 302, y: 58 },
+  { x: 356, y: 18 },
+  { x: 150, y: 96 },
+];
+
+function HeroSkena() {
+  return (
+    <Svg width="100%" height="100%" viewBox="0 0 390 150" preserveAspectRatio="xMidYMax slice">
+      <Defs>
+        <LinearGradient id="qielli" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#0A2430" />
+          <Stop offset="0.55" stopColor="#123746" />
+          <Stop offset="1" stopColor="#1C4B5C" />
+        </LinearGradient>
+        <LinearGradient id="rruga" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0" />
+          <Stop offset="0.5" stopColor="#CFE8EE" stopOpacity="0.09" />
+          <Stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </LinearGradient>
+        <RadialGradient id="horizonti" cx="300" cy="170" r="190" gradientUnits="userSpaceOnUse">
+          <Stop offset="0" stopColor="#F2C46B" stopOpacity="0.16" />
+          <Stop offset="1" stopColor="#F2C46B" stopOpacity="0" />
+        </RadialGradient>
+        <RadialGradient id="aureola">
+          <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.55" />
+          <Stop offset="0.35" stopColor="#E8F5F3" stopOpacity="0.18" />
+          <Stop offset="1" stopColor="#E8F5F3" stopOpacity="0" />
+        </RadialGradient>
+      </Defs>
+
+      <Rect width="390" height="150" fill="url(#qielli)" />
+      {/* the Milky Way: a soft diagonal haze */}
+      <Path d="M120 -20 L230 -20 L420 150 L300 150 Z" fill="url(#rruga)" />
+      {/* the last warmth of the day, low on the right */}
+      <Rect width="390" height="150" fill="url(#horizonti)" />
+
+      <G fill="#FFFFFF">
+        {YJET.map((y, i) => (
+          <Circle key={i} cx={y.x} cy={y.y} r={y.r} fillOpacity={y.o} />
+        ))}
+      </G>
+
+      {YJET_E_NDRITSHME.map((y) => (
+        <G key={`${y.x}-${y.y}`}>
+          <Circle cx={y.x} cy={y.y} r={9} fill="url(#aureola)" />
+          <Path
+            d={`M${y.x - 5} ${y.y} H${y.x + 5} M${y.x} ${y.y - 5} V${y.y + 5}`}
+            stroke="#FFFFFF"
+            strokeOpacity={0.5}
+            strokeWidth={0.5}
+          />
+          <Circle cx={y.x} cy={y.y} r={1.5} fill="#FFFFFF" />
+        </G>
+      ))}
+
+      {/* the small lit bridge of Urëza, low on the right, under the stars and clear of the title */}
+      <G opacity={0.9}>
+        <Path d="M262 112 Q295 124 328 112 Q350 120 380 116" fill="none" stroke="#F2C46B" strokeWidth="1.2" />
+        <Path
+          d="M270 114.5V121 M279 117V121 M288 118.6V121 M302 118.6V121 M311 117V121 M320 114.5V121 M342 116.4V121 M360 117.6V121"
+          stroke="#F2C46B"
+          strokeWidth="0.6"
+          strokeOpacity="0.6"
+        />
+        <Rect x="259.5" y="106" width="4" height="18" rx="1" fill="#E8F5F3" />
+        <Rect x="326.5" y="106" width="4" height="18" rx="1" fill="#E8F5F3" />
+        <Rect x="248" y="121" width="142" height="2.4" rx="1.2" fill="#E8F5F3" fillOpacity="0.9" />
+        <G fill="#F6D58A">
+          <Circle cx="272" cy="119.6" r="0.9" />
+          <Circle cx="294" cy="119.6" r="0.9" />
+          <Circle cx="316" cy="119.6" r="0.9" />
+          <Circle cx="350" cy="119.6" r="0.9" />
+          <Circle cx="372" cy="119.6" r="0.9" />
+        </G>
+      </G>
+    </Svg>
   );
 }
 

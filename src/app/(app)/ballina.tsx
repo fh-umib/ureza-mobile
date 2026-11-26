@@ -2,11 +2,12 @@ import { useRouter } from "expo-router";
 import type { ReactNode } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import Svg, { Circle, Path } from "react-native-svg";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { HapatEVizites } from "@/components/HapatEVizites";
-import { PronaIlustrim } from "@/components/PronaIlustrim";
+import { Ikona, type EmriIIkones } from "@/components/Ikona";
+import { PronaIlustrim, type Ilustrim } from "@/components/PronaIlustrim";
+import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
@@ -80,9 +81,27 @@ export default function Ballina() {
     >
       <Hyrje i={0}>
         <View style={styles.shifrat}>
-          <Shifra icon="houses" vlera={pronat.length} etiketa="Prona" onPress={() => router.navigate("/pronat")} />
-          <Shifra icon="clock" vlera={aktive} etiketa="Në proces" onPress={() => router.navigate("/oda")} />
-          <Shifra icon="doc" vlera={raporte} etiketa="Raporte" onPress={() => router.navigate("/oda")} />
+          <Shifra
+            ikona="pronat"
+            toni={{ fg: colors.petrol, bg: colors.ikonaBg }}
+            vlera={pronat.length}
+            etiketa="Prona"
+            onPress={() => router.navigate("/pronat")}
+          />
+          <Shifra
+            ikona="koha"
+            toni={{ fg: colors.kujdes, bg: colors.kujdesBg }}
+            vlera={aktive}
+            etiketa="Në proces"
+            onPress={() => router.navigate("/oda")}
+          />
+          <Shifra
+            ikona="miratuar"
+            toni={{ fg: colors.ok, bg: colors.okBg }}
+            vlera={raporte}
+            etiketa="Raporte"
+            onPress={() => router.navigate("/oda")}
+          />
         </View>
       </Hyrje>
 
@@ -95,7 +114,7 @@ export default function Ballina() {
             accessibilityLabel="Raporti është gati. Hap vizitën për ta miratuar ose kundërshtuar."
           >
             <View style={styles.njoftimIkona}>
-              <UrezaIcon name="sparkle" size={22} color="#8A5210" strokeWidth={2.2} />
+              <Ikona emri="vendim" madhesia={22} ngjyra={colors.kujdes} />
             </View>
             <View style={styles.flex}>
               <Text style={styles.njoftimTitulli}>
@@ -111,33 +130,38 @@ export default function Ballina() {
       <Hyrje i={2}>
         {eFundit ? (
           <Pressable
-            style={({ pressed }) => [styles.karta, pressed && styles.shtypur]}
+            style={({ pressed }) => [styles.kartaVizites, pressed && styles.shtypur]}
             onPress={() => hapViziten(eFundit.id)}
             accessibilityRole="button"
             accessibilityLabel={`${titulliIVizites(eFundit.lloji)}, ${pronaEFundit?.emri ?? "Prona"}. Hap detajet e vizitës.`}
           >
-            <View style={styles.kartaKrye}>
-              <View style={styles.miniatura}>
-                <PronaIlustrim lloji={eFundit.lloji === "inspektim" ? (pronaEFundit?.lloji ?? "shtepi") : "prindert"} />
-              </View>
-              <View style={styles.flex}>
-                <Text style={styles.kicker}>VIZITA E FUNDIT</Text>
-                <Text style={styles.titulli} numberOfLines={1}>
-                  {titulliIVizites(eFundit.lloji)}
-                </Text>
-                <Text style={styles.nen} numberOfLines={1}>
-                  {pronaEFundit?.emri ?? "Prona"} · {dataShkurt(eFundit.data)}
-                </Text>
+            <View style={styles.vizitaFoto}>
+              <PronaIlustrim lloji={eFundit.lloji === "inspektim" ? (pronaEFundit?.lloji ?? "shtepi") : "prindert"} />
+              <View style={styles.vizitaEtiketa}>
+                <Ikona emri="kalendar" madhesia={13} ngjyra={colors.white} />
+                <Text style={styles.vizitaEtiketaTeksti}>VIZITA E FUNDIT · {dataShkurt(eFundit.data)}</Text>
               </View>
             </View>
-            <StatusiChip statusi={eFundit.statusi} />
-            <View style={styles.hapat}>
-              <HapatEVizites statusi={eFundit.statusi} />
-            </View>
-            <Text style={styles.nen}>{caNdodh(eFundit)}</Text>
-            <View style={styles.kartaFund}>
-              <Text style={styles.kartaFundTeksti}>Shiko detajet e vizitës</Text>
-              <ShigjetaRrethi />
+            <View style={styles.vizitaTrupi}>
+              <View style={styles.vizitaTitujt}>
+                <View style={styles.flex}>
+                  <Text style={styles.titulli} numberOfLines={1}>
+                    {titulliIVizites(eFundit.lloji)}
+                  </Text>
+                  <Text style={styles.nen} numberOfLines={1}>
+                    {pronaEFundit?.emri ?? "Prona"}
+                  </Text>
+                </View>
+                <StatusiChip statusi={eFundit.statusi} />
+              </View>
+              <View style={styles.hapat}>
+                <HapatEVizites statusi={eFundit.statusi} />
+              </View>
+              <Text style={styles.nen}>{caNdodh(eFundit)}</Text>
+              <View style={styles.kartaFund}>
+                <Text style={styles.kartaFundTeksti}>Shiko detajet e vizitës</Text>
+                <ShigjetaRrethi />
+              </View>
             </View>
           </Pressable>
         ) : burimiVizitat === "duke_ngarkuar" ? (
@@ -152,22 +176,22 @@ export default function Ballina() {
       </Hyrje>
 
       <Hyrje i={3}>
-        <Text style={styles.seksioni}>Çka të kontrollojmë?</Text>
+        <Seksioni ikona="vizitat" titulli="Çka të kontrollojmë?" />
         <View style={styles.veprimet}>
           <KartaEVeprimit
-            icon="home"
+            ilustrim="ceti"
+            ikona="shtepi"
             titulli="Inspektim prone"
-            teksti="Çati, ujë, rrymë, siguri"
-            sfondi={colors.petrol}
-            theksi={colors.mint}
+            pikat={["Çati", "Ujë", "Rrymë", "Siguri"]}
+            ngjyra={colors.petrol}
             onPress={() => kerko("inspektim")}
           />
           <KartaEVeprimit
-            icon="heart"
+            ilustrim="prindert"
+            ikona="prindert"
             titulli="Vizitë te prindërit"
-            teksti="Jo mjekësore, me pëlqim"
-            sfondi={colors.teal}
-            theksi={colors.amber}
+            pikat={["Shoqëri", "Ndihmë", "Me pëlqim"]}
+            ngjyra={colors.teal}
             onPress={() => kerko("kujdes")}
           />
         </View>
@@ -180,13 +204,11 @@ export default function Ballina() {
       ) : null}
 
       <Hyrje i={5}>
-        <View style={styles.krye}>
-          <Text style={styles.seksioni}>Pronat e mia</Text>
-          <Pressable onPress={() => router.navigate("/pronat")} style={styles.link} accessibilityRole="button">
-            <Text style={styles.linkText}>Të gjitha</Text>
-            <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-          </Pressable>
-        </View>
+        <Seksioni
+          ikona="pronat"
+          titulli="Pronat e mia"
+          lidhja={{ etiketa: "Të gjitha", onPress: () => router.navigate("/pronat") }}
+        />
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -220,7 +242,9 @@ export default function Ballina() {
           accessibilityRole="link"
           accessibilityLabel="Kushtet e vizitës: çmimi, përgjegjësia dhe pëlqimi"
         >
-          <UrezaIcon name="shield" size={22} color={colors.teal} strokeWidth={2.2} />
+          <View style={styles.besimiIkona}>
+            <Ikona emri="miratuar" madhesia={20} ngjyra={colors.ok} />
+          </View>
           <View style={styles.flex}>
             <Text style={styles.besimiTitulli}>Miku i verifikuar · {CMIMI_TEKST} për vizitë</Text>
             <Text style={styles.besimiTeksti}>GPS, foto të drejtpërdrejta dhe zë. Lexo kushtet dhe pëlqimin.</Text>
@@ -241,7 +265,19 @@ function ShigjetaRrethi({ ngjyra = colors.white, sfondi = colors.petrol }: { ngj
   );
 }
 
-function Shifra({ icon, vlera, etiketa, onPress }: { icon: IconName; vlera: number; etiketa: string; onPress: () => void }) {
+function Shifra({
+  ikona,
+  toni,
+  vlera,
+  etiketa,
+  onPress,
+}: {
+  ikona: EmriIIkones;
+  toni: { fg: string; bg: string };
+  vlera: number;
+  etiketa: string;
+  onPress: () => void;
+}) {
   return (
     <Pressable
       style={({ pressed }) => [styles.shifra, pressed && styles.shtypur]}
@@ -249,8 +285,8 @@ function Shifra({ icon, vlera, etiketa, onPress }: { icon: IconName; vlera: numb
       accessibilityRole="button"
       accessibilityLabel={`${etiketa}: ${vlera}`}
     >
-      <View style={styles.shifraIkona}>
-        <UrezaIcon name={icon} size={18} color={colors.petrol} strokeWidth={2.2} />
+      <View style={[styles.shifraIkona, { backgroundColor: toni.bg }]}>
+        <Ikona emri={ikona} madhesia={18} ngjyra={toni.fg} />
       </View>
       <Text style={styles.shifraVlera}>{vlera}</Text>
       <Text style={styles.shifraEtiketa}>{etiketa}</Text>
@@ -258,48 +294,50 @@ function Shifra({ icon, vlera, etiketa, onPress }: { icon: IconName; vlera: numb
   );
 }
 
-// A big coloured card that starts a new request of one kind.
+// A card that starts a new request of one kind: a picture of what the Miku will see, the kind
+// with its icon, what is checked as small tags, and one clear button.
 function KartaEVeprimit({
-  icon,
+  ilustrim,
+  ikona,
   titulli,
-  teksti,
-  sfondi,
-  theksi,
+  pikat,
+  ngjyra,
   onPress,
 }: {
-  icon: IconName;
+  ilustrim: Ilustrim;
+  ikona: EmriIIkones;
   titulli: string;
-  teksti: string;
-  sfondi: string;
-  theksi: string;
+  pikat: string[];
+  ngjyra: string;
   onPress: () => void;
 }) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.veprimi, { backgroundColor: sfondi }, pressed && styles.shtypur]}
+      style={({ pressed }) => [styles.veprimi, pressed && styles.shtypur]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${titulli}. Kërko një vizitë.`}
+      accessibilityLabel={`${titulli}: ${pikat.join(", ")}. Kërko një vizitë.`}
     >
-      {/* soft rings in the corner, like the sun of the hero */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <Svg width="100%" height="100%" viewBox="0 0 160 190" preserveAspectRatio="xMaxYMin slice">
-          <Circle cx="150" cy="12" r="62" fill={theksi} fillOpacity={0.12} />
-          <Circle cx="150" cy="12" r="38" fill={theksi} fillOpacity={0.16} />
-          <Path d="M0 170 Q40 150 80 165 T160 158 V190 H0Z" fill="#FFFFFF" fillOpacity={0.07} />
-        </Svg>
+      <View style={styles.veprimiFoto}>
+        <PronaIlustrim lloji={ilustrim} />
+        <View style={[styles.veprimiIkona, { backgroundColor: ngjyra }]}>
+          <Ikona emri={ikona} madhesia={18} ngjyra={colors.white} />
+        </View>
       </View>
-      <View style={[styles.veprimiIkona, { backgroundColor: theksi }]}>
-        <UrezaIcon name={icon} size={24} color={sfondi} strokeWidth={2.3} />
-      </View>
-      <View style={styles.veprimiTekst}>
-        <Text style={styles.veprimiTitulli}>{titulli}</Text>
-        <Text style={styles.veprimiNen}>{teksti}</Text>
-      </View>
-      <View style={styles.veprimiFund}>
-        <Text style={styles.veprimiCta}>Kërko</Text>
-        <View style={styles.veprimiShigjeta}>
-          <UrezaIcon name="arrow" size={18} color={sfondi} strokeWidth={2.6} />
+      <View style={styles.veprimiTrupi}>
+        <Text style={styles.veprimiTitulli} numberOfLines={2}>
+          {titulli}
+        </Text>
+        <View style={styles.veprimiPikat}>
+          {pikat.map((p) => (
+            <Text key={p} style={styles.veprimiPika}>
+              {p}
+            </Text>
+          ))}
+        </View>
+        <View style={[styles.veprimiButoni, { backgroundColor: ngjyra }]}>
+          <Text style={styles.veprimiButoniTeksti}>Kërko</Text>
+          <Ikona emri="shigjeta" madhesia={14} ngjyra={colors.white} />
         </View>
       </View>
     </Pressable>
@@ -382,10 +420,9 @@ const styles = StyleSheet.create({
   shifrat: { flexDirection: "row", gap: 10 },
   shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija },
   shifraIkona: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    width: 34,
+    height: 34,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,
@@ -415,8 +452,23 @@ const styles = StyleSheet.create({
   njoftimTeksti: { color: "#8A5210", fontSize: 14, lineHeight: 19, fontWeight: "500" },
 
   karta: { backgroundColor: colors.white, borderRadius: 22, padding: 18, gap: 10, ...hija },
-  kartaKrye: { flexDirection: "row", alignItems: "center", gap: 14 },
-  miniatura: { width: 64, height: 64, borderRadius: 16, overflow: "hidden" },
+  kartaVizites: { backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija },
+  vizitaFoto: { height: 120 },
+  vizitaEtiketa: {
+    position: "absolute",
+    left: 12,
+    top: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    height: 28,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    backgroundColor: "rgba(14,47,60,0.72)",
+  },
+  vizitaEtiketaTeksti: { color: colors.white, fontSize: 11, fontWeight: "800", letterSpacing: 0.8 },
+  vizitaTrupi: { padding: 16, gap: 10 },
+  vizitaTitujt: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   kicker: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1.5 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   nen: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
@@ -433,23 +485,44 @@ const styles = StyleSheet.create({
   kartaFundTeksti: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   shigjeta: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
 
-  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800", marginBottom: 12 },
   veprimet: { flexDirection: "row", gap: 12 },
-  veprimi: { flex: 1, minHeight: 190, borderRadius: 22, padding: 16, overflow: "hidden", gap: 12 },
-  veprimiIkona: { width: 46, height: 46, borderRadius: 15, alignItems: "center", justifyContent: "center" },
-  veprimiTekst: { flex: 1, gap: 4 },
-  veprimiTitulli: { color: colors.white, fontSize: 18, lineHeight: 23, fontWeight: "800" },
-  veprimiNen: { color: colors.onHeroText, fontSize: 14, lineHeight: 19, fontWeight: "500" },
-  veprimiFund: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  veprimiCta: { color: colors.white, fontSize: 16, fontWeight: "800" },
-  veprimiShigjeta: {
+  veprimi: { flex: 1, backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija },
+  veprimiFoto: { height: 96 },
+  veprimiIkona: {
+    position: "absolute",
+    left: 12,
+    bottom: -16,
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.white,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 3,
+    borderColor: colors.white,
   },
+  veprimiTrupi: { paddingHorizontal: 12, paddingTop: 24, paddingBottom: 12, gap: 8, flex: 1 },
+  veprimiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 21, fontWeight: "800" },
+  veprimiPikat: { flexDirection: "row", flexWrap: "wrap", gap: 4, flex: 1 },
+  veprimiPika: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    fontWeight: "700",
+    backgroundColor: colors.background,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  veprimiButoni: {
+    marginTop: 4,
+    height: 40,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+  },
+  veprimiButoniTeksti: { color: colors.white, fontSize: 14, fontWeight: "800" },
 
   siKarta: { backgroundColor: "#E8F5F3", borderRadius: 22, padding: 16, gap: 14 },
   siRreshti: { flexDirection: "row" },
@@ -481,9 +554,6 @@ const styles = StyleSheet.create({
   siTitulli: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800", textAlign: "center" },
   siTeksti: { color: colors.textSecondary, fontSize: 13, lineHeight: 17, fontWeight: "500", textAlign: "center" },
 
-  krye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  link: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 12 },
-  linkText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   rrjedha: { marginHorizontal: -20 },
   rrjedhaBrenda: { paddingHorizontal: 20, paddingBottom: 12, gap: 12 },
   prona: { width: 170, backgroundColor: colors.white, borderRadius: 20, padding: 8, gap: 8, ...hija },
@@ -536,6 +606,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#CFE5DF",
     backgroundColor: colors.white,
+  },
+  besimiIkona: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.okBg,
+    alignItems: "center",
+    justifyContent: "center",
   },
   besimiTitulli: { color: colors.ink, fontSize: 15, lineHeight: 20, fontWeight: "800" },
   besimiTeksti: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },

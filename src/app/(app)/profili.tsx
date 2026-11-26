@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState, type ComponentRef, type RefObject } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
 
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { FletaModale } from "@/components/FletaModale";
@@ -8,6 +9,7 @@ import { KartaEProfilitTePunes } from "@/components/ProfiliIPunes";
 import { RreshtiNdezes } from "@/components/RreshtiNdezes";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
+import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { mbledhTeDhenat, ndajTeDhenat } from "@/lib/eksporti";
 import { hapatEProfilit, plotesimi } from "@/lib/plotesimi";
@@ -21,34 +23,27 @@ import { dataMeOre } from "@/lib/vizitat";
 // The settings are saved in the account (supabase/profili.sql); until that file is run they stay on
 // the phone, and the screen says so.
 
+// The name and phone fields, so a missing step in the completeness card can take the person
+// straight to the field (focusing it also scrolls it into view).
+type Fusha = ComponentRef<typeof TextInput>;
+type FushatEProfilit = { emriRef: RefObject<Fusha | null>; telefoniRef: RefObject<Fusha | null> };
+
 export default function Profili() {
-  const router = useRouter();
-  const { profili, burimi, rifresko } = useProfili();
+  const { profili, rifresko } = useProfili();
   const roli = profili?.roli ?? "klient";
+  const emriRef = useRef<Fusha>(null);
+  const telefoniRef = useRef<Fusha>(null);
 
   return (
     <EkraniMeHero kicker="LLOGARIA" title="Profili im" subtitle="Të dhënat dhe cilësimet e tua.">
       {profili ? (
         <>
-          <KartaEPlotesimit />
-          <KartaETeDhenave />
+          <KokaEProfilit />
+          <KartaEPlotesimit emriRef={emriRef} telefoniRef={telefoniRef} />
+          <KartaETeDhenave emriRef={emriRef} telefoniRef={telefoniRef} />
           {roli === "klient" ? <KartaENjoftimeve /> : null}
           {roli === "miku" ? <KartaEProfilitTePunes /> : null}
           <KartaEPrivatesise />
-
-          {roli !== "admin" ? (
-            <Pressable style={styles.rreshti} onPress={() => router.push("/roli")} accessibilityRole="button">
-              <View style={styles.rreshtiTekst}>
-                <Text style={styles.rreshtiTitulli}>Ndrysho rolin</Text>
-                <Text style={styles.rreshtiNen}>
-                  {roli === "klient" ? "Provo aplikacionin si Miku" : "Provo aplikacionin si Klient"} me të njëjtën
-                  llogari (prototip).
-                </Text>
-                {burimi === "demo" ? <Text style={styles.rreshtiNen}>Roli ruhet vetëm në këtë telefon.</Text> : null}
-              </View>
-              <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
-            </Pressable>
-          ) : null}
         </>
       ) : (
         <KartaPaProfil onProvo={() => void rifresko()} />
@@ -60,7 +55,7 @@ export default function Profili() {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Completeness
+// Header and completeness
 
 function inicialet(emri: string | null | undefined, email: string | null | undefined): string {
   const fjalet = (emri ?? "").trim().split(/\s+/).filter(Boolean);
@@ -69,7 +64,53 @@ function inicialet(emri: string | null | undefined, email: string | null | undef
   return (email ?? "?").charAt(0).toUpperCase();
 }
 
-function KartaEPlotesimit() {
+const ROLET: Record<"klient" | "miku" | "admin", { ikona: IconName; bg: string; fg: string }> = {
+  klient: { ikona: "user", bg: colors.ikonaBg, fg: colors.petrol },
+  miku: { ikona: "compass", bg: colors.ikonaBg, fg: colors.teal },
+  admin: { ikona: "key", bg: colors.kujdesBg, fg: colors.kujdes },
+};
+
+// The top of Profili: a round badge with the initials, the name and email, the role, and for a
+// Miku whom the Urëza team has verified, "I verifikuar".
+function KokaEProfilit() {
+  const { perdoruesi } = useSesioni();
+  const { profili } = useProfili();
+  const verifikimi = useVerifikimiIm();
+  const roli = profili?.roli ?? "klient";
+  const r = ROLET[roli];
+  const eVerifikuar = roli === "miku" && verifikimi.njohur && verifikimi.verifikuarAt !== null;
+
+  return (
+    <View style={[styles.karta, styles.koka]}>
+      <View style={styles.avatar} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <Text style={styles.avatarText}>{inicialet(profili?.emri, perdoruesi?.email)}</Text>
+      </View>
+      <View style={styles.kryeTekst}>
+        <Text style={styles.emri} numberOfLines={1} accessibilityRole="header">
+          {profili?.emri ?? perdoruesi?.email}
+        </Text>
+        <Text style={styles.email} numberOfLines={1}>
+          {perdoruesi?.email}
+        </Text>
+        <View style={styles.distinktivet}>
+          <View style={[styles.distinktiv, { backgroundColor: r.bg }]} accessible accessibilityLabel={`Roli: ${EMRAT_E_ROLEVE[roli]}`}>
+            <UrezaIcon name={r.ikona} size={14} color={r.fg} strokeWidth={2.4} />
+            <Text style={[styles.distinktivText, { color: r.fg }]}>{EMRAT_E_ROLEVE[roli]}</Text>
+          </View>
+          {eVerifikuar ? (
+            <View style={[styles.distinktiv, { backgroundColor: colors.okBg }]} accessible accessibilityLabel="I verifikuar nga ekipi i Urëzës">
+              <UrezaIcon name="shield" size={14} color={colors.ok} strokeWidth={2.4} />
+              <Text style={[styles.distinktivText, { color: colors.ok }]}>I verifikuar</Text>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function KartaEPlotesimit({ emriRef, telefoniRef }: FushatEProfilit) {
+  const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, cilesimet } = useProfili();
   const { pronat } = useDhenat();
@@ -85,48 +126,169 @@ function KartaEPlotesimit() {
   });
   const p = plotesimi(hapat);
 
+  const mungojne = hapat.filter((h) => !h.kryer);
+
   return (
-    <View style={styles.karta}>
-      <View style={styles.krye}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{inicialet(profili?.emri, perdoruesi?.email)}</Text>
-        </View>
+    <View style={[styles.karta, styles.hije]}>
+      <View style={styles.progresi}>
+        <UnazaEProgresit perqindja={p.perqindja} />
         <View style={styles.kryeTekst}>
-          <Text style={styles.emri} numberOfLines={1}>
-            {profili?.emri ?? perdoruesi?.email}
+          <Text style={styles.progresiTitulli}>
+            {p.perqindja === 100 ? "Profili është i plotë" : "Plotëso profilin"}
           </Text>
-          <Text style={styles.email} numberOfLines={1}>
-            {perdoruesi?.email}
+          <Text style={styles.ndihme}>
+            {p.kryer} nga {p.total} hapa të kryer.{p.perqindja === 100 ? " Faleminderit." : ""}
           </Text>
-          <Text style={styles.roli}>{EMRAT_E_ROLEVE[roli].toUpperCase()}</Text>
-          <View style={styles.foto}>
-            <Text style={styles.fotoText}>Ndrysho foton</Text>
-            <View style={styles.pill}>
-              <Text style={styles.pillText}>Së shpejti</Text>
-            </View>
-          </View>
         </View>
       </View>
 
-      <View style={styles.progresi}>
-        <View style={styles.progresiRresht}>
-          <Text style={styles.progresiTitulli}>Profili është {p.perqindja}% i plotë</Text>
-          <Text style={styles.progresiNumri}>
-            {p.kryer} nga {p.total}
-          </Text>
+      {mungojne.length > 0 ? (
+        <View>
+          {mungojne.map((h) => {
+            const shko = SHKO_TE_HAPI[h.etiketa];
+            const fusha = FUSHA_E_HAPIT[h.etiketa];
+            return (
+              <Rreshti
+                key={h.etiketa}
+                ikona={shko?.ikona ?? (fusha === "telefoni" ? "phone" : fusha === "emri" ? "user" : "plus")}
+                titulli={h.etiketa}
+                nentitulli={h.keshille}
+                onPress={
+                  shko
+                    ? () => router.navigate(shko.faqja)
+                    : fusha
+                      ? () => (fusha === "emri" ? emriRef : telefoniRef).current?.focus()
+                      : undefined
+                }
+              />
+            );
+          })}
         </View>
-        <View
-          style={styles.shiriti}
-          accessible
-          accessibilityRole="progressbar"
-          accessibilityLabel={`Profili është ${p.perqindja}% i plotë`}
-          accessibilityValue={{ min: 0, max: 100, now: p.perqindja }}
-        >
-          <View style={[styles.shiritiPlote, { width: `${p.perqindja}%` }]} />
-        </View>
-        <Text style={styles.ndihme}>{p.keshille ?? "Profili është i plotë. Faleminderit."}</Text>
+      ) : null}
+    </View>
+  );
+}
+
+// the steps that are filled in the form below (the email cannot be changed from the app)
+const FUSHA_E_HAPIT: Record<string, "emri" | "telefoni"> = { Emri: "emri", Telefoni: "telefoni" };
+
+// the steps that are filled on another screen
+const SHKO_TE_HAPI: Record<string, { faqja: "/pronat" | "/harta"; ikona: IconName }> = {
+  Prona: { faqja: "/pronat", ikona: "houses" },
+  "Vendndodhja e pronës": { faqja: "/harta", ikona: "pin" },
+};
+
+// The percentage as a ring (react-native-svg): a light track and a teal arc from the top.
+function UnazaEProgresit({ perqindja }: { perqindja: number }) {
+  const madhesia = 76;
+  const trashesia = 8;
+  const r = (madhesia - trashesia) / 2;
+  const perimetri = 2 * Math.PI * r;
+  return (
+    <View
+      style={{ width: madhesia, height: madhesia }}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel={`Profili është ${perqindja}% i plotë`}
+      accessibilityValue={{ min: 0, max: 100, now: perqindja }}
+    >
+      <Svg width={madhesia} height={madhesia}>
+        <Circle cx={madhesia / 2} cy={madhesia / 2} r={r} stroke={colors.line} strokeWidth={trashesia} fill="none" />
+        <Circle
+          cx={madhesia / 2}
+          cy={madhesia / 2}
+          r={r}
+          stroke={colors.teal}
+          strokeWidth={trashesia}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={`${perimetri} ${perimetri}`}
+          strokeDashoffset={perimetri * (1 - perqindja / 100)}
+          transform={`rotate(-90 ${madhesia / 2} ${madhesia / 2})`}
+        />
+      </Svg>
+      <View style={styles.unazaMes} pointerEvents="none">
+        <Text style={styles.unazaNumri}>{perqindja}%</Text>
       </View>
     </View>
+  );
+}
+
+// ---------------------------------------------------------------------------------------------
+// Rows and group titles: every row has an icon on the left and the text; a row that opens
+// something has an arrow on the right.
+
+function TitulliIGrupit({ ikona, titulli }: { ikona: IconName; titulli: string }) {
+  return (
+    <View style={styles.grupiKrye}>
+      <View style={styles.grupiIkona}>
+        <UrezaIcon name={ikona} size={20} color={colors.petrol} strokeWidth={2.2} />
+      </View>
+      <Text style={styles.titulli} accessibilityRole="header">
+        {titulli}
+      </Text>
+    </View>
+  );
+}
+
+function Rreshti({
+  ikona,
+  titulli,
+  nentitulli,
+  ngjyra = colors.ink,
+  shenja,
+  duke = false,
+  onPress,
+}: {
+  ikona: IconName;
+  titulli: string;
+  nentitulli?: string;
+  ngjyra?: string;
+  shenja?: string; // a small "✓ …" chip under the text, e.g. "Gjithmonë"; the row keeps its full width
+  duke?: boolean;
+  onPress?: () => void;
+}) {
+  const etiketa = [titulli, nentitulli, shenja].filter(Boolean).join(". ");
+  const brenda = (
+    <>
+      <View style={styles.rreshtiIkona}>
+        <UrezaIcon name={ikona} size={20} color={ngjyra === colors.ink ? colors.petrol : ngjyra} strokeWidth={2.2} />
+      </View>
+      <View style={styles.lidhjaTekst}>
+        <Text style={[styles.rreshtiTitulli, { color: ngjyra }]}>{titulli}</Text>
+        {nentitulli ? <Text style={styles.ndihme}>{nentitulli}</Text> : null}
+        {shenja ? (
+          <View style={styles.aktive}>
+            <UrezaIcon name="check" size={14} color={colors.ok} strokeWidth={2.8} />
+            <Text style={styles.aktiveText}>{shenja}</Text>
+          </View>
+        ) : null}
+      </View>
+      {duke ? (
+        <ActivityIndicator color={colors.petrol} />
+      ) : onPress ? (
+        <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+      ) : null}
+    </>
+  );
+  if (!onPress) {
+    return (
+      <View style={styles.rreshti} accessible accessibilityLabel={etiketa}>
+        {brenda}
+      </View>
+    );
+  }
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.rreshti, (duke || pressed) && styles.shtypur]}
+      onPress={onPress}
+      disabled={duke}
+      accessibilityRole="button"
+      accessibilityLabel={titulli}
+      accessibilityHint={nentitulli}
+    >
+      {brenda}
+    </Pressable>
   );
 }
 
@@ -135,7 +297,8 @@ function KartaEPlotesimit() {
 
 type Statusi = { ok: true } | { gabim: string } | null;
 
-function KartaETeDhenave() {
+function KartaETeDhenave({ emriRef, telefoniRef }: FushatEProfilit) {
+  const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, burimi, cilesimet, cilesimetNeLlogari, ruajTeDhenat } = useProfili();
   const revealSoon = useRevealOnFocus();
@@ -193,10 +356,8 @@ function KartaETeDhenave() {
   }
 
   return (
-    <View style={styles.karta}>
-      <Text style={styles.titulli} accessibilityRole="header">
-        Të dhënat e mia
-      </Text>
+    <View style={[styles.karta, styles.hije]}>
+      <TitulliIGrupit ikona="user" titulli="Të dhënat" />
 
       {!cilesimetNeLlogari ? (
         <View style={styles.shenim}>
@@ -217,6 +378,7 @@ function KartaETeDhenave() {
               <UrezaIcon name="user" size={22} color={colors.textSecondary} />
             </View>
             <TextInput
+              ref={emriRef}
               style={[styles.input, fokus === "emri" && styles.inputFokus, gabimEmri ? styles.inputGabim : null]}
               value={emri}
               onChangeText={(t) => {
@@ -229,7 +391,7 @@ function KartaETeDhenave() {
                 revealSoon();
               }}
               onBlur={() => setFokus(null)}
-              placeholder="p.sh. Flutura Hyseni"
+              placeholder="p.sh. Arta Berisha"
               placeholderTextColor="#8FA3AC"
               maxLength={40}
               autoCapitalize="words"
@@ -269,6 +431,7 @@ function KartaETeDhenave() {
               <UrezaIcon name="phone" size={22} color={colors.textSecondary} />
             </View>
             <TextInput
+              ref={telefoniRef}
               style={[
                 styles.input,
                 fokus === "telefoni" && styles.inputFokus,
@@ -361,6 +524,15 @@ function KartaETeDhenave() {
         ) : null}
         {statusi && "gabim" in statusi ? <Text style={styles.gabim}>{statusi.gabim}</Text> : null}
       </View>
+
+      {profili && profili.roli !== "admin" ? (
+        <Rreshti
+          ikona="sparkle"
+          titulli="Ndrysho rolin"
+          nentitulli={`${profili.roli === "klient" ? "Provo aplikacionin si Miku" : "Provo aplikacionin si Klient"} me të njëjtën llogari (prototip).${burimi === "demo" ? " Roli ruhet vetëm në këtë telefon." : ""}`}
+          onPress={() => router.push("/roli")}
+        />
+      ) : null}
     </View>
   );
 }
@@ -372,11 +544,13 @@ type FushaENjoftimit = "njoftoPranimin" | "njoftoRaportin" | "njoftoKujtesen";
 
 // A switch that is saved at once: it flips right away and goes back when the save fails.
 function NdezesIRuajtur({
+  ikona,
   titulli,
   nentitulli,
   fusha,
   onGabim,
 }: {
+  ikona: IconName;
   titulli: string;
   nentitulli: string;
   fusha: FushaENjoftimit;
@@ -396,31 +570,32 @@ function NdezesIRuajtur({
     if (gabim) onGabim(gabim);
   }
 
-  return <RreshtiNdezes titulli={titulli} nentitulli={nentitulli} vlera={vlera} onNdrysho={ndrysho} />;
+  return <RreshtiNdezes ikona={ikona} titulli={titulli} nentitulli={nentitulli} vlera={vlera} onNdrysho={ndrysho} />;
 }
 
 function KartaENjoftimeve() {
   const [gabim, setGabim] = useState<string | null>(null);
   return (
-    <View style={styles.karta}>
-      <Text style={styles.titulli} accessibilityRole="header">
-        Njoftimet
-      </Text>
+    <View style={[styles.karta, styles.hije]}>
+      <TitulliIGrupit ikona="bell" titulli="Njoftimet" />
       <Text style={styles.ndihme}>Njoftimet nuk dërgohen ende. Zgjedhjet ruhen që të punojnë kur të aktivizohen.</Text>
       <View style={styles.listaNdezesish}>
         <NdezesIRuajtur
+          ikona="check"
           titulli="Kur Miku e pranon detyrën"
           nentitulli="Njoftim menjëherë."
           fusha="njoftoPranimin"
           onGabim={setGabim}
         />
         <NdezesIRuajtur
+          ikona="doc"
           titulli="Kur raporti është gati"
           nentitulli="Pas çdo vizite."
           fusha="njoftoRaportin"
           onGabim={setGabim}
         />
         <NdezesIRuajtur
+          ikona="clock"
           titulli="Kujtesë para vizitës"
           nentitulli="Një ditë më parë."
           fusha="njoftoKujtesen"
@@ -434,45 +609,6 @@ function KartaENjoftimeve() {
 
 // ---------------------------------------------------------------------------------------------
 // Privacy
-
-function RreshtiLidhje({
-  ikona,
-  tekst,
-  nentitulli,
-  ngjyra,
-  chevron = false,
-  duke = false,
-  onPress,
-}: {
-  ikona: IconName;
-  tekst: string;
-  nentitulli?: string;
-  ngjyra: string;
-  chevron?: boolean;
-  duke?: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      style={[styles.lidhja, duke && styles.disabled]}
-      onPress={onPress}
-      disabled={duke}
-      accessibilityRole="button"
-      accessibilityLabel={tekst}
-    >
-      <UrezaIcon name={ikona} size={22} color={ngjyra} />
-      <View style={styles.lidhjaTekst}>
-        <Text style={[styles.lidhjaText, { color: ngjyra }]}>{tekst}</Text>
-        {nentitulli ? <Text style={styles.ndihme}>{nentitulli}</Text> : null}
-      </View>
-      {duke ? (
-        <ActivityIndicator color={ngjyra} />
-      ) : chevron ? (
-        <UrezaIcon name="chevron" size={18} color={ngjyra} />
-      ) : null}
-    </Pressable>
-  );
-}
 
 function KartaEPrivatesise() {
   const router = useRouter();
@@ -514,59 +650,45 @@ function KartaEPrivatesise() {
   }
 
   return (
-    <View style={styles.karta}>
-      <Text style={styles.titulli} accessibilityRole="header">
-        Privatësia dhe pëlqimi
-      </Text>
+    <View style={[styles.karta, styles.hije]}>
+      <TitulliIGrupit ikona="shield" titulli="Privatësia dhe pëlqimi" />
 
-      <View style={styles.listaNdezesish}>
-        {roli === "klient" ? (
-          <Pressable
-            style={styles.info}
+      <View>
+        {roli !== "admin" ? (
+          <Rreshti
+            ikona="doc"
+            titulli={roli === "miku" ? "Kushtet dhe kontrata" : "Kushtet e vizitës dhe pëlqimi"}
+            nentitulli={
+              roli === "miku"
+                ? "Kushtet e punës, përgjegjësia për dëmin dhe kontrata që pranon para çdo vizite."
+                : "Çmimi, përgjegjësia dhe pëlqimi me shkrim, që e jep në çdo kërkesë (edhe për prindërit)."
+            }
             onPress={() => router.push("/kushtet")}
-            accessibilityRole="link"
-            accessibilityLabel="Kushtet e vizitës dhe pëlqimi"
-          >
-            <View style={styles.lidhjaTekst}>
-              <Text style={styles.infoTitulli}>Kushtet e vizitës dhe pëlqimi</Text>
-              <Text style={styles.ndihme}>
-                Çmimi, përgjegjësia dhe pëlqimi me shkrim, që e jep në çdo kërkesë (edhe për prindërit).
-              </Text>
-            </View>
-            <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
-          </Pressable>
+          />
         ) : null}
 
         {roli !== "admin" ? (
-          <View style={styles.info}>
-            <View style={styles.lidhjaTekst}>
-              <Text style={styles.infoTitulli}>
-                {roli === "klient" ? "Fotot ruhen vetëm në Odën time" : "Fotot e vizitave i sheh vetëm klienti"}
-              </Text>
-              <Text style={styles.ndihme}>
-                {roli === "klient"
-                  ? "Përveç teje, i sheh Miku që i bëri dhe, vetëm kur kundërshton, admini."
-                  : "Dhe ti, që i bëre. Admini vetëm kur klienti kundërshton."}
-              </Text>
-            </View>
-            <View style={styles.aktive}>
-              <UrezaIcon name="check" size={14} color="#1E6B3E" strokeWidth={2.8} />
-              <Text style={styles.aktiveText}>Gjithmonë</Text>
-            </View>
-          </View>
+          <Rreshti
+            ikona="eye"
+            titulli={roli === "klient" ? "Fotot ruhen vetëm në Odën time" : "Fotot e vizitave i sheh vetëm klienti"}
+            nentitulli={
+              roli === "klient"
+                ? "Përveç teje, i sheh Miku që i bëri dhe, vetëm kur kundërshton, admini."
+                : "Dhe ti, që i bëre. Admini vetëm kur klienti kundërshton."
+            }
+            shenja="Gjithmonë"
+          />
         ) : null}
-      </View>
 
-      <RreshtiLidhje
-        ikona="download"
-        tekst="Shkarko të dhënat e mia"
-        nentitulli="Profili, pronat dhe vizitat në një skedar teksti."
-        ngjyra={colors.petrol}
-        chevron
-        duke={duke}
-        onPress={shkarko}
-      />
-      {gabimShkarkimi ? <Text style={styles.gabim}>{gabimShkarkimi}</Text> : null}
+        <Rreshti
+          ikona="download"
+          titulli="Shkarko të dhënat e mia"
+          nentitulli="Profili, pronat dhe vizitat në një skedar teksti."
+          duke={duke}
+          onPress={shkarko}
+        />
+        {gabimShkarkimi ? <Text style={styles.gabim}>{gabimShkarkimi}</Text> : null}
+      </View>
 
       {roli !== "admin" ? (
         fshirjaKerkuar ? (
@@ -591,10 +713,11 @@ function KartaEPrivatesise() {
             </Pressable>
           </View>
         ) : (
-          <RreshtiLidhje
+          <Rreshti
             ikona="trash"
-            tekst="Fshij llogarinë"
-            ngjyra="#B3261E"
+            titulli="Fshij llogarinë"
+            nentitulli="Dërgon kërkesë te ekipi; të pyesim edhe një herë."
+            ngjyra={colors.error}
             onPress={() => {
               setGabimFshirja(null);
               setKonfirmim(true);
@@ -683,23 +806,34 @@ function DilButon() {
       accessibilityLabel="Dil nga llogaria"
     >
       {duke ? (
-        <ActivityIndicator color={colors.petrol} />
+        <ActivityIndicator color={colors.error} />
       ) : (
         <>
-          <Text style={styles.dilText}>Dil nga llogaria</Text>
-          <UrezaIcon name="logout" size={22} color={colors.petrol} strokeWidth={2.3} />
+          <UrezaIcon name="logout" size={22} color={colors.error} strokeWidth={2.3} />
+          <Text style={styles.dilText}>Dil</Text>
         </>
       )}
     </Pressable>
   );
 }
 
+// the light shadow the cards on Ballina, Oda and Pronat use
+const hija = {
+  shadowColor: "#0B2530",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.07,
+  shadowRadius: 12,
+  elevation: 2,
+};
+
 const styles = StyleSheet.create({
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
+  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 12 },
+  hije: hija,
+  shtypur: { opacity: 0.85 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
 
-  // completeness
-  krye: { flexDirection: "row", alignItems: "center", gap: 16 },
+  // header
+  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija },
   avatar: {
     width: 72,
     height: 72,
@@ -712,17 +846,22 @@ const styles = StyleSheet.create({
   kryeTekst: { flex: 1, minWidth: 0 },
   emri: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   email: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontWeight: "500" },
-  roli: { color: colors.teal, fontSize: 12, lineHeight: 16, fontWeight: "700", letterSpacing: 1, marginTop: 2 },
-  foto: { minHeight: 40, flexDirection: "row", alignItems: "center", gap: 8 },
-  fotoText: { color: colors.textSecondary, fontSize: 15, fontWeight: "800" },
-  pill: { backgroundColor: "#FCEFD2", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 2 },
-  pillText: { color: "#7A4A06", fontSize: 12, fontWeight: "700" },
-  progresi: { gap: 8 },
-  progresiRresht: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
-  progresiTitulli: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: "700", flexShrink: 1 },
-  progresiNumri: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "700" },
-  shiriti: { height: 10, borderRadius: 5, backgroundColor: "#E3EAF0", overflow: "hidden" },
-  shiritiPlote: { height: 10, borderRadius: 5, backgroundColor: "#1F7A68" },
+  distinktivet: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
+  distinktiv: {
+    height: 28,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  distinktivText: { fontSize: 13, fontWeight: "800" },
+
+  // completeness
+  progresi: { flexDirection: "row", alignItems: "center", gap: 16 },
+  progresiTitulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontWeight: "800" },
+  unazaMes: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center" },
+  unazaNumri: { color: colors.ink, fontSize: 18, fontWeight: "800" },
   ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
   ndihmeMadhe: { color: colors.textSecondary, fontSize: 16, lineHeight: 24, fontWeight: "500" },
 
@@ -767,7 +906,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 4,
   },
-  gjuhaAktive: { backgroundColor: "#E8F5F3" },
+  gjuhaAktive: { backgroundColor: colors.ikonaBg },
   gjuhaText: { color: colors.textSecondary, fontSize: 15, fontWeight: "600" },
   gjuhaTextAktive: { color: colors.petrol, fontWeight: "800" },
   primary: {
@@ -791,7 +930,7 @@ const styles = StyleSheet.create({
   dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
   disabled: { opacity: 0.5 },
   rresht: { flexDirection: "row", alignItems: "center", gap: 8 },
-  ok: { color: "#1E6B3E", fontSize: 15, lineHeight: 20, fontWeight: "700" },
+  ok: { color: colors.ok, fontSize: 15, lineHeight: 20, fontWeight: "700" },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontWeight: "600" },
   shenim: {
     flexDirection: "row",
@@ -803,59 +942,66 @@ const styles = StyleSheet.create({
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontWeight: "600" },
 
-  // switches and privacy
+  // groups and rows
   listaNdezesish: { marginTop: 2 },
-  info: { minHeight: 72, flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 8 },
-  infoTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700" },
+  grupiKrye: { flexDirection: "row", alignItems: "center", gap: 10 },
+  grupiIkona: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   aktive: {
+    alignSelf: "flex-start",
+    marginTop: 6,
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "#E4F6EB",
+    backgroundColor: colors.okBg,
     borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  aktiveText: { color: "#1E6B3E", fontSize: 12, fontWeight: "700" },
-  lidhja: {
+  aktiveText: { color: colors.ok, fontSize: 12, fontWeight: "700" },
+  lidhjaTekst: { flex: 1, minWidth: 0 },
+  kerkesa: { gap: 6, padding: 14, borderRadius: 16, backgroundColor: colors.kujdesBg },
+  kerkesaTitulli: { color: colors.kujdes, fontSize: 16, lineHeight: 22, fontWeight: "800" },
+  kerkesaText: { color: colors.kujdes, fontSize: 15, lineHeight: 22, fontWeight: "500" },
+
+  // one row: icon on the left, the text, an arrow on the right when it opens something
+  rreshti: {
     minHeight: 64,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: "#EDF1F4",
+    borderTopColor: colors.line,
   },
-  lidhjaTekst: { flex: 1, minWidth: 0 },
-  lidhjaText: { fontSize: 16, lineHeight: 22, fontWeight: "700" },
-  kerkesa: { gap: 6, padding: 14, borderRadius: 16, backgroundColor: "#FFF2DE" },
-  kerkesaTitulli: { color: "#8A5210", fontSize: 16, lineHeight: 22, fontWeight: "800" },
-  kerkesaText: { color: "#8A5210", fontSize: 15, lineHeight: 22, fontWeight: "500" },
-
-  // the rest of the screen
-  rreshti: {
-    minHeight: 72,
-    flexDirection: "row",
+  rreshtiIkona: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
-    gap: 12,
-    padding: 16,
-    backgroundColor: colors.white,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E3EAF0",
+    justifyContent: "center",
   },
-  rreshtiTekst: { flex: 1, gap: 2 },
-  rreshtiTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  rreshtiNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
+  rreshtiTitulli: { fontSize: 16, lineHeight: 22, fontWeight: "700" },
+
+  // sign out: set apart, soft red, not a strong red button
   dil: {
     height: 56,
+    marginTop: 8,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: colors.inputBorder,
-    backgroundColor: colors.white,
+    borderColor: colors.errorLine,
+    backgroundColor: colors.errorBg,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
-  dilText: { color: colors.petrol, fontSize: 17, fontWeight: "700" },
+  dilText: { color: colors.error, fontSize: 17, fontWeight: "800" },
 });
