@@ -27,6 +27,8 @@ const IKONAT = {
   shto: { ios: "plus", android: "add", rezerve: "plus" },
   kujdes: { ios: "exclamationmark.circle.fill", android: "error", rezerve: "warning" },
   gps: { ios: "location.fill", android: "location_on", rezerve: "pin" },
+  foto: { ios: "camera.fill", android: "photo_camera", rezerve: "camera" },
+  ze: { ios: "waveform", android: "graphic_eq", rezerve: "mic" },
   ditari: { ios: "book.fill", android: "menu_book", rezerve: "book" },
   detyrat: { ios: "checklist", android: "checklist", rezerve: "list" },
 } as const satisfies Record<string, { ios: Extract<Emri, string>; android: string; rezerve: IconName }>;

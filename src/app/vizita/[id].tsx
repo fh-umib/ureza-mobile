@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -8,8 +9,8 @@ import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { PermbledhjaERaportit, VendimiIRaportit } from "@/components/RaportiVizites";
 import { SeShpejti } from "@/components/SeShpejti";
 import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
-import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
+import { DeshmiteShkurt, KartaEMikut, StatusiIGjalle } from "@/components/VizitaBesimi";
 import { colors } from "@/constants/ureza";
 import { Kutia } from "@/components/Kutia";
 import { useMikuIVerifikuar } from "@/lib/admini";
@@ -102,6 +103,7 @@ export default function DetajetEVizites() {
       setKonfirmo(false);
       return;
     }
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
   }
 
@@ -116,6 +118,7 @@ export default function DetajetEVizites() {
       setGabim(mesazh);
       return;
     }
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push({ pathname: "/deshmia/[id]", params: { id: vizita.id } });
   }
 
@@ -136,7 +139,10 @@ export default function DetajetEVizites() {
           return (
             <Pressable
               key={t.vlera}
-              onPress={() => setTab(t.vlera)}
+              onPress={() => {
+                if (t.vlera !== tab) void Haptics.selectionAsync();
+                setTab(t.vlera);
+              }}
               style={[styles.tab, aktiv && styles.tabAktiv]}
               accessibilityRole="tab"
               accessibilityState={{ selected: aktiv }}
@@ -156,10 +162,9 @@ export default function DetajetEVizites() {
             </View>
           ) : null}
 
-          <View style={styles.karta}>
-            <StatusiChip statusi={vizita.statusi} />
-            <Text style={styles.statusiTeksti}>{tekstiIStatusit}</Text>
-          </View>
+          {/* trust, in order: who comes, what is happening now, then the proof */}
+          {!eMiku ? <KartaEMikut emri={vizita.mikuEmri} verifikuar={mikuVerifikuar} /> : null}
+          <StatusiIGjalle statusi={vizita.statusi} teksti={tekstiIStatusit} />
 
           {raportiGati ? <PermbledhjaERaportit vizita={vizita} onShikoDeshmite={() => setTab("deshmi")} /> : null}
 
@@ -168,13 +173,7 @@ export default function DetajetEVizites() {
             <Text style={styles.udhezime}>{vizita.udhezime}</Text>
             <Rresht etiketa="Lloji" vlera={titulliIVizites(vizita.lloji)} />
             <Rresht etiketa="Data" vlera={dataEPlote(vizita.data)} />
-            <Rresht etiketa="Prona" vlera={prona?.emri ?? "Prona"} />
-            <Rresht
-              etiketa="Miku"
-              vlera={vizita.mikuEmri ?? "Pa caktuar ende"}
-              fundit
-              distinktiv={!eMiku && mikuVerifikuar ? "I verifikuar nga Urëza" : undefined}
-            />
+            <Rresht etiketa="Prona" vlera={prona?.emri ?? "Prona"} fundit />
           </View>
 
           <KartaEKontrates vizitaId={vizita.id} />
@@ -212,26 +211,7 @@ export default function DetajetEVizites() {
           ) : null}
 
           {/* while the report waits for a decision, "Shiko dëshmitë" is on the report card above */}
-          {!raportiGati ? (
-            <View style={styles.karta}>
-              <Text style={styles.titulli}>Dëshmitë</Text>
-              {dergoi ? (
-                <>
-                  <Text style={styles.tekst}>GPS, foto dhe shënim zanor nga vizita.</Text>
-                  <Pressable style={styles.lidhje} onPress={() => setTab("deshmi")} accessibilityRole="button">
-                    <Text style={styles.lidhjeText}>Shiko dëshmitë</Text>
-                    <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-                  </Pressable>
-                </>
-              ) : (
-                <Text style={styles.tekst}>
-                  {eMiku
-                    ? "Vendndodhja GPS, fotot dhe shënimi zanor i dërgohen klientit kur ta kryesh vizitën."
-                    : "Vendndodhja GPS, fotot dhe shënimi zanor vijnë këtu kur Miku ta kryejë vizitën."}
-                </Text>
-              )}
-            </View>
-          ) : null}
+          {!raportiGati ? <DeshmiteShkurt gati={dergoi} onHap={() => setTab("deshmi")} /> : null}
 
           {!eMiku ? <VendimiIRaportit vizita={vizita} admin={eAdmin} /> : null}
 
@@ -311,8 +291,10 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
     setDuke(false);
     if (mesazh) {
       setGabim(mesazh);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onPranuar();
   }
 
@@ -539,7 +521,6 @@ const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontWeight: "500" },
-  statusiTeksti: { color: colors.ink, fontSize: 17, lineHeight: 25, fontWeight: "500" },
   udhezime: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "500", marginBottom: 6 },
   rreshti: { minHeight: 52, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
@@ -566,8 +547,6 @@ const styles = StyleSheet.create({
   joText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
   disabled: { opacity: 0.6 },
   ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500", textAlign: "center" },
-  lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
-  lidhjeText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
   primary: { height: 56, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },
   primaryText: { color: colors.white, fontSize: 17, fontWeight: "700" },
   sukses: {
