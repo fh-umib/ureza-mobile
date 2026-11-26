@@ -28,3 +28,25 @@ export const colors = {
   // days that already have a visit in the calendar
   vizita: "#C9302C",
 };
+
+// Shared shape tokens, so every card, button and chip uses the same radius and shadow.
+export const rrezja = { karta: 22, kartaVogel: 18, butoni: 16, chip: 14, ikona: 12 } as const;
+
+export const hija = {
+  // cards on the light background: a soft, low shadow
+  karta: {
+    shadowColor: "#0B2530",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 2,
+  },
+  // things that float above the screen (toasts)
+  larte: {
+    shadowColor: "#0B2530",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 8,
+  },
+} as const;
