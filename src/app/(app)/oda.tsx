@@ -7,6 +7,7 @@ import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { Ikona, type EmriIIkones } from "@/components/Ikona";
 import { GrafikuIMuajve, ShiritiIStatuseve, type MuajiIGrafikut } from "@/components/OdaGrafiket";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
+import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { colors } from "@/constants/ureza";
@@ -348,17 +349,6 @@ export default function Oda() {
   );
 }
 
-function Seksioni({ ikona, titulli }: { ikona: EmriIIkones; titulli: string }) {
-  return (
-    <View style={styles.seksioni}>
-      <Ikona emri={ikona} madhesia={20} ngjyra={colors.teal} />
-      <Text style={styles.seksioniTitulli} accessibilityRole="header">
-        {titulli}
-      </Text>
-    </View>
-  );
-}
-
 function Shifra({ ikona, vlera, etiketa }: { ikona: EmriIIkones; vlera: string; etiketa: string }) {
   return (
     <View style={styles.shifra} accessible accessibilityLabel={`${etiketa}: ${vlera}`}>
@@ -574,9 +564,7 @@ const styles = StyleSheet.create({
   shifraVlera: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: "800" },
   shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontWeight: "600" },
 
-  // section titles and cards
-  seksioni: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 12 },
-  seksioniTitulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  // cards
   karta: { backgroundColor: colors.white, borderRadius: 22, paddingHorizontal: 14, ...hija },
   kartaStat: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
   kartaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "800" },

@@ -5,8 +5,9 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { FletaModale } from "@/components/FletaModale";
+import { Ikona, type EmriIIkones } from "@/components/Ikona";
 import { ditePara, PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
-import { UrezaIcon } from "@/components/UrezaIcon";
+import { Seksioni } from "@/components/Seksioni";
 import { VendndodhjaFusha } from "@/components/VendndodhjaFusha";
 import { Ditari } from "@/components/Ditari";
 import { colors } from "@/constants/ureza";
@@ -14,10 +15,10 @@ import { useDhenat, type RezultatiShtimit } from "@/lib/dhenat";
 import { gjejQytetin, type Koordinata } from "@/lib/gjeo";
 import type { Lloji, Prona } from "@/lib/pronat";
 
-const LLOJET: { vlera: Lloji; emri: string }[] = [
-  { vlera: "shtepi", emri: "Shtëpi" },
-  { vlera: "prindert", emri: "Prindërit" },
-  { vlera: "toke", emri: "Tokë" },
+const LLOJET: { vlera: Lloji; emri: string; ikona: EmriIIkones }[] = [
+  { vlera: "shtepi", emri: "Shtëpi", ikona: "shtepi" },
+  { vlera: "prindert", emri: "Prindërit", ikona: "prindert" },
+  { vlera: "toke", emri: "Tokë", ikona: "toke" },
 ];
 
 const DITE_PA_KONTROLL = 45;
@@ -79,6 +80,8 @@ export default function Pronat() {
         </Hyrje>
       ) : null}
 
+      <Seksioni ikona="pronat" titulli="Pronat e tua" numri={pronat.length > 0 ? pronat.length : undefined} />
+
       {burimi === "supabase" && pronat.length === 0 ? (
         <View style={styles.bosh}>
           <Text style={styles.boshTitle}>Ende nuk ke asnjë pronë</Text>
@@ -111,34 +114,38 @@ export default function Pronat() {
           accessibilityLabel="Shto pronë"
         >
           <View style={styles.shtoRrethi}>
-            <UrezaIcon name="plus" size={26} color={colors.white} strokeWidth={2.6} />
+            <Ikona emri="shto" madhesia={24} ngjyra={colors.white} />
           </View>
           <View style={styles.flex}>
-            <Text style={styles.shtoText}>Shto pronë</Text>
-            <Text style={styles.shtoNen}>Shtëpi, tokë ose prindërit</Text>
+            <Text style={styles.shtoText}>Shto një pronë</Text>
+            <Text style={styles.shtoNen}>Shtëpi, tokë, ose shtëpia e prindërve</Text>
           </View>
-          <UrezaIcon name="chevron" size={20} color={colors.petrol} strokeWidth={2.4} />
+          <Ikona emri="shigjeta" madhesia={18} ngjyra={colors.petrol} />
         </Pressable>
       </Hyrje>
-
-      <Ditari onShikoTeGjitha={() => router.navigate("/oda")} />
 
       <Pressable
         style={({ pressed }) => [styles.detyrat, pressed && styles.shtypur]}
         onPress={() => router.push("/detyrat")}
         accessibilityRole="button"
+        accessibilityLabel="Detyrat: punët që duhen bërë për pronat e tua"
       >
         <View style={styles.detyratIkona}>
-          <UrezaIcon name="list" size={20} color={colors.teal} strokeWidth={2.4} />
+          <Ikona emri="detyrat" madhesia={20} ngjyra={colors.teal} />
         </View>
         <View style={styles.detyratTekst}>
           <Text style={styles.detyratTitulli}>Detyrat</Text>
           <Text style={styles.detyratNen}>Punët që duhen bërë për pronat e tua</Text>
         </View>
-        <View style={styles.shigjeta}>
-          <UrezaIcon name="arrow" size={16} color={colors.white} strokeWidth={2.6} />
-        </View>
+        <Ikona emri="shigjeta" madhesia={18} ngjyra={colors.petrol} />
       </Pressable>
+
+      <Seksioni
+        ikona="ditari"
+        titulli="Ditari i kujdesit"
+        lidhja={{ etiketa: "Te Oda", onPress: () => router.navigate("/oda") }}
+      />
+      <Ditari />
 
       <ShtoPronen hapur={hapur} mbyll={() => setHapur(false)} shto={shto} onLajmerim={setLajmerim} />
     </EkraniMeHero>
@@ -245,6 +252,7 @@ function ShtoPronen({
                 accessibilityRole="button"
                 accessibilityState={{ selected: zgjedhur }}
               >
+                <Ikona emri={l.ikona} madhesia={16} ngjyra={zgjedhur ? colors.white : colors.petrol} />
                 <Text style={[styles.chipText, zgjedhur && styles.chipTextZgjedhur]}>{l.emri}</Text>
               </Pressable>
             );
@@ -286,17 +294,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    padding: 16,
+    padding: 14,
     borderRadius: 22,
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderColor: "#9FB6C0",
-    backgroundColor: "#F9FCFD",
+    backgroundColor: colors.ikonaBg,
+    borderWidth: 1,
+    borderColor: "rgba(23,85,104,0.14)",
   },
   shtoRrethi: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: 16,
     backgroundColor: colors.petrol,
     alignItems: "center",
     justifyContent: "center",
@@ -312,24 +319,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     shadowColor: "#0B2530",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 2,
   },
   detyratIkona: {
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: "#E8F5F3",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  shigjeta: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.petrol,
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -354,7 +353,9 @@ const styles = StyleSheet.create({
   chips: { flexDirection: "row", gap: 8 },
   chip: {
     minHeight: 44,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
+    flexDirection: "row",
+    gap: 6,
     borderRadius: 22,
     borderWidth: 1.5,
     borderColor: colors.inputBorder,

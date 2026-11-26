@@ -26,6 +26,9 @@ const IKONAT = {
   shigjeta: { ios: "chevron.right", android: "chevron_right", rezerve: "chevron" },
   shto: { ios: "plus", android: "add", rezerve: "plus" },
   kujdes: { ios: "exclamationmark.circle.fill", android: "error", rezerve: "warning" },
+  gps: { ios: "location.fill", android: "location_on", rezerve: "pin" },
+  ditari: { ios: "book.fill", android: "menu_book", rezerve: "book" },
+  detyrat: { ios: "checklist", android: "checklist", rezerve: "list" },
 } as const satisfies Record<string, { ios: Extract<Emri, string>; android: string; rezerve: IconName }>;
 
 export type EmriIIkones = keyof typeof IKONAT;

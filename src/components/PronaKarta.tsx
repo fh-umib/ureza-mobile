@@ -4,17 +4,21 @@ import { colors } from "@/constants/ureza";
 import type { Lloji, Prona } from "@/lib/pronat";
 import { dataNeTekst, dataNgaTekst, STATUSET, type Vizita } from "@/lib/vizitat";
 
+import { Ikona, type EmriIIkones } from "./Ikona";
 import { PronaIlustrim } from "./PronaIlustrim";
 import { UrezaIcon, type IconName } from "./UrezaIcon";
 
-// A property card on Pronat: a small picture beside the name, place and kind; how fresh the
-// last check is (or the visit in progress); then the number of visits and a clear request button.
+// A property card on Pronat: the picture across the top with the kind and GPS as badges; then
+// the name, the place and how fresh the last check is (or the visit in progress); at the bottom
+// the visits (to the history) and a clear request button.
 
 export const LLOJET_E_PRONES: Record<Lloji, { emri: string; ikona: IconName }> = {
   shtepi: { emri: "Shtëpi", ikona: "home" },
   prindert: { emri: "Prindërit", ikona: "heart" },
   toke: { emri: "Tokë", ikona: "map" },
 };
+
+const IKONA_E_LLOJIT: Record<Lloji, EmriIIkones> = { shtepi: "shtepi", prindert: "prindert", toke: "toke" };
 
 const DITE_FRESKE = 45;
 const DITA_MS = 24 * 60 * 60 * 1000;
@@ -47,40 +51,50 @@ export function PronaKarta({
 
   return (
     <View style={styles.karta}>
-      <View style={styles.krye}>
-        <View style={styles.foto}>
-          <PronaIlustrim lloji={prona.lloji} />
+      {/* the picture is the card's face: the kind and the GPS state sit on it as small badges */}
+      <View style={styles.foto}>
+        <PronaIlustrim lloji={prona.lloji} />
+        <View style={[styles.distinktiv, styles.distinktivMajtas]}>
+          <Ikona emri={IKONA_E_LLOJIT[prona.lloji]} madhesia={13} ngjyra={colors.white} />
+          <Text style={styles.distinktivTeksti}>{lloji.emri}</Text>
         </View>
-        <View style={styles.tekst}>
-          <Text style={styles.emri} numberOfLines={2}>
-            {prona.emri}
-          </Text>
-          <View style={styles.meta}>
-            <UrezaIcon name="pin" size={14} color={colors.textSecondary} strokeWidth={2.2} />
-            <Text style={styles.metaTeksti} numberOfLines={1}>
-              {prona.vendi} · {lloji.emri}
-            </Text>
+        {prona.koordinatat ? (
+          <View
+            style={[styles.distinktiv, styles.distinktivDjathtas]}
+            accessible
+            accessibilityLabel="Ka vendndodhje të saktë GPS"
+          >
+            <Ikona emri="gps" madhesia={13} ngjyra={colors.mint} />
+            <Text style={[styles.distinktivTeksti, { color: colors.mint }]}>GPS</Text>
           </View>
-          {aktive ? <ChipiAktiv vizita={aktive} /> : <ChipiIFreskise dite={ditePara} />}
+        ) : null}
+      </View>
+
+      <View style={styles.trupi}>
+        <Text style={styles.emri} numberOfLines={2}>
+          {prona.emri}
+        </Text>
+        <View style={styles.meta}>
+          <UrezaIcon name="pin" size={14} color={colors.textSecondary} strokeWidth={2.2} />
+          <Text style={styles.metaTeksti} numberOfLines={1}>
+            {prona.vendi}
+          </Text>
         </View>
+        {aktive ? <ChipiAktiv vizita={aktive} /> : <ChipiIFreskise dite={ditePara} />}
       </View>
 
       <View style={styles.fund}>
         <Pressable
-          style={styles.historia}
+          style={({ pressed }) => [styles.historia, pressed && styles.shtypur]}
           onPress={onHistoria}
           accessibilityRole="button"
-          accessibilityLabel={`${vizita} vizita. Hap historinë.`}
+          accessibilityLabel={`${vizita} vizita. Hap historinë në Odë.`}
         >
-          <UrezaIcon name="book" size={16} color={colors.petrol} strokeWidth={2.2} />
+          <Ikona emri="historia" madhesia={16} ngjyra={colors.petrol} />
           <Text style={styles.historiaTeksti}>
             {vizita} {vizita === 1 ? "vizitë" : "vizita"}
           </Text>
-          {prona.koordinatat ? (
-            <View style={styles.gps} accessibilityLabel="Ka vendndodhje të saktë GPS">
-              <Text style={styles.gpsTeksti}>GPS</Text>
-            </View>
-          ) : null}
+          <Ikona emri="shigjeta" madhesia={14} ngjyra={colors.petrol} />
         </Pressable>
         <Pressable
           style={({ pressed }) => [styles.kerko, pressed && styles.shtypur]}
@@ -199,19 +213,31 @@ const styles = StyleSheet.create({
   karta: {
     backgroundColor: colors.white,
     borderRadius: 22,
-    padding: 12,
-    gap: 12,
+    overflow: "hidden",
     shadowColor: "#0B2530",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.07,
-    shadowRadius: 12,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.09,
+    shadowRadius: 16,
+    elevation: 3,
   },
-  krye: { flexDirection: "row", gap: 14, alignItems: "center" },
-  // close to the 4:3 of the drawings, so nothing is cut off
-  foto: { width: 100, height: 80, borderRadius: 16, overflow: "hidden" },
-  tekst: { flex: 1, gap: 4, alignItems: "flex-start" },
-  emri: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
+  // the picture across the whole card; the drawings are 4:3 and are cropped from the middle
+  foto: { height: 150 },
+  distinktiv: {
+    position: "absolute",
+    top: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    height: 28,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    backgroundColor: "rgba(14,47,60,0.72)",
+  },
+  distinktivMajtas: { left: 12 },
+  distinktivDjathtas: { right: 12 },
+  distinktivTeksti: { color: colors.white, fontSize: 12, fontWeight: "800", letterSpacing: 0.3 },
+  trupi: { paddingHorizontal: 16, paddingTop: 14, gap: 6, alignItems: "flex-start" },
+  emri: { color: colors.ink, fontSize: 19, lineHeight: 24, fontWeight: "800" },
   meta: { flexDirection: "row", alignItems: "center", gap: 4 },
   metaTeksti: { color: colors.textSecondary, fontSize: 14, fontWeight: "600", flexShrink: 1 },
   chip: {
@@ -229,18 +255,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 12,
+    marginTop: 14,
+    marginHorizontal: 16,
+    paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: "#EDF2F5",
+    borderTopColor: colors.background,
   },
-  historia: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 40, paddingLeft: 4 },
+  historia: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44 },
   historiaTeksti: { color: colors.petrol, fontSize: 14, fontWeight: "800" },
-  gps: { marginLeft: 4, paddingHorizontal: 7, height: 20, borderRadius: 6, backgroundColor: "#E8F5F3", justifyContent: "center" },
-  gpsTeksti: { color: colors.teal, fontSize: 11, fontWeight: "800", letterSpacing: 0.5 },
   kerko: {
-    height: 40,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    height: 44,
+    paddingHorizontal: 18,
+    borderRadius: 22,
     backgroundColor: colors.petrol,
     flexDirection: "row",
     alignItems: "center",
