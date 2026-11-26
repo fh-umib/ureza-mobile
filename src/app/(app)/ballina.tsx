@@ -11,7 +11,7 @@ import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { SkeletiIKartes } from "@/components/ui/Skeleti";
-import { colors, font } from "@/constants/ureza";
+import { colors, font, hija } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
 import { useProfili } from "@/lib/profili";
@@ -123,7 +123,7 @@ export default function Ballina() {
               </Text>
               <Text style={styles.njoftimTeksti}>Shiko dëshmitë, pastaj mirato ose kundërshto.</Text>
             </View>
-            <ShigjetaRrethi ngjyra="#8A5210" sfondi="#FFE3B3" />
+            <ShigjetaRrethi ngjyra={colors.kujdes} sfondi="#FFE3B3" />
           </Pressable>
         </Hyrje>
       ) : null}
@@ -405,13 +405,6 @@ function KartaEPrones({ prona, onPress }: { prona: Prona; onPress: () => void })
   );
 }
 
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 6 },
-  shadowOpacity: 0.08,
-  shadowRadius: 14,
-  elevation: 3,
-};
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -419,7 +412,7 @@ const styles = StyleSheet.create({
   pa: { backgroundColor: "transparent" },
 
   shifrat: { flexDirection: "row", gap: 10 },
-  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija },
+  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija.karta },
   shifraIkona: {
     width: 34,
     height: 34,
@@ -435,7 +428,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: "#FFF2DE",
+    backgroundColor: colors.kujdesBg,
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
@@ -450,10 +443,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   njoftimTitulli: { color: "#6B3F0A", fontSize: 16, lineHeight: 21, fontFamily: font.w800 },
-  njoftimTeksti: { color: "#8A5210", fontSize: 14, lineHeight: 19, fontFamily: font.w500 },
+  njoftimTeksti: { color: colors.kujdes, fontSize: 14, lineHeight: 19, fontFamily: font.w500 },
 
-  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 18, gap: 10, ...hija },
-  kartaVizites: { backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija },
+  karta: { backgroundColor: colors.white, borderRadius: 22, padding: 18, gap: 10, ...hija.karta },
+  kartaVizites: { backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija.karta },
   vizitaFoto: { height: 120 },
   vizitaEtiketa: {
     position: "absolute",
@@ -487,7 +480,7 @@ const styles = StyleSheet.create({
   shigjeta: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
 
   veprimet: { flexDirection: "row", gap: 12 },
-  veprimi: { flex: 1, backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija },
+  veprimi: { flex: 1, backgroundColor: colors.white, borderRadius: 22, overflow: "hidden", ...hija.karta },
   veprimiFoto: { height: 96 },
   veprimiIkona: {
     position: "absolute",
@@ -525,7 +518,7 @@ const styles = StyleSheet.create({
   },
   veprimiButoniTeksti: { color: colors.white, fontSize: 14, fontFamily: font.w800 },
 
-  siKarta: { backgroundColor: "#E8F5F3", borderRadius: 22, padding: 16, gap: 14 },
+  siKarta: { backgroundColor: colors.ikonaBg, borderRadius: 22, padding: 16, gap: 14 },
   siRreshti: { flexDirection: "row" },
   siHapi: { flex: 1, alignItems: "center", gap: 4 },
   siIkonaRreshti: { flexDirection: "row", alignItems: "center", width: "100%", marginBottom: 4 },
@@ -549,7 +542,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#E8F5F3",
+    borderColor: colors.ikonaBg,
   },
   siNumriTeksti: { color: colors.ink, fontSize: 11, fontFamily: font.w800 },
   siTitulli: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w800, textAlign: "center" },
@@ -557,7 +550,7 @@ const styles = StyleSheet.create({
 
   rrjedha: { marginHorizontal: -20 },
   rrjedhaBrenda: { paddingHorizontal: 20, paddingBottom: 12, gap: 12 },
-  prona: { width: 170, backgroundColor: colors.white, borderRadius: 20, padding: 8, gap: 8, ...hija },
+  prona: { width: 170, backgroundColor: colors.white, borderRadius: 20, padding: 8, gap: 8, ...hija.karta },
   pronaFoto: { height: 110, borderRadius: 14, overflow: "hidden" },
   pronaVendi: {
     position: "absolute",
@@ -591,7 +584,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
   },

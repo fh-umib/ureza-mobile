@@ -11,7 +11,7 @@ import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
 import { SkeletiIFaqes } from "@/components/ui/Skeleti";
-import { colors, font } from "@/constants/ureza";
+import { colors, font, hija } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Prona } from "@/lib/pronat";
 import {
@@ -495,13 +495,6 @@ function RreshtiIKohes({
   );
 }
 
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
 
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
@@ -520,13 +513,13 @@ const styles = StyleSheet.create({
   },
   primaryText: { color: colors.white, fontSize: 17, fontFamily: font.w700 },
 
-  bosh: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 8, ...hija },
+  bosh: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 8, ...hija.karta },
   boshFoto: { height: 140, borderRadius: 16, overflow: "hidden", marginBottom: 6 },
   boshTitle: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   boshText: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w500, marginBottom: 8 },
 
   // waiting for a decision
-  vemendja: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija },
+  vemendja: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija.karta },
   vemendjaKrye: { flexDirection: "row", alignItems: "center", gap: 12 },
   vemendjaIkona: {
     width: 40,
@@ -552,7 +545,7 @@ const styles = StyleSheet.create({
 
   // figures
   shifrat: { flexDirection: "row", gap: 10 },
-  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija },
+  shifra: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 12, gap: 2, ...hija.karta },
   shifraIkona: {
     width: 34,
     height: 34,
@@ -566,8 +559,8 @@ const styles = StyleSheet.create({
   shifraEtiketa: { color: colors.textSecondary, fontSize: 12, lineHeight: 16, fontFamily: font.w600 },
 
   // cards
-  karta: { backgroundColor: colors.white, borderRadius: 22, paddingHorizontal: 14, ...hija },
-  kartaStat: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
+  karta: { backgroundColor: colors.white, borderRadius: 22, paddingHorizontal: 14, ...hija.karta },
+  kartaStat: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija.karta },
   kartaTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
   statistikat: { gap: 12 },
 
@@ -662,7 +655,7 @@ const styles = StyleSheet.create({
     borderColor: colors.background,
   },
   boshtiVija: { flex: 1, width: 2, backgroundColor: colors.line, marginTop: 2 },
-  vizita: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 14, gap: 12, marginBottom: 12, ...hija },
+  vizita: { flex: 1, backgroundColor: colors.white, borderRadius: 18, padding: 14, gap: 12, marginBottom: 12, ...hija.karta },
   vizitaKrye: { flexDirection: "row", alignItems: "center", gap: 12 },
   vizitaIkona: {
     width: 40,

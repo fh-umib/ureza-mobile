@@ -130,7 +130,7 @@ export function ShifratEPronave({
         ikona={kujdes ? "warning" : "check"}
         vlera={String(kerkojneKontroll)}
         etiketa="Kërkojnë kontroll"
-        ngjyra={kujdes ? { bg: "#FFF2DE", fg: "#8A5210" } : undefined}
+        ngjyra={kujdes ? { bg: colors.kujdesBg, fg: colors.kujdes } : undefined}
       />
     </View>
   );
@@ -163,9 +163,9 @@ export function ChipiIFreskise({ dite }: { dite: number | null }) {
   const teksti =
     dite === null ? "Pa vizitë ende" : dite <= 0 ? "Kontrolluar sot" : dite === 1 ? "Kontrolluar dje" : `Kontrolluar para ${dite} ditësh`;
   return (
-    <View style={[styles.chip, { backgroundColor: mire ? "#E4F6EB" : "#FFF2DE" }]}>
-      <UrezaIcon name={mire ? "check" : "warning"} size={13} color={mire ? "#1E6B3E" : "#8A5210"} strokeWidth={2.6} />
-      <Text style={[styles.chipTeksti, { color: mire ? "#1E6B3E" : "#8A5210" }]} numberOfLines={1}>
+    <View style={[styles.chip, { backgroundColor: mire ? colors.okBg : colors.kujdesBg }]}>
+      <UrezaIcon name={mire ? "check" : "warning"} size={13} color={mire ? colors.ok : colors.kujdes} strokeWidth={2.6} />
+      <Text style={[styles.chipTeksti, { color: mire ? colors.ok : colors.kujdes }]} numberOfLines={1}>
         {teksti}
       </Text>
     </View>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 6,

@@ -165,7 +165,7 @@ export default function DetajetEVizites() {
         <>
           {sapoPranuar && vizita.statusi === "pranuar" ? (
             <View style={styles.sukses}>
-              <UrezaIcon name="check" size={20} color="#1E6B3E" strokeWidth={2.6} />
+              <UrezaIcon name="check" size={20} color={colors.ok} strokeWidth={2.6} />
               <Text style={styles.suksesText}>Ke pranuar detyrën. Klienti e sheh emrin tënd te vizita.</Text>
             </View>
           ) : null}
@@ -360,11 +360,11 @@ function PranoDetyren({ vizita, prona, onPranuar }: { vizita: Vizita; prona?: Pr
         </Pressable>
         {paProfil ? (
           <Pressable style={styles.paProfil} onPress={() => router.push("/profili")} accessibilityRole="button">
-            <UrezaIcon name="warning" size={18} color="#8A5210" strokeWidth={2.2} />
+            <UrezaIcon name="warning" size={18} color={colors.kujdes} strokeWidth={2.2} />
             <Text style={styles.paProfilTeksti}>
               Së pari plotëso “Si punon si Miku” te Profili (kompani, individ, student ose mjeshtër).
             </Text>
-            <UrezaIcon name="chevron" size={18} color="#8A5210" strokeWidth={2.4} />
+            <UrezaIcon name="chevron" size={18} color={colors.kujdes} strokeWidth={2.4} />
           </Pressable>
         ) : (
           <Kutia
@@ -438,8 +438,8 @@ function KartaEKontrates({ vizitaId }: { vizitaId: string }) {
 function ShenjaEPales({ emri, kur }: { emri: string; kur: string | null }) {
   return (
     <View style={[styles.pala, kur ? styles.palaPo : styles.palaJo]}>
-      <UrezaIcon name={kur ? "check" : "clock"} size={14} color={kur ? "#1E6B3E" : "#8A5210"} strokeWidth={2.6} />
-      <Text style={[styles.palaTeksti, { color: kur ? "#1E6B3E" : "#8A5210" }]}>
+      <UrezaIcon name={kur ? "check" : "clock"} size={14} color={kur ? colors.ok : colors.kujdes} strokeWidth={2.6} />
+      <Text style={[styles.palaTeksti, { color: kur ? colors.ok : colors.kujdes }]}>
         {emri}: {kur ? dataShkurt(kur.slice(0, 10)) : "pret"}
       </Text>
     </View>
@@ -473,7 +473,7 @@ function Rresht({
         <Text style={styles.vlera}>{vlera}</Text>
         {distinktiv ? (
           <View style={styles.distinktiv}>
-            <UrezaIcon name="shield" size={14} color="#1E6B3E" strokeWidth={2.4} />
+            <UrezaIcon name="shield" size={14} color={colors.ok} strokeWidth={2.4} />
             <Text style={styles.distinktivTeksti}>{distinktiv}</Text>
           </View>
         ) : null}
@@ -488,8 +488,8 @@ const styles = StyleSheet.create({
   kontrataPika: { flexDirection: "row", gap: 10, alignItems: "flex-start" },
   kontrataPalet: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
   pala: { flexDirection: "row", alignItems: "center", gap: 6, height: 28, paddingHorizontal: 10, borderRadius: 14 },
-  palaPo: { backgroundColor: "#E4F6EB" },
-  palaJo: { backgroundColor: "#FFF2DE" },
+  palaPo: { backgroundColor: colors.okBg },
+  palaJo: { backgroundColor: colors.kujdesBg },
   palaTeksti: { fontSize: 13, fontFamily: font.w700 },
   kontrataLidhje: { flexDirection: "row", alignItems: "center", gap: 6, minHeight: 44 },
   kontrataLidhjeTeksti: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
@@ -499,9 +499,9 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 12,
     borderRadius: 14,
-    backgroundColor: "#FFF2DE",
+    backgroundColor: colors.kujdesBg,
   },
-  paProfilTeksti: { flex: 1, color: "#8A5210", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  paProfilTeksti: { flex: 1, color: colors.kujdes, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   vleraKolona: { flexShrink: 1, alignItems: "flex-end", gap: 4 },
   distinktiv: {
     flexDirection: "row",
@@ -510,9 +510,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#E4F6EB",
+    backgroundColor: colors.okBg,
   },
-  distinktivTeksti: { color: "#1E6B3E", fontSize: 12, fontFamily: font.w800 },
+  distinktivTeksti: { color: colors.ok, fontSize: 12, fontFamily: font.w800 },
   tabet: { flexDirection: "row", gap: 4, padding: 4, borderRadius: 16, backgroundColor: "#E3EAF0" },
   tab: { flex: 1, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center" },
   tabAktiv: {
@@ -562,11 +562,11 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E4F6EB",
+    backgroundColor: colors.okBg,
   },
-  suksesText: { flex: 1, color: "#1E6B3E", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
+  suksesText: { flex: 1, color: colors.ok, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
   deshmi: { flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 4 },
-  deshmiIkona: { width: 44, height: 44, borderRadius: 14, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  deshmiIkona: { width: 44, height: 44, borderRadius: 14, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   deshmiTekst: { flex: 1, gap: 1 },
   deshmiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontFamily: font.w800 },
 });

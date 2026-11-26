@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   opsionZgjedhur: { borderColor: colors.petrol },
-  ikona: { width: 56, height: 56, borderRadius: 17, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikona: { width: 56, height: 56, borderRadius: 17, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   opsionTekst: { flex: 1, gap: 2 },
   opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
   opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },

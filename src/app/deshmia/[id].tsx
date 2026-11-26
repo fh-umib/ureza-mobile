@@ -262,7 +262,7 @@ function KartaGps({ d, prona }: { d: PerdorimiIDeshmive; prona?: Prona }) {
       <View style={styles.krye}>
         <Text style={styles.titulli}>Vendndodhja</Text>
         <View style={[styles.chip, gps ? styles.chipGati : styles.chipPritje]}>
-          <Text style={[styles.chipText, { color: gps ? "#1E6B3E" : "#8A5210" }]}>{gps ? "Gati" : "Pa u marrë"}</Text>
+          <Text style={[styles.chipText, { color: gps ? colors.ok : colors.kujdes }]}>{gps ? "Gati" : "Pa u marrë"}</Text>
         </View>
       </View>
       {gps ? (
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: "#E3EAF0",
   },
-  hapiGati: { backgroundColor: "#E4F6EB" },
+  hapiGati: { backgroundColor: colors.okBg },
   hapiRrethi: {
     width: 20,
     height: 20,
@@ -515,19 +515,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  hapiRrethiGati: { backgroundColor: "#1E6B3E", borderColor: "#1E6B3E" },
+  hapiRrethiGati: { backgroundColor: colors.ok, borderColor: colors.ok },
   hapiText: { color: colors.textSecondary, fontSize: 14, fontFamily: font.w700 },
-  hapiTextGati: { color: "#1E6B3E" },
+  hapiTextGati: { color: colors.ok },
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 12 },
   krye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
   nen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   chip: { height: 28, paddingHorizontal: 12, borderRadius: 14, alignItems: "center", justifyContent: "center" },
-  chipGati: { backgroundColor: "#E4F6EB" },
-  chipPritje: { backgroundColor: "#FFF2DE" },
+  chipGati: { backgroundColor: colors.okBg },
+  chipPritje: { backgroundColor: colors.kujdesBg },
   chipText: { fontSize: 13, fontFamily: font.w700 },
-  paralajmerim: { color: "#8A5210", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  paralajmerim: { color: colors.kujdes, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   ndihme: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500, textAlign: "center" },
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
@@ -627,7 +627,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
 });

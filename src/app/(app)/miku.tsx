@@ -60,9 +60,9 @@ export default function KerkesatPerMiken() {
           <UrezaIcon
             name={verifikimi.verifikuarAt ? "shield" : "clock"}
             size={20}
-            color={verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210"}
+            color={verifikimi.verifikuarAt ? colors.ok : colors.kujdes}
           />
-          <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210" }]}>
+          <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? colors.ok : colors.kujdes }]}>
             {verifikimi.verifikuarAt
               ? `Je Miku i verifikuar nga ekipi i Urëzës (që më ${dataMeOre(verifikimi.verifikuarAt)}).`
               : "Ekipi i Urëzës ende nuk të ka verifikuar. Kërkesat e reja i sheh dhe i pranon vetëm pasi të verifikohesh."}
@@ -77,11 +77,11 @@ export default function KerkesatPerMiken() {
           accessibilityRole="button"
           accessibilityLabel="Plotëso si punon si Miku te Profili"
         >
-          <UrezaIcon name="warning" size={20} color="#8A5210" />
-          <Text style={[styles.shenimText, { color: "#8A5210" }]}>
+          <UrezaIcon name="warning" size={20} color={colors.kujdes} />
+          <Text style={[styles.shenimText, { color: colors.kujdes }]}>
             Para se të pranosh vizita, trego si punon te Profili: kompani, individ, student ose mjeshtër. Del në kontratë.
           </Text>
-          <UrezaIcon name="chevron" size={18} color="#8A5210" strokeWidth={2.4} />
+          <UrezaIcon name="chevron" size={18} color={colors.kujdes} strokeWidth={2.4} />
         </Pressable>
       ) : null}
 
@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
-  verifikuar: { backgroundColor: "#E4F6EB" },
-  paVerifikuar: { backgroundColor: "#FFF2DE" },
+  verifikuar: { backgroundColor: colors.okBg },
+  paVerifikuar: { backgroundColor: colors.kujdesBg },
   rreshti: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     borderColor: "#E3EAF0",
     padding: 14,
   },
-  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   tekst: { flex: 1, gap: 4 },
   shigjeta: { alignSelf: "center" },
   titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
