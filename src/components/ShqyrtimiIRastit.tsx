@@ -144,7 +144,7 @@ function FormaEShqyrtimit({ vizita }: { vizita: Vizita }) {
 
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 10 },
-  mbyllur: { backgroundColor: "#E8F5F3" },
+  mbyllur: { backgroundColor: colors.ikonaBg },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 10 },
   titulli: { flex: 1, color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },

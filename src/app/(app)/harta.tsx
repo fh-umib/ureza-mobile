@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Linking,
   Pressable,
   ScrollView,
@@ -22,7 +21,9 @@ import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
-import { colors, font } from "@/constants/ureza";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
+import { colors, font, hija } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
 import { vendiNeHarte, type Prona } from "@/lib/pronat";
@@ -124,32 +125,28 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
 
         <View style={styles.flete}>
           <View style={styles.fleteBrenda}>
-            {burimiPronat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+            {burimiPronat === "duke_ngarkuar" ? <SkeletiIFaqes meFoto rreshta={2} /> : null}
 
             {burimiPronat === "pa_lidhje" ? (
-              <View style={styles.karta}>
-                <Text style={styles.titulliKartes}>Nuk u lidh me serverin</Text>
-                <Text style={styles.tekst}>Kontrollo internetin, pastaj provo përsëri.</Text>
-                <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
-                  <Text style={styles.dytesorText}>Provo përsëri</Text>
-                </Pressable>
-              </View>
+              <GjendjaBosh
+                toni="gabim"
+                titulli="Nuk u lidh me serverin"
+                teksti="Kontrollo internetin, pastaj provo përsëri."
+                veprimi={{ etiketa: "Provo përsëri", onPress: () => void rifresko() }}
+              />
             ) : null}
 
             {(burimiPronat === "supabase" || burimiPronat === "demo") && !prona ? (
-              <View style={styles.karta}>
-                <Text style={styles.titulliKartes}>{eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}</Text>
-                <Text style={styles.tekst}>
-                  {eMiku
+              <GjendjaBosh
+                ikona="map"
+                titulli={eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}
+                teksti={
+                  eMiku
                     ? "Pronat shfaqen këtu kur ka kërkesa të hapura, ose vizita që ke pranuar."
-                    : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."}
-                </Text>
-                {!eMiku ? (
-                  <Pressable style={styles.dytesor} onPress={() => router.navigate("/pronat")} accessibilityRole="button">
-                    <Text style={styles.dytesorText}>Shko te Pronat</Text>
-                  </Pressable>
-                ) : null}
-              </View>
+                    : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."
+                }
+                veprimi={eMiku ? undefined : { etiketa: "Shto pronën e parë", onPress: () => router.navigate("/pronat") }}
+              />
             ) : null}
 
             {prona ? (
@@ -367,14 +364,6 @@ function RreshtiIVizites({ vizita, fundit }: { vizita: Vizita; fundit: boolean }
   );
 }
 
-// the light shadow the cards on Ballina, Oda and Pronat use
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.hero },
@@ -433,17 +422,17 @@ const styles = StyleSheet.create({
     gap: 6,
     borderWidth: 2,
     borderColor: "transparent",
-    ...hija,
+    ...hija.karta,
   },
   pronaKartaZgjedhur: { borderColor: colors.petrol },
   pronaFoto: { height: 84, borderRadius: 14, overflow: "hidden" },
   pronaEmri: { color: colors.ink, fontSize: 15, lineHeight: 20, fontFamily: font.w800, paddingHorizontal: 4, minHeight: 40 },
   pronaVendi: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingBottom: 4 },
   pronaVendiTeksti: { color: colors.textSecondary, fontSize: 13, fontFamily: font.w600, flexShrink: 1 },
-  zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija },
+  zgjedhur: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 8, alignItems: "flex-start", ...hija.karta },
   emriIPrones: { color: colors.ink, fontSize: 22, lineHeight: 28, fontFamily: font.w800 },
   vendi: { color: colors.textSecondary, fontSize: 15, lineHeight: 21, fontFamily: font.w600, flexShrink: 1 },
-  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija },
+  karta: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 8, ...hija.karta },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
   titulliKartes: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800, flexShrink: 1 },
   tekst: { color: colors.textSecondary, fontSize: 15, lineHeight: 22, fontFamily: font.w500 },
@@ -461,11 +450,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   butonIkoneText: { color: colors.petrol, fontSize: 15, fontFamily: font.w800 },
-  dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   vizitatKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
   seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
-  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija },
+  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija.karta },
   rreshtiIkona: {
     width: 40,
     height: 40,

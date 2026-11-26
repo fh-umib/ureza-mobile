@@ -5,6 +5,9 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { GrafikuIDiteve, ListaEShiritave, PllakaETreguesit } from "@/components/PaneliGrafiket";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIKartes } from "@/components/ui/Skeleti";
+import { useToast } from "@/components/ui/Toast";
 import { colors, font } from "@/constants/ureza";
 import { usePaneliIAdminit, type MikuPerAdminin } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
@@ -118,7 +121,7 @@ export default function Paneli() {
 
       {/* 1 · What needs the admin now */}
       {burimiVizitat === "duke_ngarkuar" ? (
-        <ActivityIndicator color={colors.petrol} />
+        <SkeletiIKartes />
       ) : teHapura.length > 0 ? (
         <View style={[styles.karta, styles.kartaRast]}>
           <View style={styles.rreshtIkone}>
@@ -141,7 +144,7 @@ export default function Paneli() {
       ) : (
         <View style={[styles.karta, styles.kartaMire]}>
           <View style={styles.rreshtIkone}>
-            <UrezaIcon name="check" size={22} color="#1E6B3E" strokeWidth={2.6} />
+            <UrezaIcon name="check" size={22} color={colors.ok} strokeWidth={2.6} />
             <Text style={[styles.kartaTitulli, styles.mireTitulli]}>Asnjë rast në pritje</Text>
           </View>
           <Text style={styles.mireTekst}>
@@ -152,7 +155,7 @@ export default function Paneli() {
 
       {/* 2 · The figures */}
       <Text style={styles.seksioni}>Treguesit</Text>
-      {paneli.burimi === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+      {paneli.burimi === "duke_ngarkuar" ? <SkeletiIKartes /> : null}
       {gati ? (
         <>
           <View style={styles.rrjeta}>
@@ -211,7 +214,11 @@ export default function Paneli() {
       {/* 3 · Disputed reports */}
       <Text style={styles.seksioni}>Rastet e kundërshtuara</Text>
       {burimiVizitat !== "duke_ngarkuar" && teHapura.length === 0 && teMbyllura.length === 0 ? (
-        <Text style={styles.tekst}>Ende asnjë raport i kundërshtuar.</Text>
+        <GjendjaBosh
+          ikona="shield"
+          titulli="Asnjë raport i kundërshtuar"
+          teksti="Kur një klient kundërshton një raport, rasti shfaqet këtu që ta shqyrtosh."
+        />
       ) : null}
       {teHapura.map((v) => (
         <RreshtiIRastit key={v.id} vizita={v} emriProna={emriProna(v)} />
@@ -324,6 +331,7 @@ function RreshtiIMikut({
   const [duke, setDuke] = useState(false);
   const [gabim, setGabim] = useState<string | null>(null);
   const [konfirmo, setKonfirmo] = useState(false);
+  const toast = useToast();
   const verifikuar = miku.verifikuarAt !== null;
 
   async function ndrysho(vlera: boolean) {
@@ -334,6 +342,7 @@ function RreshtiIMikut({
     setDuke(false);
     setKonfirmo(false);
     if (mesazh) setGabim(mesazh);
+    else toast.sukses(vlera ? "Miku u verifikua." : "Verifikimi u hoq.");
   }
 
   return (
@@ -350,10 +359,10 @@ function RreshtiIMikut({
           <UrezaIcon
             name={verifikuar ? "shield" : "clock"}
             size={16}
-            color={verifikuar ? "#1E6B3E" : "#8A5210"}
+            color={verifikuar ? colors.ok : colors.kujdes}
             strokeWidth={2.4}
           />
-          <Text style={[styles.chipText, { color: verifikuar ? "#1E6B3E" : "#8A5210" }]}>
+          <Text style={[styles.chipText, { color: verifikuar ? colors.ok : colors.kujdes }]}>
             {verifikuar ? "I verifikuar" : "Pa verifikuar"}
           </Text>
         </View>
@@ -402,18 +411,18 @@ const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
   kartaTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
   tekst: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
-  shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
+  shenim: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 14, borderRadius: 16, backgroundColor: colors.ikonaBg },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
-  shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: "#E8F5F3" },
+  shenimKolone: { gap: 4, padding: 14, borderRadius: 16, backgroundColor: colors.ikonaBg },
   rreshtIkone: { flexDirection: "row", alignItems: "center", gap: 8 },
 
   kartaRast: { backgroundColor: "#FBE9E9", borderColor: "#F3CFCF" },
   rastEtiketa: { color: "#7A1F1B", fontSize: 15, fontFamily: font.w800 },
   heroNumri: { color: "#7A1F1B", fontSize: 56, lineHeight: 62, fontFamily: font.w800 },
   rastTekst: { color: "#7A1F1B", fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
-  kartaMire: { backgroundColor: "#E4F6EB", borderColor: "#CBEBD7" },
-  mireTitulli: { color: "#1E6B3E" },
-  mireTekst: { color: "#1E6B3E", fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
+  kartaMire: { backgroundColor: colors.okBg, borderColor: "#CBEBD7" },
+  mireTitulli: { color: colors.ok },
+  mireTekst: { color: colors.ok, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
 
   rrjeta: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
 
@@ -427,7 +436,7 @@ const styles = StyleSheet.create({
     borderColor: "#E3EAF0",
     padding: 14,
   },
-  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   ikonaRast: { backgroundColor: "#FBE9E9" },
   rreshtiTekst: { flex: 1, gap: 3 },
   rreshtiTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
@@ -444,8 +453,8 @@ const styles = StyleSheet.create({
   kartaMiku: { backgroundColor: colors.white, borderRadius: 20, padding: 18, gap: 8, borderWidth: 1, borderColor: "#E3EAF0" },
   mikuKrye: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   chip: { height: 32, paddingHorizontal: 10, borderRadius: 16, flexDirection: "row", alignItems: "center", gap: 6 },
-  chipPo: { backgroundColor: "#E4F6EB" },
-  chipJo: { backgroundColor: "#FFF2DE" },
+  chipPo: { backgroundColor: colors.okBg },
+  chipJo: { backgroundColor: colors.kujdesBg },
   chipText: { fontSize: 13, fontFamily: font.w700 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   primary: { height: 52, borderRadius: 16, backgroundColor: colors.petrol, alignItems: "center", justifyContent: "center" },

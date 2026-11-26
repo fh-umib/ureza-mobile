@@ -201,10 +201,10 @@ function Lista() {
                 <UrezaIcon
                   name={eBere ? "check" : "clock"}
                   size={14}
-                  color={eBere ? "#1E6B3E" : "#8A5210"}
+                  color={eBere ? colors.ok : colors.kujdes}
                   strokeWidth={2.4}
                 />
-                <Text style={[styles.chipText, { color: eBere ? "#1E6B3E" : "#8A5210" }]}>
+                <Text style={[styles.chipText, { color: eBere ? colors.ok : colors.kujdes }]}>
                   {eBere ? "E përfunduar" : "Në pritje"}
                 </Text>
               </View>
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     gap: 5,
     marginTop: 2,
   },
-  chipPritje: { backgroundColor: "#FFF2DE" },
-  chipBere: { backgroundColor: "#E4F6EB" },
+  chipPritje: { backgroundColor: colors.kujdesBg },
+  chipBere: { backgroundColor: colors.okBg },
   chipText: { fontSize: 12, fontFamily: font.w700 },
 });

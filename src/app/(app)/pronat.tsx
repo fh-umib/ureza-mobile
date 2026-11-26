@@ -10,6 +10,9 @@ import { ditePara, PronaKarta, ShifratEPronave } from "@/components/PronaKarta";
 import { Seksioni } from "@/components/Seksioni";
 import { VendndodhjaFusha } from "@/components/VendndodhjaFusha";
 import { Ditari } from "@/components/Ditari";
+import { useToast } from "@/components/ui/Toast";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIKartes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat, type RezultatiShtimit } from "@/lib/dhenat";
 import { gjejQytetin, type Koordinata } from "@/lib/gjeo";
@@ -31,7 +34,6 @@ export default function Pronat() {
   const router = useRouter();
   const { pronat, vizitat, burimiPronat: burimi, shtoPronen: shto, rifresko } = useDhenat();
   const [hapur, setHapur] = useState(false);
-  const [lajmerim, setLajmerim] = useState<string | null>(null);
 
   const meGps = pronat.filter((p) => p.koordinatat).length;
   const kerkojneKontroll = pronat.filter((p) => {
@@ -56,22 +58,20 @@ export default function Pronat() {
         </Pressable>
       ) : null}
 
-      {lajmerim ? (
-        <Pressable onPress={() => setLajmerim(null)} accessibilityRole="button" accessibilityHint="Prek për ta mbyllur">
-          <Text style={styles.demoNote}>{lajmerim}</Text>
-        </Pressable>
+      {burimi === "duke_ngarkuar" ? (
+        <>
+          <SkeletiIKartes />
+          <SkeletiIKartes />
+        </>
       ) : null}
 
-      {burimi === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
-
       {burimi === "pa_lidhje" ? (
-        <View style={styles.bosh}>
-          <Text style={styles.boshTitle}>Nuk u lidh me serverin</Text>
-          <Text style={styles.boshText}>Kontrollo internetin, pastaj provo përsëri.</Text>
-          <Pressable style={styles.riprovo} onPress={() => void rifresko()} accessibilityRole="button">
-            <Text style={styles.riprovoText}>Provo përsëri</Text>
-          </Pressable>
-        </View>
+        <GjendjaBosh
+          toni="gabim"
+          titulli="Nuk u lidh me serverin"
+          teksti="Kontrollo internetin, pastaj provo përsëri."
+          veprimi={{ etiketa: "Provo përsëri", onPress: () => void rifresko() }}
+        />
       ) : null}
 
       {pronat.length > 0 ? (
@@ -147,7 +147,7 @@ export default function Pronat() {
       />
       <Ditari />
 
-      <ShtoPronen hapur={hapur} mbyll={() => setHapur(false)} shto={shto} onLajmerim={setLajmerim} />
+      <ShtoPronen hapur={hapur} mbyll={() => setHapur(false)} shto={shto} />
     </EkraniMeHero>
   );
 }
@@ -156,13 +156,12 @@ function ShtoPronen({
   hapur,
   mbyll,
   shto,
-  onLajmerim,
 }: {
   hapur: boolean;
   mbyll: () => void;
   shto: (emri: string, vendi: string, lloji: Lloji, koordinatat: Koordinata | null) => Promise<RezultatiShtimit>;
-  onLajmerim: (tekst: string) => void;
 }) {
+  const toast = useToast();
   const [emri, setEmri] = useState("");
   const [vendi, setVendi] = useState("");
   const [lloji, setLloji] = useState<Lloji>("shtepi");
@@ -202,7 +201,8 @@ function ShtoPronen({
     setTekstiIVendit("");
     mbyll();
     // saved, but the exact position was not (e.g. supabase/harta.sql has not been run)
-    if (r.gabim) onLajmerim(`Prona u ruajt, por vendndodhja e saktë jo. ${r.gabim}`);
+    if (r.gabim) toast.info(`Prona u ruajt, por vendndodhja e saktë jo. ${r.gabim}`);
+    else toast.sukses("Prona u shtua.");
   }
 
   return (

@@ -1,9 +1,11 @@
 import { useRouter } from "expo-router";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIListes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useProfiliIPunes } from "@/lib/kontrata";
@@ -32,16 +34,15 @@ export default function KerkesatPerMiken() {
       title="Kërkesat"
       subtitle={tePritura.length > 0 ? `${tePritura.length} të reja presin një Miku.` : "Vizitat që presin një Miku."}
     >
-      {burimiVizitat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+      {burimiVizitat === "duke_ngarkuar" ? <SkeletiIListes rreshta={3} /> : null}
 
       {burimiVizitat === "pa_lidhje" ? (
-        <View style={styles.bosh}>
-          <Text style={styles.boshTitle}>Kërkesat nuk u ngarkuan</Text>
-          <Text style={styles.boshText}>Nuk u lidh me serverin. Kontrollo internetin dhe provo përsëri.</Text>
-          <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
-            <Text style={styles.dytesorText}>Provo përsëri</Text>
-          </Pressable>
-        </View>
+        <GjendjaBosh
+          toni="gabim"
+          titulli="Kërkesat nuk u ngarkuan"
+          teksti="Nuk u lidh me serverin. Kontrollo internetin dhe provo përsëri."
+          veprimi={{ etiketa: "Provo përsëri", onPress: () => void rifresko() }}
+        />
       ) : null}
 
       {demo ? (
@@ -59,9 +60,9 @@ export default function KerkesatPerMiken() {
           <UrezaIcon
             name={verifikimi.verifikuarAt ? "shield" : "clock"}
             size={20}
-            color={verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210"}
+            color={verifikimi.verifikuarAt ? colors.ok : colors.kujdes}
           />
-          <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? "#1E6B3E" : "#8A5210" }]}>
+          <Text style={[styles.shenimText, { color: verifikimi.verifikuarAt ? colors.ok : colors.kujdes }]}>
             {verifikimi.verifikuarAt
               ? `Je Miku i verifikuar nga ekipi i Urëzës (që më ${dataMeOre(verifikimi.verifikuarAt)}).`
               : "Ekipi i Urëzës ende nuk të ka verifikuar. Kërkesat e reja i sheh dhe i pranon vetëm pasi të verifikohesh."}
@@ -76,20 +77,21 @@ export default function KerkesatPerMiken() {
           accessibilityRole="button"
           accessibilityLabel="Plotëso si punon si Miku te Profili"
         >
-          <UrezaIcon name="warning" size={20} color="#8A5210" />
-          <Text style={[styles.shenimText, { color: "#8A5210" }]}>
+          <UrezaIcon name="warning" size={20} color={colors.kujdes} />
+          <Text style={[styles.shenimText, { color: colors.kujdes }]}>
             Para se të pranosh vizita, trego si punon te Profili: kompani, individ, student ose mjeshtër. Del në kontratë.
           </Text>
-          <UrezaIcon name="chevron" size={18} color="#8A5210" strokeWidth={2.4} />
+          <UrezaIcon name="chevron" size={18} color={colors.kujdes} strokeWidth={2.4} />
         </Pressable>
       ) : null}
 
       <Text style={styles.seksioni}>Kërkesa të reja</Text>
       {burimiVizitat !== "duke_ngarkuar" && burimiVizitat !== "pa_lidhje" && tePritura.length === 0 ? (
-        <View style={styles.bosh}>
-          <Text style={styles.boshTitle}>Nuk ka kërkesa të reja</Text>
-          <Text style={styles.boshText}>Kur një klient kërkon një vizitë, shfaqet këtu që ta pranosh.</Text>
-        </View>
+        <GjendjaBosh
+          ikona="list"
+          titulli="Nuk ka kërkesa të reja"
+          teksti="Kur një klient kërkon një vizitë, shfaqet këtu që ta pranosh."
+        />
       ) : null}
       {tePritura.map((v) => (
         <Rreshti key={v.id} vizita={v} emriProna={pronat.find((p) => p.id === v.pronaId)?.emri} />
@@ -139,22 +141,17 @@ function Rreshti({ vizita, emriProna }: { vizita: Vizita; emriProna?: string }) 
 
 const styles = StyleSheet.create({
   seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
-  bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
-  dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   shenim: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
-  verifikuar: { backgroundColor: "#E4F6EB" },
-  paVerifikuar: { backgroundColor: "#FFF2DE" },
+  verifikuar: { backgroundColor: colors.okBg },
+  paVerifikuar: { backgroundColor: colors.kujdesBg },
   rreshti: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
     borderColor: "#E3EAF0",
     padding: 14,
   },
-  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikona: { width: 48, height: 48, borderRadius: 15, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   tekst: { flex: 1, gap: 4 },
   shigjeta: { alignSelf: "center" },
   titulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },

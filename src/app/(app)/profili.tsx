@@ -8,7 +8,8 @@ import { FletaModale } from "@/components/FletaModale";
 import { KartaEProfilitTePunes } from "@/components/ProfiliIPunes";
 import { RreshtiNdezes } from "@/components/RreshtiNdezes";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
-import { colors, font } from "@/constants/ureza";
+import { useToast } from "@/components/ui/Toast";
+import { colors, font, hija } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
 import { mbledhTeDhenat, ndajTeDhenat } from "@/lib/eksporti";
@@ -295,12 +296,13 @@ function Rreshti({
 // ---------------------------------------------------------------------------------------------
 // Personal data
 
-type Statusi = { ok: true } | { gabim: string } | null;
+type Statusi = { gabim: string } | null;
 
 function KartaETeDhenave({ emriRef, telefoniRef }: FushatEProfilit) {
   const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, burimi, cilesimet, cilesimetNeLlogari, ruajTeDhenat } = useProfili();
+  const toast = useToast();
   const revealSoon = useRevealOnFocus();
 
   const emriRuajtur = profili?.emri ?? "";
@@ -352,7 +354,8 @@ function KartaETeDhenave({ emriRef, telefoniRef }: FushatEProfilit) {
     setDuke(true);
     const gabim = await ruajTeDhenat(n);
     setDuke(false);
-    setStatusi(gabim ? { gabim } : { ok: true });
+    setStatusi(gabim ? { gabim } : null);
+    if (!gabim) toast.sukses("Ndryshimet u ruajtën.");
   }
 
   return (
@@ -516,12 +519,6 @@ function KartaETeDhenave({ emriRef, telefoniRef }: FushatEProfilit) {
           )}
         </Pressable>
 
-        {statusi && "ok" in statusi ? (
-          <View style={styles.rresht}>
-            <UrezaIcon name="check" size={18} color="#1E6B3E" strokeWidth={2.6} />
-            <Text style={styles.ok}>Ndryshimet u ruajtën.</Text>
-          </View>
-        ) : null}
         {statusi && "gabim" in statusi ? <Text style={styles.gabim}>{statusi.gabim}</Text> : null}
       </View>
 
@@ -787,11 +784,14 @@ function KartaPaProfil({ onProvo }: { onProvo: () => void }) {
 
 function DilButon() {
   const [duke, setDuke] = useState(false);
+  const toast = useToast();
 
   async function dilNga() {
     setDuke(true);
     try {
       await dil();
+    } catch (e) {
+      toast.gabim(`Dalja nuk u krye. ${(e as Error).message}`);
     } finally {
       setDuke(false);
     }
@@ -817,23 +817,15 @@ function DilButon() {
   );
 }
 
-// the light shadow the cards on Ballina, Oda and Pronat use
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
 
 const styles = StyleSheet.create({
   karta: { backgroundColor: colors.white, borderRadius: 22, padding: 20, gap: 12 },
-  hije: hija,
+  hije: hija.karta,
   shtypur: { opacity: 0.85 },
   titulli: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
 
   // header
-  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija },
+  koka: { flexDirection: "row", alignItems: "center", gap: 16, ...hija.karta },
   avatar: {
     width: 72,
     height: 72,
@@ -929,8 +921,6 @@ const styles = StyleSheet.create({
   dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
   dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w700 },
   disabled: { opacity: 0.5 },
-  rresht: { flexDirection: "row", alignItems: "center", gap: 8 },
-  ok: { color: colors.ok, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   shenim: {
     flexDirection: "row",
@@ -938,7 +928,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 16,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   shenimText: { flex: 1, color: colors.petrol, fontSize: 15, lineHeight: 22, fontFamily: font.w600 },
 

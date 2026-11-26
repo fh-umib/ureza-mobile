@@ -106,7 +106,7 @@ export function VendndodhjaFusha({
       />
       {lexuar ? (
         <View style={styles.rresht}>
-          <UrezaIcon name="check" size={18} color="#1E6B3E" strokeWidth={2.6} />
+          <UrezaIcon name="check" size={18} color={colors.ok} strokeWidth={2.6} />
           <Text style={styles.ok}>
             {koordinataNeTekst(lexuar)}
             {saktesia !== null ? ` · ±${Math.round(saktesia)} m` : ""}
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   inputFokus: { borderColor: colors.petrol },
   inputGabim: { borderColor: colors.error },
   rresht: { flexDirection: "row", alignItems: "center", gap: 8 },
-  ok: { color: "#1E6B3E", fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
+  ok: { color: colors.ok, fontSize: 15, lineHeight: 20, fontFamily: font.w700 },
   gabim: { color: colors.error, fontSize: 14, lineHeight: 20, fontFamily: font.w600 },
   telefoni: {
     minHeight: 48,

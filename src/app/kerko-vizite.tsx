@@ -7,6 +7,7 @@ import { Kalendari } from "@/components/Kalendari";
 import { Kutia } from "@/components/Kutia";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { SkeletiIListes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
@@ -118,7 +119,7 @@ function Forma() {
     );
   }
 
-  if (burimiPronat === "duke_ngarkuar") return <ActivityIndicator color={colors.petrol} />;
+  if (burimiPronat === "duke_ngarkuar") return <SkeletiIListes rreshta={2} />;
 
   if (burimiPronat === "pa_lidhje") {
     return (
@@ -319,7 +320,7 @@ const styles = StyleSheet.create({
   },
   opsionZgjedhur: { borderColor: colors.petrol },
   foto: { width: 64, height: 64, borderRadius: 14, overflow: "hidden" },
-  ikonaPlote: { width: 56, height: 56, borderRadius: 17, backgroundColor: "#E8F5F3", alignItems: "center", justifyContent: "center" },
+  ikonaPlote: { width: 56, height: 56, borderRadius: 17, backgroundColor: colors.ikonaBg, alignItems: "center", justifyContent: "center" },
   opsionTekst: { flex: 1, gap: 2 },
   opsionTitulli: { color: colors.ink, fontSize: 17, lineHeight: 22, fontFamily: font.w800 },
   opsionNen: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontFamily: font.w500 },
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 18,
-    backgroundColor: "#E8F5F3",
+    backgroundColor: colors.ikonaBg,
   },
   cmimiTekst: { flex: 1, gap: 2 },
   cmimiVlera: { color: colors.ink, fontSize: 26, lineHeight: 32, fontFamily: font.w800 },

@@ -11,6 +11,7 @@ import { Stack, usePathname, useRootNavigationState, useRouter, type Href } from
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
+import { ToastProvider } from "@/components/ui/Toast";
 import { colors } from "@/constants/ureza";
 import { DhenatProvider } from "@/lib/dhenat";
 import { FAQJA_KRYESORE, faqjaLejohet } from "@/lib/faqet";
@@ -97,7 +98,9 @@ export default function RootLayout() {
     <SesioniProvider>
       <ProfiliProvider>
         <DhenatProvider>
-          <Rrugat />
+          <ToastProvider>
+            <Rrugat />
+          </ToastProvider>
         </DhenatProvider>
       </ProfiliProvider>
     </SesioniProvider>

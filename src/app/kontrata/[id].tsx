@@ -7,6 +7,8 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, Vi
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { Kutia } from "@/components/Kutia";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { paleMiku, useKontrata, useProfiliIPunes, type DhenatEKontrates } from "@/lib/kontrata";
@@ -63,9 +65,15 @@ export default function Kontrata() {
     return (
       <EkraniMeHero kicker="KONTRATA" title="Kontrata" kthehu={mbrapa}>
         {kontrata.burimi === "duke_ngarkuar" ? (
-          <ActivityIndicator color={colors.petrol} />
+          <SkeletiIFaqes rreshta={3} />
         ) : (
-          <Text style={styles.teksti}>Kjo kontratë nuk u gjet, ose nuk ke qasje në të.</Text>
+          <GjendjaBosh
+            toni="gabim"
+            ikona="doc"
+            titulli="Kontrata nuk u gjet"
+            teksti="Kjo kontratë nuk u gjet, ose nuk ke qasje në të."
+            veprimi={{ etiketa: "Kthehu", onPress: mbrapa.onPress }}
+          />
         )}
       </EkraniMeHero>
     );
@@ -411,7 +419,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: "#D3DEE4",
+    borderColor: colors.line,
   },
   opsionZgjedhur: { borderColor: colors.petrol, backgroundColor: "#F2F8FA" },
   opsionEmri: { color: colors.ink, fontSize: 15, fontFamily: font.w800 },
@@ -483,10 +491,10 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: 18,
-    backgroundColor: "#E4F6EB",
+    backgroundColor: colors.okBg,
   },
-  suksesIkona: { width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E6B3E", alignItems: "center", justifyContent: "center" },
-  suksesTitulli: { color: "#1E6B3E", fontSize: 16, fontFamily: font.w800 },
+  suksesIkona: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.ok, alignItems: "center", justifyContent: "center" },
+  suksesTitulli: { color: colors.ok, fontSize: 16, fontFamily: font.w800 },
   ndaj: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.white, justifyContent: "center" },
-  ndajTeksti: { color: "#1E6B3E", fontSize: 14, fontFamily: font.w800 },
+  ndajTeksti: { color: colors.ok, fontSize: 14, fontFamily: font.w800 },
 });

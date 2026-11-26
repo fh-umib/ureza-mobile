@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { colors, font } from "@/constants/ureza";
+import { colors, font, hija } from "@/constants/ureza";
 import type { Statusi } from "@/lib/vizitat";
 
 import { HapatEVizites } from "./HapatEVizites";
@@ -150,13 +150,6 @@ export function DeshmiteShkurt({ gati, onHap }: { gati: boolean; onHap: () => vo
   );
 }
 
-const hija = {
-  shadowColor: "#0B2530",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.07,
-  shadowRadius: 12,
-  elevation: 2,
-};
 
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
@@ -171,7 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 22,
     padding: 16,
-    ...hija,
+    ...hija.karta,
   },
   avatar: {
     width: 64,
@@ -212,7 +205,7 @@ const styles = StyleSheet.create({
   distinktivTeksti: { color: colors.ok, fontSize: 12, fontFamily: font.w800 },
 
   // live state
-  statusi: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija },
+  statusi: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 10, ...hija.karta },
   statusiKrye: { flexDirection: "row", alignItems: "center", gap: 8 },
   statusiTeksti: { color: colors.ink, fontSize: 17, lineHeight: 25, fontFamily: font.w600 },
   hapat: { marginTop: 4 },
@@ -221,7 +214,7 @@ const styles = StyleSheet.create({
   pika: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.kujdes },
 
   // proofs
-  deshmiteKarta: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija },
+  deshmiteKarta: { backgroundColor: colors.white, borderRadius: 22, padding: 16, gap: 12, ...hija.karta },
   deshmiteKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   deshmiteTitulli: { color: colors.ink, fontSize: 18, lineHeight: 24, fontFamily: font.w800 },
   lidhja: { flexDirection: "row", alignItems: "center", gap: 2, minHeight: 44 },
