@@ -27,7 +27,7 @@ import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
 import { vendiNeHarte, type Prona } from "@/lib/pronat";
 import { useProfili } from "@/lib/profili";
-import { dataShkurt, titulliIVizites, type Vizita } from "@/lib/vizitat";
+import { dataShkurt, LLOJET_E_VIZITES, STATUSET, titulliIVizites, type Vizita } from "@/lib/vizitat";
 
 const SA_VIZITA_NE_FLETE = 4;
 
@@ -200,6 +200,24 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
 
               <KartaEVendit prona={prona} eMiku={eMiku} onRedakto={() => setRedakto(true)} />
 
+              <View style={styles.vizitatKrye}>
+                <Text style={styles.seksioni} accessibilityRole="header">
+                  Vizitat
+                </Text>
+                {vizitatEPrones.length > 0 ? (
+                  <Pressable
+                    style={styles.lidhje}
+                    // the Miku has no Oda; their visits are on Kërkesat
+                    onPress={() => router.navigate(eMiku ? "/miku" : "/oda")}
+                    accessibilityRole="link"
+                    accessibilityLabel={eMiku ? "Shiko të gjitha te Kërkesat" : "Shiko të gjitha te Oda"}
+                  >
+                    <Text style={styles.lidhjeText}>Shiko të gjitha</Text>
+                    <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
+                  </Pressable>
+                ) : null}
+              </View>
+
               <View style={styles.vizitat}>
                 {vizitatEPrones.length === 0 ? (
                   <Text style={[styles.tekst, styles.pavizita]}>Ende nuk ka vizita për këtë pronë.</Text>
@@ -209,17 +227,6 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
                     .map((v, i, lista) => <RreshtiIVizites key={v.id} vizita={v} fundit={i === lista.length - 1} />)
                 )}
               </View>
-
-              {vizitatEPrones.length > SA_VIZITA_NE_FLETE ? (
-                <Pressable
-                  style={styles.lidhje}
-                  onPress={() => router.navigate(eMiku ? "/miku" : "/oda")}
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.lidhjeText}>Shiko të gjitha</Text>
-                  <UrezaIcon name="chevron" size={18} color={colors.petrol} strokeWidth={2.6} />
-                </Pressable>
-              ) : null}
             </>
           ) : null}
         </ScrollView>
@@ -330,22 +337,28 @@ const GJENDJET: Record<"sakte" | "perafert" | "mungon", GjendjaEVendit> = {
   mungon: { titulli: "Prona nuk është në hartë", ikona: "close", bg: colors.neutralBg, fg: colors.neutral },
 };
 
+// One visit: the icon of its kind, the title and date, the status (colour + icon + word) and an arrow.
 function RreshtiIVizites({ vizita, fundit }: { vizita: Vizita; fundit: boolean }) {
   const router = useRouter();
+  const ikona = LLOJET_E_VIZITES.find((l) => l.vlera === vizita.lloji)?.icon ?? "home";
   return (
     <Pressable
-      style={[styles.rreshti, !fundit && styles.ndarje]}
+      style={({ pressed }) => [styles.rreshti, !fundit && styles.ndarje, pressed && styles.shtypur]}
       onPress={() => router.push({ pathname: "/vizita/[id]", params: { id: vizita.id } })}
       accessibilityRole="button"
-      accessibilityLabel={`${titulliIVizites(vizita.lloji)}, ${dataShkurt(vizita.data)}`}
+      accessibilityLabel={`${titulliIVizites(vizita.lloji)}, ${dataShkurt(vizita.data)}, ${STATUSET[vizita.statusi]?.emri ?? ""}. Hap vizitën.`}
     >
+      <View style={styles.rreshtiIkona}>
+        <UrezaIcon name={ikona} size={20} color={colors.petrol} strokeWidth={2.2} />
+      </View>
       <View style={styles.rreshtiTekst}>
         <Text style={styles.rreshtiTitulli} numberOfLines={1}>
           {titulliIVizites(vizita.lloji)}
         </Text>
         <Text style={styles.rreshtiData}>{dataShkurt(vizita.data)}</Text>
+        <StatusiChip statusi={vizita.statusi} />
       </View>
-      <StatusiChip statusi={vizita.statusi} />
+      <UrezaIcon name="arrow" size={20} color={colors.petrol} strokeWidth={2.4} />
     </Pressable>
   );
 }
@@ -445,11 +458,21 @@ const styles = StyleSheet.create({
   butonIkoneText: { color: colors.petrol, fontSize: 15, fontWeight: "800" },
   dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
   dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "800" },
-  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16 },
+  vizitatKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
+  seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
+  vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija },
+  rreshtiIkona: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.ikonaBg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   pavizita: { paddingVertical: 20 },
-  rreshti: { minHeight: 68, flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 8 },
+  rreshti: { minHeight: 72, flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12 },
   ndarje: { borderBottomWidth: 1, borderBottomColor: "#EDF1F4" },
-  rreshtiTekst: { flex: 1, minWidth: 0 },
+  rreshtiTekst: { flex: 1, minWidth: 0, gap: 2, alignItems: "flex-start" },
   rreshtiTitulli: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: "700" },
   rreshtiData: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
   lidhje: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 4 },
