@@ -12,6 +12,8 @@ import { ShqyrtimiIRastit } from "@/components/ShqyrtimiIRastit";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
 import { DeshmiteShkurt, KartaEMikut, StatusiIGjalle } from "@/components/VizitaBesimi";
 import { colors, font } from "@/constants/ureza";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { Kutia } from "@/components/Kutia";
 import { useMikuIVerifikuar } from "@/lib/admini";
 import { PJESA_E_DEMIT, useKontrata, useProfiliIPunes } from "@/lib/kontrata";
@@ -61,12 +63,15 @@ export default function DetajetEVizites() {
     return (
       <EkraniMeHero kicker="VIZITA" title="Vizita" kthehu={mbrapa}>
         {burimiVizitat === "duke_ngarkuar" ? (
-          <ActivityIndicator color={colors.petrol} />
+          <SkeletiIFaqes rreshta={2} />
         ) : (
-          <View style={styles.karta}>
-            <Text style={styles.titulli}>Kjo vizitë nuk u gjet</Text>
-            <Text style={styles.tekst}>Ndoshta u anulua. Kthehu te Oda për të parë vizitat e tua.</Text>
-          </View>
+          <GjendjaBosh
+            toni="gabim"
+            ikona="warning"
+            titulli="Kjo vizitë nuk u gjet"
+            teksti="Ndoshta u anulua. Kthehu për të parë vizitat e tua."
+            veprimi={{ etiketa: "Kthehu", onPress: mbrapa.onPress }}
+          />
         )}
       </EkraniMeHero>
     );

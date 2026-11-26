@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Linking,
   Pressable,
   ScrollView,
@@ -22,6 +21,8 @@ import { RedaktoVendin } from "@/components/RedaktoVendin";
 import { SeShpejti } from "@/components/SeShpejti";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { koordinataNeTekst, lidhjaEHartes } from "@/lib/gjeo";
@@ -124,32 +125,28 @@ function HartaEPronave({ eMiku }: { eMiku: boolean }) {
 
         <View style={styles.flete}>
           <View style={styles.fleteBrenda}>
-            {burimiPronat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+            {burimiPronat === "duke_ngarkuar" ? <SkeletiIFaqes meFoto rreshta={2} /> : null}
 
             {burimiPronat === "pa_lidhje" ? (
-              <View style={styles.karta}>
-                <Text style={styles.titulliKartes}>Nuk u lidh me serverin</Text>
-                <Text style={styles.tekst}>Kontrollo internetin, pastaj provo përsëri.</Text>
-                <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
-                  <Text style={styles.dytesorText}>Provo përsëri</Text>
-                </Pressable>
-              </View>
+              <GjendjaBosh
+                toni="gabim"
+                titulli="Nuk u lidh me serverin"
+                teksti="Kontrollo internetin, pastaj provo përsëri."
+                veprimi={{ etiketa: "Provo përsëri", onPress: () => void rifresko() }}
+              />
             ) : null}
 
             {(burimiPronat === "supabase" || burimiPronat === "demo") && !prona ? (
-              <View style={styles.karta}>
-                <Text style={styles.titulliKartes}>{eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}</Text>
-                <Text style={styles.tekst}>
-                  {eMiku
+              <GjendjaBosh
+                ikona="map"
+                titulli={eMiku ? "Asnjë pronë për momentin" : "Ende nuk ke asnjë pronë"}
+                teksti={
+                  eMiku
                     ? "Pronat shfaqen këtu kur ka kërkesa të hapura, ose vizita që ke pranuar."
-                    : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."}
-                </Text>
-                {!eMiku ? (
-                  <Pressable style={styles.dytesor} onPress={() => router.navigate("/pronat")} accessibilityRole="button">
-                    <Text style={styles.dytesorText}>Shko te Pronat</Text>
-                  </Pressable>
-                ) : null}
-              </View>
+                    : "Shto të parën te Pronat, p.sh. shtëpinë ose prindërit, dhe do ta shohësh në hartë."
+                }
+                veprimi={eMiku ? undefined : { etiketa: "Shto pronën e parë", onPress: () => router.navigate("/pronat") }}
+              />
             ) : null}
 
             {prona ? (
@@ -461,8 +458,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   butonIkoneText: { color: colors.petrol, fontSize: 15, fontFamily: font.w800 },
-  dytesor: { minHeight: 44, alignItems: "flex-start", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontFamily: font.w800 },
   vizitatKrye: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
   seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontFamily: font.w800 },
   vizitat: { backgroundColor: colors.white, borderRadius: 20, paddingHorizontal: 16, ...hija },

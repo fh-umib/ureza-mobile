@@ -7,6 +7,7 @@ import { Kalendari } from "@/components/Kalendari";
 import { Kutia } from "@/components/Kutia";
 import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { SkeletiIListes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
@@ -118,7 +119,7 @@ function Forma() {
     );
   }
 
-  if (burimiPronat === "duke_ngarkuar") return <ActivityIndicator color={colors.petrol} />;
+  if (burimiPronat === "duke_ngarkuar") return <SkeletiIListes rreshta={2} />;
 
   if (burimiPronat === "pa_lidhje") {
     return (

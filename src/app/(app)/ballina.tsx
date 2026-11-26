@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import type { ReactNode } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
@@ -10,6 +10,7 @@ import { PronaIlustrim, type Ilustrim } from "@/components/PronaIlustrim";
 import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon, type IconName } from "@/components/UrezaIcon";
+import { SkeletiIKartes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { CMIMI_TEKST } from "@/lib/kushtet";
@@ -165,7 +166,7 @@ export default function Ballina() {
             </View>
           </Pressable>
         ) : burimiVizitat === "duke_ngarkuar" ? (
-          <ActivityIndicator color={colors.petrol} />
+          <SkeletiIKartes />
         ) : (
           <View style={styles.karta}>
             <Text style={styles.kicker}>FILLO KËTU</Text>

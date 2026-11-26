@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState, type ReactNode } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
@@ -10,6 +10,7 @@ import { PronaIlustrim } from "@/components/PronaIlustrim";
 import { Seksioni } from "@/components/Seksioni";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import type { Prona } from "@/lib/pronat";
@@ -174,7 +175,7 @@ export default function Oda() {
       title="Oda"
       subtitle={kaVizita ? `${vizitat.length} vizita, me dëshmi dhe raport.` : "Historia e çdo vizite, me dëshmi."}
     >
-      {burimiVizitat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+      {burimiVizitat === "duke_ngarkuar" ? <SkeletiIFaqes rreshta={4} /> : null}
 
       {burimiVizitat !== "duke_ngarkuar" && !kaVizita ? (
         <Hyrje i={0}>

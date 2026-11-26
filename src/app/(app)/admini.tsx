@@ -5,6 +5,8 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { GrafikuIDiteve, ListaEShiritave, PllakaETreguesit } from "@/components/PaneliGrafiket";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIKartes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { usePaneliIAdminit, type MikuPerAdminin } from "@/lib/admini";
 import { useDhenat } from "@/lib/dhenat";
@@ -118,7 +120,7 @@ export default function Paneli() {
 
       {/* 1 · What needs the admin now */}
       {burimiVizitat === "duke_ngarkuar" ? (
-        <ActivityIndicator color={colors.petrol} />
+        <SkeletiIKartes />
       ) : teHapura.length > 0 ? (
         <View style={[styles.karta, styles.kartaRast]}>
           <View style={styles.rreshtIkone}>
@@ -152,7 +154,7 @@ export default function Paneli() {
 
       {/* 2 · The figures */}
       <Text style={styles.seksioni}>Treguesit</Text>
-      {paneli.burimi === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+      {paneli.burimi === "duke_ngarkuar" ? <SkeletiIKartes /> : null}
       {gati ? (
         <>
           <View style={styles.rrjeta}>
@@ -211,7 +213,11 @@ export default function Paneli() {
       {/* 3 · Disputed reports */}
       <Text style={styles.seksioni}>Rastet e kundërshtuara</Text>
       {burimiVizitat !== "duke_ngarkuar" && teHapura.length === 0 && teMbyllura.length === 0 ? (
-        <Text style={styles.tekst}>Ende asnjë raport i kundërshtuar.</Text>
+        <GjendjaBosh
+          ikona="shield"
+          titulli="Asnjë raport i kundërshtuar"
+          teksti="Kur një klient kundërshton një raport, rasti shfaqet këtu që ta shqyrtosh."
+        />
       ) : null}
       {teHapura.map((v) => (
         <RreshtiIRastit key={v.id} vizita={v} emriProna={emriProna(v)} />

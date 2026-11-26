@@ -16,6 +16,8 @@ import { HartaEDeshmise } from "@/components/HartaEDeshmise";
 import { ListaEKontrollit } from "@/components/ListaEKontrollit";
 import { LojtariZanor } from "@/components/LojtariZanor";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { colors, font } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { useDeshmite, type Deshmi, type PerdorimiIDeshmive } from "@/lib/deshmite";
@@ -65,12 +67,15 @@ export default function Deshmia() {
     return (
       <EkraniMeHero kicker="MIKU · NË TERREN" title="Dëshmia e vizitës" kthehu={mbrapa}>
         {burimiVizitat === "duke_ngarkuar" ? (
-          <ActivityIndicator color={colors.petrol} />
+          <SkeletiIFaqes rreshta={2} />
         ) : (
-          <View style={styles.karta}>
-            <Text style={styles.titulli}>Kjo vizitë nuk u gjet</Text>
-            <Text style={styles.tekst}>Kthehu te Kërkesat dhe hape përsëri vizitën.</Text>
-          </View>
+          <GjendjaBosh
+            toni="gabim"
+            ikona="warning"
+            titulli="Kjo vizitë nuk u gjet"
+            teksti="Kthehu te Kërkesat dhe hape përsëri vizitën."
+            veprimi={{ etiketa: "Kthehu", onPress: mbrapa.onPress }}
+          />
         )}
       </EkraniMeHero>
     );
