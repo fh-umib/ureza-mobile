@@ -46,7 +46,7 @@ export default function MikuFillimi() {
       : { etiketa: "Mbrapa", onPress: () => setZgjedhur((hapi - 1) as Hapi) };
 
   const titujt: Record<Hapi, { titulli: string; nen: string }> = {
-    1: { titulli: "Kush je ti?", nen: "Emri dhe telefoni, që klienti dhe ekipi të të njohin." },
+    1: { titulli: "Kush je ti?", nen: "Emrin e sheh klienti; telefonin vetëm ekipi i Urëzës." },
     2: { titulli: "Si punon?", nen: "Del në kontratën që pranon për çdo vizitë." },
     3: { titulli: "Çka ndodh më pas", nen: "Edhe pak dhe je gati për vizitën e parë." },
   };
@@ -122,7 +122,8 @@ function HapiTeDhenat({ onVazhdo }: { onVazhdo: () => void }) {
     const e = emri.trim();
     const t = pastroTelefonin(telefoni);
     const gE = e.length < 2 ? "Shkruaj emrin dhe mbiemrin (të paktën 2 shkronja)." : null;
-    // for a Miku the phone is needed: the team calls before verifying, the client on the day
+    // for a Miku the phone is needed: the team calls before verifying (only the admin sees it,
+    // through mikut_per_adminin(); the client never does)
     const gT = t === "" ? "Shkruaj numrin e telefonit. Ekipi të thërret para verifikimit." : gabimiITelefonit(t);
     setGabimEmri(gE);
     setGabimTelefoni(gT);
@@ -170,7 +171,7 @@ function HapiTeDhenat({ onVazhdo }: { onVazhdo: () => void }) {
         }}
         placeholder="+383 44 000 000"
         gabim={gabimTelefoni}
-        ndihme="Vetëm ekipi i Urëzës dhe klienti i vizitës që pranon e shohin."
+        ndihme="Vetëm ekipi i Urëzës e sheh, që të të thërrasë para verifikimit."
         onFocus={revealSoon}
         tipi="telefoni"
       />
