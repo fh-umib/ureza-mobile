@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState, type ComponentRef, type RefObject } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
@@ -23,17 +23,24 @@ import { dataMeOre } from "@/lib/vizitat";
 // The settings are saved in the account (supabase/profili.sql); until that file is run they stay on
 // the phone, and the screen says so.
 
+// The name and phone fields, so a missing step in the completeness card can take the person
+// straight to the field (focusing it also scrolls it into view).
+type Fusha = ComponentRef<typeof TextInput>;
+type FushatEProfilit = { emriRef: RefObject<Fusha | null>; telefoniRef: RefObject<Fusha | null> };
+
 export default function Profili() {
   const { profili, rifresko } = useProfili();
   const roli = profili?.roli ?? "klient";
+  const emriRef = useRef<Fusha>(null);
+  const telefoniRef = useRef<Fusha>(null);
 
   return (
     <EkraniMeHero kicker="LLOGARIA" title="Profili im" subtitle="Të dhënat dhe cilësimet e tua.">
       {profili ? (
         <>
           <KokaEProfilit />
-          <KartaEPlotesimit />
-          <KartaETeDhenave />
+          <KartaEPlotesimit emriRef={emriRef} telefoniRef={telefoniRef} />
+          <KartaETeDhenave emriRef={emriRef} telefoniRef={telefoniRef} />
           {roli === "klient" ? <KartaENjoftimeve /> : null}
           {roli === "miku" ? <KartaEProfilitTePunes /> : null}
           <KartaEPrivatesise />
@@ -102,7 +109,7 @@ function KokaEProfilit() {
   );
 }
 
-function KartaEPlotesimit() {
+function KartaEPlotesimit({ emriRef, telefoniRef }: FushatEProfilit) {
   const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, cilesimet } = useProfili();
@@ -139,13 +146,20 @@ function KartaEPlotesimit() {
         <View>
           {mungojne.map((h) => {
             const shko = SHKO_TE_HAPI[h.etiketa];
+            const fusha = FUSHA_E_HAPIT[h.etiketa];
             return (
               <Rreshti
                 key={h.etiketa}
-                ikona={shko?.ikona ?? "plus"}
+                ikona={shko?.ikona ?? (fusha === "telefoni" ? "phone" : fusha === "emri" ? "user" : "plus")}
                 titulli={h.etiketa}
-                nentitulli={shko ? h.keshille : `${h.keshille} Më poshtë, te Të dhënat.`}
-                onPress={shko ? () => router.navigate(shko.faqja) : undefined}
+                nentitulli={h.keshille}
+                onPress={
+                  shko
+                    ? () => router.navigate(shko.faqja)
+                    : fusha
+                      ? () => (fusha === "emri" ? emriRef : telefoniRef).current?.focus()
+                      : undefined
+                }
               />
             );
           })}
@@ -155,7 +169,10 @@ function KartaEPlotesimit() {
   );
 }
 
-// the steps that are filled on another screen; the others are in the form below
+// the steps that are filled in the form below (the email cannot be changed from the app)
+const FUSHA_E_HAPIT: Record<string, "emri" | "telefoni"> = { Emri: "emri", Telefoni: "telefoni" };
+
+// the steps that are filled on another screen
 const SHKO_TE_HAPI: Record<string, { faqja: "/pronat" | "/harta"; ikona: IconName }> = {
   Prona: { faqja: "/pronat", ikona: "houses" },
   "Vendndodhja e pronës": { faqja: "/harta", ikona: "pin" },
@@ -280,7 +297,7 @@ function Rreshti({
 
 type Statusi = { ok: true } | { gabim: string } | null;
 
-function KartaETeDhenave() {
+function KartaETeDhenave({ emriRef, telefoniRef }: FushatEProfilit) {
   const router = useRouter();
   const { perdoruesi } = useSesioni();
   const { profili, burimi, cilesimet, cilesimetNeLlogari, ruajTeDhenat } = useProfili();
@@ -361,6 +378,7 @@ function KartaETeDhenave() {
               <UrezaIcon name="user" size={22} color={colors.textSecondary} />
             </View>
             <TextInput
+              ref={emriRef}
               style={[styles.input, fokus === "emri" && styles.inputFokus, gabimEmri ? styles.inputGabim : null]}
               value={emri}
               onChangeText={(t) => {
@@ -373,7 +391,7 @@ function KartaETeDhenave() {
                 revealSoon();
               }}
               onBlur={() => setFokus(null)}
-              placeholder="p.sh. Flutura Hyseni"
+              placeholder="p.sh. Arta Berisha"
               placeholderTextColor="#8FA3AC"
               maxLength={40}
               autoCapitalize="words"
@@ -413,6 +431,7 @@ function KartaETeDhenave() {
               <UrezaIcon name="phone" size={22} color={colors.textSecondary} />
             </View>
             <TextInput
+              ref={telefoniRef}
               style={[
                 styles.input,
                 fokus === "telefoni" && styles.inputFokus,
@@ -635,11 +654,15 @@ function KartaEPrivatesise() {
       <TitulliIGrupit ikona="shield" titulli="Privatësia dhe pëlqimi" />
 
       <View>
-        {roli === "klient" ? (
+        {roli !== "admin" ? (
           <Rreshti
             ikona="doc"
-            titulli="Kushtet e vizitës dhe pëlqimi"
-            nentitulli="Çmimi, përgjegjësia dhe pëlqimi me shkrim, që e jep në çdo kërkesë (edhe për prindërit)."
+            titulli={roli === "miku" ? "Kushtet dhe kontrata" : "Kushtet e vizitës dhe pëlqimi"}
+            nentitulli={
+              roli === "miku"
+                ? "Kushtet e punës, përgjegjësia për dëmin dhe kontrata që pranon para çdo vizite."
+                : "Çmimi, përgjegjësia dhe pëlqimi me shkrim, që e jep në çdo kërkesë (edhe për prindërit)."
+            }
             onPress={() => router.push("/kushtet")}
           />
         ) : null}

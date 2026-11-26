@@ -334,7 +334,7 @@ type GjendjaEVendit = { titulli: string; ikona: IconName; bg: string; fg: string
 const GJENDJET: Record<"sakte" | "perafert" | "mungon", GjendjaEVendit> = {
   sakte: { titulli: "Vendndodhja e saktë", ikona: "check", bg: colors.okBg, fg: colors.ok },
   perafert: { titulli: "Vendndodhje e përafërt", ikona: "warning", bg: colors.kujdesBg, fg: colors.kujdes },
-  mungon: { titulli: "Prona nuk është në hartë", ikona: "close", bg: colors.neutralBg, fg: colors.neutral },
+  mungon: { titulli: "Prona nuk është në hartë", ikona: "map", bg: colors.neutralBg, fg: colors.neutral },
 };
 
 // One visit: the icon of its kind, the title and date, the status (colour + icon + word) and an arrow.
