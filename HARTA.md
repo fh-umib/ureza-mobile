@@ -293,7 +293,17 @@ something, and status shown with colour + icon + word.
 
 **Small additions**: the `bell` icon in `UrezaIcon.tsx`; named colours for
 the states (`ok`, `kujdes`, `neutral`, `ikonaBg`, `errorBg`) in
-`ureza.ts`, so no screen hard-codes them.
+`ureza.ts`, so the new parts of Harta and Profili use them instead of
+hex values. Some older hard-coded colours remain (e.g. the card shadow
+`#0B2530`, input placeholders); moving them to tokens is the next step,
+on the `tringa/sistemi-ui` branch.
+
+**After Flutura's review**: property names on the Harta cards wrap to
+two lines (cards 170 px wide), so similar names can be told apart; the
+"Gjithmonë" chip sits under the text so the photos row keeps its full
+width; the Miku also sees "Kushtet dhe kontrata" under Privatësia; the
+missing "Emri" and "Telefoni" steps jump to their field; "Not on the map"
+uses a grey map icon (neutral) instead of an X.
 
 ### AI Usage
 
