@@ -1,9 +1,11 @@
 import { useRouter } from "expo-router";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { EkraniMeHero } from "@/components/EkraniMeHero";
 import { StatusiChip } from "@/components/StatusiChip";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIListes } from "@/components/ui/Skeleti";
 import { colors } from "@/constants/ureza";
 import { useVerifikimiIm } from "@/lib/admini";
 import { useProfiliIPunes } from "@/lib/kontrata";
@@ -32,16 +34,15 @@ export default function KerkesatPerMiken() {
       title="Kërkesat"
       subtitle={tePritura.length > 0 ? `${tePritura.length} të reja presin një Miku.` : "Vizitat që presin një Miku."}
     >
-      {burimiVizitat === "duke_ngarkuar" ? <ActivityIndicator color={colors.petrol} /> : null}
+      {burimiVizitat === "duke_ngarkuar" ? <SkeletiIListes rreshta={3} /> : null}
 
       {burimiVizitat === "pa_lidhje" ? (
-        <View style={styles.bosh}>
-          <Text style={styles.boshTitle}>Kërkesat nuk u ngarkuan</Text>
-          <Text style={styles.boshText}>Nuk u lidh me serverin. Kontrollo internetin dhe provo përsëri.</Text>
-          <Pressable style={styles.dytesor} onPress={() => void rifresko()} accessibilityRole="button">
-            <Text style={styles.dytesorText}>Provo përsëri</Text>
-          </Pressable>
-        </View>
+        <GjendjaBosh
+          toni="gabim"
+          titulli="Kërkesat nuk u ngarkuan"
+          teksti="Nuk u lidh me serverin. Kontrollo internetin dhe provo përsëri."
+          veprimi={{ etiketa: "Provo përsëri", onPress: () => void rifresko() }}
+        />
       ) : null}
 
       {demo ? (
@@ -86,10 +87,11 @@ export default function KerkesatPerMiken() {
 
       <Text style={styles.seksioni}>Kërkesa të reja</Text>
       {burimiVizitat !== "duke_ngarkuar" && burimiVizitat !== "pa_lidhje" && tePritura.length === 0 ? (
-        <View style={styles.bosh}>
-          <Text style={styles.boshTitle}>Nuk ka kërkesa të reja</Text>
-          <Text style={styles.boshText}>Kur një klient kërkon një vizitë, shfaqet këtu që ta pranosh.</Text>
-        </View>
+        <GjendjaBosh
+          ikona="list"
+          titulli="Nuk ka kërkesa të reja"
+          teksti="Kur një klient kërkon një vizitë, shfaqet këtu që ta pranosh."
+        />
       ) : null}
       {tePritura.map((v) => (
         <Rreshti key={v.id} vizita={v} emriProna={pronat.find((p) => p.id === v.pronaId)?.emri} />
@@ -139,11 +141,6 @@ function Rreshti({ vizita, emriProna }: { vizita: Vizita; emriProna?: string }) 
 
 const styles = StyleSheet.create({
   seksioni: { color: colors.ink, fontSize: 20, lineHeight: 26, fontWeight: "800" },
-  bosh: { backgroundColor: colors.white, borderRadius: 20, padding: 20, gap: 4, borderWidth: 1, borderColor: "#E3EAF0" },
-  boshTitle: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: "800" },
-  boshText: { color: colors.textSecondary, fontSize: 14, lineHeight: 20, fontWeight: "500" },
-  dytesor: { minHeight: 48, alignItems: "center", justifyContent: "center" },
-  dytesorText: { color: colors.petrol, fontSize: 16, fontWeight: "700" },
   shenim: {
     flexDirection: "row",
     alignItems: "flex-start",

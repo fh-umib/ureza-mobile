@@ -7,6 +7,8 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, Vi
 import { EkraniMeHero, useRevealOnFocus } from "@/components/EkraniMeHero";
 import { Kutia } from "@/components/Kutia";
 import { UrezaIcon } from "@/components/UrezaIcon";
+import { GjendjaBosh } from "@/components/ui/GjendjaBosh";
+import { SkeletiIFaqes } from "@/components/ui/Skeleti";
 import { colors } from "@/constants/ureza";
 import { useDhenat } from "@/lib/dhenat";
 import { paleMiku, useKontrata, useProfiliIPunes, type DhenatEKontrates } from "@/lib/kontrata";
@@ -63,9 +65,15 @@ export default function Kontrata() {
     return (
       <EkraniMeHero kicker="KONTRATA" title="Kontrata" kthehu={mbrapa}>
         {kontrata.burimi === "duke_ngarkuar" ? (
-          <ActivityIndicator color={colors.petrol} />
+          <SkeletiIFaqes rreshta={3} />
         ) : (
-          <Text style={styles.teksti}>Kjo kontratë nuk u gjet, ose nuk ke qasje në të.</Text>
+          <GjendjaBosh
+            toni="gabim"
+            ikona="doc"
+            titulli="Kontrata nuk u gjet"
+            teksti="Kjo kontratë nuk u gjet, ose nuk ke qasje në të."
+            veprimi={{ etiketa: "Kthehu", onPress: mbrapa.onPress }}
+          />
         )}
       </EkraniMeHero>
     );

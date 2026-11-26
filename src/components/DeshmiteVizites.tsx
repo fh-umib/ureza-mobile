@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
-import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
+import { SkeletiIListes } from "./ui/Skeleti";
 import { colors } from "@/constants/ureza";
 import { useDeshmite } from "@/lib/deshmite";
 import { useDhenat } from "@/lib/dhenat";
@@ -21,7 +22,7 @@ export function DeshmiteVizites({ vizita }: { vizita: Vizita }) {
   const prona = pronat.find((p) => p.id === vizita.pronaId);
   const eKlient = profili?.roli !== "miku" && profili?.roli !== "admin";
 
-  if (d.burimi === "duke_ngarkuar") return <ActivityIndicator color={colors.petrol} />;
+  if (d.burimi === "duke_ngarkuar") return <SkeletiIListes rreshta={3} />;
 
   if (d.burimi === "pa_lidhje") {
     return (
