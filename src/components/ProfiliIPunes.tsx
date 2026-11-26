@@ -11,8 +11,9 @@ import { UrezaIcon } from "./UrezaIcon";
 // "Si punon si Miku" on Profili: a company registered in Kosovo, an individual, a student or a
 // craftsman. A company also gives its name and business number (ARBK); a craftsman their trade.
 // It goes into every contract the Miku accepts, and a Miku cannot accept a visit without it.
-export function KartaEProfilitTePunes() {
-  const { profili, gati, ruaj } = useProfiliIPunes();
+// `puna` comes from the screen, so the header of Profili and this form share one copy of the data.
+export function KartaEProfilitTePunes({ puna }: { puna: ReturnType<typeof useProfiliIPunes> }) {
+  const { profili, gati, ruaj } = puna;
   if (!gati) {
     return (
       <View style={styles.karta}>

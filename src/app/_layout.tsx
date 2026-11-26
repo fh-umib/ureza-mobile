@@ -58,6 +58,7 @@ function Rrugat() {
         <Stack.Protected guard={hyri}>
           <Stack.Screen name="(app)" />
           <Stack.Screen name="roli" />
+          <Stack.Screen name="miku-fillimi" />
           <Stack.Screen name="kerko-vizite" />
           <Stack.Screen name="vizita/[id]" />
           <Stack.Screen name="kontrata/[id]" />
